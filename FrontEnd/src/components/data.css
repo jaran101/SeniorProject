@@ -1,0 +1,29 @@
+.data-container{
+     width: 400px;
+  height: auto;
+  margin: auto;
+  margin-top: 10px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.bdata{
+  background-color:#a7a0a0 ;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Kanit', sans-serif;
+  color: #ffff;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.bdata:hover {
+  background-color: #f70d0d;
+  color: white;
+  transform: scale(1.1);
+}

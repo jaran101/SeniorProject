@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap');
+
+/* ── หน้าหลัก ── */
+.Box {
+  background-color: #FFECCD;
+  user-select: none;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── card ── */
+.box1 {
+  background: #E3C9A8;
+  width: 460px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(5, 4, 4, 0.15);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── หัวข้อ ── */
+.f1 {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 32px;
+  color: #2f2828;
+  text-align: center;
+}
+
+/* ── field wrapper ── */
+.field {
+  width: 88%;
+}
+
+.field label {
+  display: block;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: #6b5b45;
+  margin-bottom: 4px;
+  padding-left: 2px;
+}
+
+/* ── input ── */
+.i1 {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 88%;          /* เปลี่ยนจาก 408px → 100% */
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding: 8px 12px;
+  background: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.i1:focus {
+  border-color: #C7A57A;
+  box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
+}
+
+.i1.error {
+  border-color: #e05c5c;
+}
+
+/* ── error message ── */
+.err-msg {
+  font-family: 'Kanit', sans-serif;
+  font-size: 12px;
+  color: #e05c5c;
+  margin-top: 4px;
+  padding-left: 2px;
+}
+
+/* ── ปุ่ม ── */
+.button {
+  background-color: #C7A57A;
+  border: none;
+  border-radius: 10px;
+  height: 52px;
+  width: 100%;          /* เปลี่ยนจาก 408px → 100% */
+  font-family: 'Kanit', sans-serif;
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button:hover   { background-color: #B38B5B; }
+.button:active  { transform: scale(0.98); }
+.button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── เส้นคั่น ── */
+.line {
+  border: none;
+  height: 1.5px;
+  background-color: #C8A27C;
+  width: 100%;
+}
+
+/* ── ลิงก์ล่าง ── */
+.box2 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.a {
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  color: #6b5b45;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.a:hover {
+  text-decoration: underline;
+  color: rgb(25, 67, 157);
+}

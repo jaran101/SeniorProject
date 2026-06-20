@@ -1,0 +1,17 @@
+.footer{ 
+  background-color: #a67c5b;
+    width: auto; 
+    height: 30px; 
+    display: flex; 
+    padding: 10px 20px; 
+    overflow: hidden;
+    height: calc(100vh-105px);
+} 
+
+.f3{ font-family: 'Kanit', sans-serif; 
+    font-size: 14px; 
+    font-weight: 100; 
+    line-height: 0.5;  
+    margin: auto; 
+    text-align: center;
+}

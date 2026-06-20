@@ -1,0 +1,138 @@
+.divider-item {
+  height: 0.5px;
+  background: #e0cdb8;
+  margin: 4px 0;
+}
+
+/* wrapper ของปุ่ม Logout */
+.logout-item {
+  padding: 4px 6px;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #2f2828;
+}
+
+.brand-user {
+  font-size: 14px;
+  font-weight: 300;
+  color: #6b5b45;
+}
+
+
+
+/* ── Profile bar ── */
+.profile-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #E3C9A8;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  border-radius: 0 0 0px 0px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;      /* ✅ เพิ่ม */
+}
+
+/* ── รูปโปรไฟล์ ── */
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;        /* ครอบรูปให้พอดีวงกลม */
+  border: 3px solid #C7A57A;
+}
+
+/* ── ข้อมูลผู้ใช้ ── */
+.profile-name {
+  font-family: 'Kanit', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #2f2828;
+  margin-bottom: 6px;
+}
+
+.profile-info span {
+  display: inline-block;
+  font-family: 'Kanit', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #6b5b45;
+  margin-right: 16px;
+}
+
+/* ── Tab menu ── */
+.profile-menu {
+  display: flex;
+  gap: 8px;
+  padding: 1rem 2rem;
+  background: #fff8f0;
+  border-bottom: 0.5px solid #e0cdb8;
+}
+
+/* ── Tab button ── */
+.profile-button {
+  background: none;
+  border: none;
+  font-family: 'Kanit', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: #6b5b45;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.profile-button:hover {
+  background: #fdf0e0;
+  color: #a67c5b;
+}
+
+/* tab ที่ active อยู่ */
+.profile-button.active {
+  background: #C7A57A;
+  color: white;
+  font-weight: 400;
+}
+
+/* ── Page animation ── */
+.page-animation {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-animation.active {
+  opacity: 1;
+    animation: fadeSlide 0.35s ease forwards;
+}
+
+/* ── ยังไม่ได้ login ── */
+.not-login {
+  font-family: 'Kanit', sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  text-align: center;
+  margin-top: 3rem;
+  color: #6b5b45;
+}
+
+@keyframes fadeSlide{
+    from{
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}

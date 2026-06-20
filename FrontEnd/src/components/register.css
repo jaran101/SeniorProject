@@ -1,0 +1,27 @@
+.row {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.ri1 {
+  width: 100%;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding: 8px 12px;
+  background: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+
+  box-sizing: border-box; /* สำคัญ */
+}
+
+.ri1.error {
+  border-color: #e05c5c;
+}

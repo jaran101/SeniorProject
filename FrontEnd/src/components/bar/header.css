@@ -1,0 +1,133 @@
+.brand-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #2f2828;
+}
+.brand-user {
+  font-size: 18px;
+  font-weight: 200;
+  color: #ffffff;
+  font-family: 'Kanit', sans-serif;
+}
+
+.buttonLogout {
+border: none;
+background: none;
+  font-family: 'Kanit', sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+  margin: 0;
+  padding: 6px;
+  cursor: pointer;
+    color: #333;
+
+  margin-left: 0px;
+}
+.buttonLogout:hover {
+  transform: scale(1.05);
+    background-color: #f2f2f2;
+
+}
+
+
+/* dropdown */
+
+
+.dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  padding: 4px;
+  min-width: 150px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+  border-radius: 6px;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+/* รายการ */
+.dropdown li {
+  list-style: none;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown li:last-child {
+  border-bottom: none;
+}
+
+.dropdown a {
+  display: block;
+  padding: 12px;
+  text-decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+.dropdown a:hover {
+  background-color: #f2f2f2;
+    transform: scale(1.05);
+
+}
+
+
+
+
+.header {
+  background-color: rgba(166, 124, 91, 0.8);
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* แยกซ้ายขวา */
+  align-items: center;
+  padding: 10px 20px;
+      color: white; 
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: 1s;
+   position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+
+
+/* เมนู */
+.menu {
+  position: relative;
+  right: 30px;
+}
+
+/* ปุ่ม */
+.menu-btn {
+  padding: 10px 15px;
+  background: #e3cba8;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.menu-btn:hover {
+  background: #8b684a;
+  transform: scale(1.05);
+}
+
+
+
+/* hover แล้วแสดง */
+.menu:hover .dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ข้อความ */
+.p1 {
+  font-family: 'Kanit', sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+  margin: 0;
+}

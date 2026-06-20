@@ -1,0 +1,96 @@
+.show-card {
+  background: #fff;
+  border: 0.5px solid #e0cdb8;
+  border-radius: 16px;
+    overflow: hidden;
+  margin: 1rem auto;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+.show-c2{
+  display: flex;
+  gap: 10px;
+
+}
+.show-service{
+  width: 270px;
+  height: auto;
+  border-radius: 5px;
+  border: 2px;
+  padding: 5px;
+  background-color: #d1d1d1ca;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  margin:0px 0px 10px 10px;
+}
+
+.show-service:hover{
+  color: black;
+  background-color: rgb(255, 197, 120);
+          transform: scale(1.02);
+          transition: 5ms all;
+}
+
+
+.dd{
+  margin: 10px 0px 10px 10px
+
+}
+.show-img {
+ width: 100%;
+  height: 180px;
+  object-fit: cover;   /* ครอบรูปให้พอดี ไม่บิดเบี้ยว */
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.show-category{
+  font-family: 'Kanit', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.show-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2f2828;
+  margin-bottom: 6px;
+}
+
+.show-desc {
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #6b5b45;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.show-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 0.5px solid #e0cdb8;
+}
+
+.show-price {
+  font-family: 'Kanit', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: #e37f22;
+}
+
+.show-badge {
+  font-family: 'Kanit', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  background: #fdf0e0;
+  color: #b07847;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 0.5px solid #e0cdb8;
+}
+

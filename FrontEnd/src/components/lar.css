@@ -1,0 +1,57 @@
+.lar-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: #FFECCD; /* เพิ่ม bg ให้เข้า theme */
+}
+
+.lar-card {
+  background: #fff;
+  border: 0.5px solid #e0cdb8; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  border-radius: 16px;          /* เพิ่มจาก 12px → ดูนุ่มขึ้น */
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* เพิ่มเงา */
+}
+
+.lar-tab-row {
+  display: flex;
+  border-bottom: 0.5px solid #e0cdb8;
+}
+
+.lar-tab {
+  flex: 1;
+  padding: 14px;
+  font-family: 'Kanit', sans-serif; /* เพิ่ม font ให้ตรงกับที่อื่น */
+  font-size: 15px;
+  font-weight: 300;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lar-tab:hover:not(.active) {
+  background: #fdf0e0; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  color: #a67c5b;
+}
+
+.lar-tab.active {
+  color: #2f2828;
+  background: #fdf0e0; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  font-weight: 400;
+}
+
+.lar-panel {
+  padding: 2rem;
+  animation: fadeSlide 0.25s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

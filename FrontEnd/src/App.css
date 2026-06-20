@@ -1,0 +1,24 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+   box-sizing: border-box;      /* ✅ เพิ่ม */
+  overflow-x: hidden; 
+}
+*, *::before, *::after {
+  box-sizing: border-box;      /* ✅ เพิ่ม — ครอบทุก element */
+}
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+   min-height: 0;
+}

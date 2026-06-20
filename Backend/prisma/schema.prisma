@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  TECHNICIAN
+  ADMIN
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum OrderStatus {
+  ACCEPTED
+  IN_PROGRESS
+  WAITING_CONFIRM
+  COMPLETED
+  CANCELLED
+}
+
+enum ServiceCategory {
+  ELECTRICAL
+  PLUMBING
+  AIR_CONDITIONER
+  PAINTING
+  CONSTRUCTION
+  FURNITURE
+  CLEANING
+  OTHER
+}
+
+enum ChatType {
+  MESSAGE
+  IMAGE
+  PRICE_OFFER
+  PRICE_ACCEPT
+  PRICE_REJECT
+}
+
+model Users {
+  Users_Id   Int        @id @default(autoincrement())
+  Email      String     @unique
+  Password   String
+  Role       Role
+  Status     Status     @default(ACTIVE)
+  Created_At DateTime   @default(now())
+  Updated_At DateTime   @updatedAt
+  Profile    Profiles?
+  Services   Services[]
+  Orders     Orders[]
+
+  @@map("users")
+}
+
+model Profiles {
+  Profile_Id      Int       @id @default(autoincrement())
+  Users_Id        Int       @unique
+  First_Name      String?
+  Last_Name       String?
+  Phone           String?
+  Avatar          String?
+  Address         String?
+  Gender          Gender?
+  Birth_Date      DateTime?
+  Bio             String?
+  Experience_Year Int?
+  Created_At      DateTime  @default(now())
+  Updated_At      DateTime  @updatedAt
+  User            Users     @relation(fields: [Users_Id], references: [Users_Id])
+
+  @@map("profiles")
+}
+
+model Services {
+  Service_Id  Int             @id @default(autoincrement())
+  Users_Id    Int
+  Title       String
+  Category    ServiceCategory
+  Description String?
+  Price       Float
+  Image       String?
+  Created_At  DateTime        @default(now())
+  Updated_At  DateTime        @updatedAt
+  User        Users           @relation(fields: [Users_Id], references: [Users_Id])
+  Orders      Orders[]
+  Chats       Chats[]
+
+  @@map("services")
+}
+
+model Orders {
+  Order_Id    Int         @id @default(autoincrement())
+  Users_Id    Int
+  Service_Id  Int
+  Final_Price Float?
+  Work_Date   DateTime?
+  Status      OrderStatus @default(ACCEPTED)
+  Created_At  DateTime    @default(now())
+  Updated_At  DateTime    @updatedAt
+  User        Users       @relation(fields: [Users_Id], references: [Users_Id])
+  Service     Services    @relation(fields: [Service_Id], references: [Service_Id])
+  Chats       Chats[]
+  Review      Reviews?
+
+  @@map("orders")
+}
+
+model Reviews {
+  Review_Id  Int      @id @default(autoincrement())
+  Order_Id   Int      @unique
+  Rating     Int
+  Comment    String?
+  Created_At DateTime @default(now())
+  Order      Orders   @relation(fields: [Order_Id], references: [Order_Id])
+
+  @@map("reviews")
+}
+
+model Chats {
+  Chat_Id     Int       @id @default(autoincrement())
+  Service_Id  Int
+  Room_Id     String
+  Order_Id    Int?
+  Sender_Id   Int
+  Receiver_Id Int
+  Type        ChatType  @default(MESSAGE)
+  Message     String?
+  Price       Float?
+  Work_Date   DateTime?
+  Image       String?
+  Is_Read     Boolean   @default(false)
+  Created_At  DateTime  @default(now())
+  Service     Services  @relation(fields: [Service_Id], references: [Service_Id])
+  Order       Orders?   @relation(fields: [Order_Id], references: [Order_Id])
+
+  @@map("chats")
+}
