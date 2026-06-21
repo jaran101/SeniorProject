@@ -11,34 +11,35 @@ export const chatSocket = (io) => {
       try {
         let orderId = data.Order_Id ? Number(data.Order_Id) : null;
         if (data.Type !== "PRICE_OFFER") {
-          if (data.Type === "PRICE_ACCEPT") {
-            const order = await prisma.orders.create({
-              data: {
-                Users_Id: Number(data.Sender_Id),
-                Service_Id: Number(data.Service_Id),
-                Final_Price: Number(data.Price),
-                Work_Date: new Date(data.Work_Date),
-                Status: "ACCEPTED"
-              }
-            });
-            orderId = order.Order_Id;
-          }
-          const chat = await prisma.chats.create({
+          io.to(data.Room_Id).emit("receive_message", data);
+        }
+        if (data.Type === "PRICE_ACCEPT") {
+          const order = await prisma.orders.create({
             data: {
+              Users_Id: Number(data.Sender_Id),
               Service_Id: Number(data.Service_Id),
-              Room_Id: data.Room_Id,
-              Order_Id: orderId,
-              Sender_Id: Number(data.Sender_Id),
-              Receiver_Id: Number(data.Receiver_Id),
-              Type: data.Type || "MESSAGE",
-              Message: data.Message || null,
-              Image: data.Image || null,
-              Price: data.Price ? Number(data.Price) : null,
-              Work_Date: data.Work_Date ? new Date(data.Work_Date) : null
+              Final_Price: Number(data.Price),
+              Work_Date: new Date(data.Work_Date),
+              Status: "ACCEPTED"
             }
           });
+          orderId = order.Order_Id;
         }
-        io.to(data.Room_Id).emit("receive_message", chat?chat:data);
+        const chat = await prisma.chats.create({
+          data: {
+            Service_Id: Number(data.Service_Id),
+            Room_Id: data.Room_Id,
+            Order_Id: orderId,
+            Sender_Id: Number(data.Sender_Id),
+            Receiver_Id: Number(data.Receiver_Id),
+            Type: data.Type || "MESSAGE",
+            Message: data.Message || null,
+            Image: data.Image || null,
+            Price: data.Price ? Number(data.Price) : null,
+            Work_Date: data.Work_Date ? new Date(data.Work_Date) : null
+          }
+        });
+        io.to(data.Room_Id).emit("receive_message", chat);
       } catch (err) {
         console.log(err);
       }
