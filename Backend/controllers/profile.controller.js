@@ -37,7 +37,7 @@ export const createProfile = async (req, res, next) => {
       }
     });
 
-    res.json(profile);
+    res.json({result:profile});
   } catch (err) {
     next(err);
   }
@@ -74,7 +74,7 @@ export const getProfileById = async (req, res, next) => {
     if (!profile) {
       createError(400, "Profile not found");
     }
-    res.json(profile);
+    res.json({result:profile});
   } catch (err) {
     next(err);
   }
@@ -100,7 +100,7 @@ export const updateProfile = async (req, res, next) => {
           }
           Avatar= req.file.filename;
         }
-    const updated = await prisma.profiles.update({
+    const result = await prisma.profiles.update({
       where: {
         Users_Id: Number(Users_Id)
       },
@@ -115,7 +115,7 @@ export const updateProfile = async (req, res, next) => {
         Avatar
       }
     });
-    res.json(updated);
+    res.json({message:"update profile success",result});
   } catch (err) {
     next(err);
   }
@@ -183,7 +183,7 @@ export const updateRole = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    await prisma.users.update({
+    const result=await prisma.users.update({
       where: {
         Users_Id: Number(Users_Id)
       },
@@ -191,7 +191,7 @@ export const updateRole = async (req, res, next) => {
         Role
       }
     });
-    res.json({message: "update role success"});
+    res.json({message: "update role success",result});
   } catch (err) {
     next(err);
   }
@@ -208,7 +208,7 @@ export const updateStatus = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    await prisma.users.update({
+    const result=await prisma.users.update({
       where: {
         Users_Id: Number(Users_Id)
       },
@@ -217,7 +217,7 @@ export const updateStatus = async (req, res, next) => {
       }
     });
 
-    res.json({message: "update status success"});
+    res.json({message: "update status success",result});
   } catch (err) {
     next(err);
   }
@@ -230,7 +230,7 @@ export const getAllUser = async (req, res, next) => {
         Profile: true
       }
     });
-    res.json(users);
+    res.json({result:users});
   } catch (err) {
     next(err);
   }
@@ -250,7 +250,7 @@ export const getUserById = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    res.json(user);
+    res.json({result:user});
   } catch (err) {
     next(err);
   }
@@ -270,7 +270,7 @@ export const getUserByEmail = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    res.json(user);
+    res.json({result:user});
   } catch (err) {
     next(err);
   }
@@ -279,7 +279,7 @@ export const getUserByEmail = async (req, res, next) => {
 export const amountUser = async (req, res, next) => {
   try {
     const count = await prisma.users.count();
-    res.json({amountuser: count});
+    res.json({result: count});
   } catch (err) {
     next(err);
   }
