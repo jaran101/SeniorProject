@@ -27,7 +27,7 @@ export default function Header() {
           `http://localhost:3000/api/readprofile/${id}`,
           { headers: { authorization: localStorage.getItem("token") } }
         );
-        setProfile(response.data);
+        setProfile(response.data.result);
       } catch (error) {
         if (error.response?.status === 404) {
           // ไม่มี profile ก็ไม่เป็นไร

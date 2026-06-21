@@ -18,7 +18,7 @@ const usePartnerProfile = (partnerId) => {
                 axios.get(`${API_URL}/readprofile/${partnerId}`, 
                     authHeaders()
                 )
-                setProfile(response.data)
+                setProfile(response.data.result)
             }catch(error){
                 console.error("Error fetching profile:", 
                     error.response?.data?.msg || error.message

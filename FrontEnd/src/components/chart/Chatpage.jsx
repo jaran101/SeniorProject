@@ -60,7 +60,9 @@ const RoomSidebarItem = ({ room, isActive, userId, onClick }) => {
         </div>
         <div className="sidebarmessages">
             
-          <p className="messagesside">{room.Image ?  "ได้ส่งรูปภาพ"  :room.Message || "(ไม่มีข้อความ)"}</p>
+          <p className="messagesside">{room.Image ?  "ได้ส่งรูปภาพ"  :room.Message || "(ไม่มีข้อความ)"}
+            
+          </p>
         </div>
       </div>
     </div>
@@ -88,12 +90,19 @@ function ChatPage() {
   const [input, setInput] = useState("")         // ข้อความที่พิมพ์
   const [image, setImage] = useState(null)       // ไฟล์รูปที่เลือก
   const [preview, setPreview] = useState(null)   // URL preview รูปก่อนส่ง
-  const incomingState = location.state || null
   const [showPriceModal, setShowPriceModal] = useState(false)
-
+  const incomingState = location.state || null
+const [serviceUserId, setServiceUserId] = useState(incomingState?.serviceUserId || null)
+const [serviceDetail, setServiceDetail] = useState(null)
   // -----------------------------------------------------
   // เชื่อม Socket + เช็ค Login
   // -----------------------------------------------------
+
+  
+
+
+
+
   useEffect(() => {
     if (!userId || !token) { navigate("/lar"); 
       alert("กรุณาเข้าสู่ระบบก่อน")
@@ -106,27 +115,27 @@ function ChatPage() {
   }, [])
 
   // -----------------------------------------------------
-  // ดึงรายการห้องแชททั้งหมดของ User
+  // ดึงรายการห้องแชททั้งหมดของ User (SildeBar)
   // -----------------------------------------------------
+
 useEffect(() => {
   async function fetchRooms() {
     try {
       const res = await axios.get(`http://localhost:3000/api/listmyrooms/${userId}`, {
         headers: { authorization: token }
       })
-
-      const roomList = res.data.result   // ← เก็บไว้ในตัวแปรก่อน
+      const roomList = res.data.result
       setRooms(roomList)
 
-      // ตอนนี้ใช้ roomList ได้แล้ว
+      // join ทุกห้องเพื่อรับข้อความ real-time
+      roomList.forEach(room => {
+        socket.emit("join_room", room.Room_Id)
+      })
+
       if (incomingState?.roomId) {
         const targetRoom = roomList.find(r => r.Room_Id === incomingState.roomId)
-        if (targetRoom) {
-          setActiveRoom(targetRoom)
-          console.log(targetRoom)
-        }
+        if (targetRoom) setActiveRoom(targetRoom)
       }
-
     } catch (err) { console.log(err) }
   }
   fetchRooms()
@@ -135,36 +144,76 @@ useEffect(() => {
   // -----------------------------------------------------
   // เมื่อเลือกห้อง → เข้า Socket Room + ดึงข้อความในห้อง
   // -----------------------------------------------------
-  useEffect(() => {
-    if (!activeRoom) return
-    socket.emit("join_room", activeRoom.Room_Id)
-    async function fetchMessages() {
-      try {
-        const res = await axios.get(`http://localhost:3000/api/readmessages/${activeRoom.Room_Id}`, {
-          headers: { authorization: token }
-        })
-        setMessages(res.data.result)
-      } catch (err) { console.log(err) }
-    }
-    fetchMessages()
-  }, [activeRoom])
+ useEffect(() => {
+  if (!activeRoom) return
+    console.log("fetchMessages called:", activeRoom.Room_Id)  // ← ดูว่าเรียกกี่ครั้ง
 
+  socket.emit("join_room", activeRoom.Room_Id)
+  async function fetchMessages() {
+    try {
+      const res = await axios.get(`http://localhost:3000/api/readmessages/${activeRoom.Room_Id}`, {
+        headers: { authorization: token }
+      })
+          console.log("messages from DB:", res.data.result)  // ← ดูว่ามีซ้ำใน DB ไหม
+        console.log("DB count:", res.data.result.length)
+
+      setMessages(res.data.result)
+
+      const lastMsg = res.data.result[res.data.result.length - 1]  // ✅
+      if (lastMsg) {
+        setRooms((prev) => {
+          const exists = prev.find(r => r.Room_Id === activeRoom.Room_Id)  // ✅
+          if (exists) {  // ✅
+            return prev.map(r => r.Room_Id === activeRoom.Room_Id
+              ? { ...r, Message: lastMsg.Message, Image: lastMsg.Image }
+              : r
+            )
+          } else {
+            return [{ ...activeRoom, Message: lastMsg.Message, Image: lastMsg.Image }, ...prev]
+          }
+        })
+      }
+    } catch (err) { console.log(err) }
+  }
+  fetchMessages()
+}, [activeRoom])
   // -----------------------------------------------------
   // รับข้อความ Real-time จาก Socket
   // -----------------------------------------------------
-  useEffect(() => {
-    socket.on("receive_message", (newMsg) => {
-      setMessages((prev) => [...prev, newMsg])  // เพิ่มข้อความใหม่เข้า state
+useEffect(() => {
+  socket.on("receive_message", (newMsg) => {
+        console.log("receive_message fired:", newMsg.Chat_Id)  // ← ดูว่า fire กี่ครั้ง
+          console.log("receive fired, current messages length:", )
+
+    setMessages((prev) => [...prev, newMsg])
+        console.log("prev length:", prev.length, "newMsg:", newMsg.Chat_Id)
+
+    // อัพเดต sidebar
+    setRooms((prev) => {
+      const roomExists = prev.find(r => r.Room_Id === newMsg.Room_Id)
+
+      if (roomExists) {
+        // ห้องมีอยู่แล้ว → แค่อัพเดตข้อความล่าสุด
+        return prev.map((room) =>
+          room.Room_Id === newMsg.Room_Id
+            ? { ...room, Message: newMsg.Message, Image: newMsg.Image }
+            : room
+        )
+      } else {
+        // ห้องใหม่ → เพิ่มเข้า sidebar เลย
+        return [newMsg, ...prev]
+      }
     })
-    return () => socket.off("receive_message")  // cleanup เมื่อ component ถูกทำลาย
-  }, [])
+  })
+  return () => socket.off("receive_message")
+}, [])
   // -----------------------------------------------------
   //ช่างเสนอราคา
   // -----------------------------------------------------
     const sendPrice = async (price , note)=>{
     try{
         const response = await 
-        axios.post("http://localhost:3000/api/offerprice",{
+        axios.post("http://localhost:3000/api/offer-price",{
           Service_Id: activeRoom.Service_Id,
       Room_Id: activeRoom.Room_Id,
       Sender_Id: userId,
@@ -174,17 +223,26 @@ useEffect(() => {
       {
         headers:{authorization :token}
       })
-    setMessages((prev) => [...prev, response.data.result])
+      const newMsg = response.data.result
+       socket.emit("send_message", newMsg) 
     setShowPriceModal(false)
     }catch(err){
-      console.log(err)
+        console.log(err)
+      
     }
-
-    }
-
-
-
-
+  }
+  // -----------------------------------------------------
+  //openPriceModal
+  // -----------------------------------------------------
+  const openPriceModal = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3000/api/readservice/${activeRoom.Service_Id}`, {
+      headers: { authorization: token }
+    })
+    setServiceDetail(res.data.result)
+  } catch (err) { console.log(err) }
+  setShowPriceModal(true)
+}
   // -----------------------------------------------------
   // ส่งข้อความผ่าน Socket
   // -----------------------------------------------------
@@ -200,7 +258,6 @@ useEffect(() => {
     })
     setInput("")  // เคลียร์ช่องพิมพ์
   }
-
   // -----------------------------------------------------
   // ส่งรูปภาพผ่าน HTTP (multipart/form-data)
   // -----------------------------------------------------
@@ -219,9 +276,25 @@ useEffect(() => {
       setMessages((prev) => [...prev, res.data.result])  // เพิ่มรูปเข้า state
     } catch (err) { console.log(err) }
   }
-  
 
+console.log(serviceUserId)
 
+// เพิ่ม useEffect นี้ — ตอนเปลี่ยนห้อง ดึง service มาเช็ค
+useEffect(() => {
+  if (!activeRoom) return
+  async function fetchService() {
+    try {
+      const res = await axios.get(`http://localhost:3000/api/readservice/${activeRoom.Service_Id}`, {
+        headers: { authorization: token }
+      })
+      const s = res.data.result
+      setServiceDetail(s)
+      // ถ้า Users_Id ตรงกับ userId แสดงว่าเราคือช่าง
+      setServiceUserId(s.Users_Id)
+    } catch (err) { console.log(err) }
+  }
+  fetchService()
+}, [activeRoom])
   // -----------------------------------------------------
   // UI
   // -----------------------------------------------------
@@ -278,9 +351,9 @@ useEffect(() => {
                           padding: "12px 16px",
                           minWidth: "180px"
                         }}>
-                          <p style={{ margin: 0, fontSize: "12px", color: "#e37f22", fontWeight: 600 }}>💰 เสนอราคา</p>
+                          <p style={{ margin: 0, fontSize: "12px", color: "#e37f22", fontWeight: 600 }}>💰 เสนอราคางาน {msg.Title} </p>
                           <p style={{ margin: "6px 0 0", fontSize: "20px", fontWeight: 700, color: "#111" }}>
-                            ฿{msg.Price?.toLocaleString()}
+                            ฿{msg.Price?.toLocaleString()} 
                           </p>
                           {msg.Message && msg.Message !== "เสนอราคา" && (
                             <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#555" }}>{msg.Message}</p>
@@ -350,12 +423,12 @@ useEffect(() => {
                 className="buttonMessage"
               >ส่ง</button>
 
-              {/* ปุ่มเสนอราคา — เฉพาะช่าง */}
-              {activeRoom?.Sender_Id === userId && (
-                <button onClick={() => setShowPriceModal(true)} className="imageinsert">
-                  <p className="f3">เสนอราคา</p>
+              {/* ปุ่มเสนอราคา — เฉพาะช่าง     idช่าง === UserId */}
+              {serviceUserId === userId && (
+                <button onClick={openPriceModal} className="imageinsert">
+                <p className="f3">เสนอราคา</p>
                 </button>
-              )}
+                    )}
             </div>
           </div>
         )}
@@ -365,7 +438,7 @@ useEffect(() => {
       {showPriceModal && (
         <PriceOfferModal
           onClose={() => setShowPriceModal(false)}
-          
+          service={serviceDetail}
           onSend={sendPrice}
         />
       )}

@@ -8,7 +8,8 @@ import socket from "./chart/useSocket"
 export default function ShowService({ service }) {
   const navigate = useNavigate();
     const [receiverData, setReceiverData] = useState(null);
-    
+    const userId = Number(localStorage.getItem("id"))
+
     const receiverId = service.Users_Id;
 
       useEffect(() => {
@@ -29,58 +30,39 @@ export default function ShowService({ service }) {
       fethuser();
     },[receiverId]);
 
-    console.log(service.Price)
     //----------------------------------------
- const handleChat = async () => {
-  const userData = localStorage.getItem("user")
-  const senderId = JSON.parse(userData).payload.id
+const handleChat = async () => {
+   console.log("receiverId ตอนเริ่ม:", receiverId) 
+  const senderId = Number(localStorage.getItem("id"))
   const ids = [senderId, receiverId].sort((a, b) => a - b)
   const roomId = `room_${ids[0]}_${ids[1]}_${service.Service_Id}`
 
   try {
-    // ⭐ เช็คก่อนว่าห้องมีอยู่แล้วไหม
-    const res = await axios.get( "http://localhost:3000/api/listmyrooms/" + 
-      senderId,
-      { headers: { authorization: 
-        localStorage.getItem("token") } }
-    )
-
-    const existingRoom = 
-    res.data.result.find((r) => r.Room_Id === roomId)
-
-
-   await socket.connect()
-
-    
-
-  //  socket.once ("connect", () => {
-    socket.emit("join_room", roomId)
-    socket.emit("send_message", {
-      Room_Id: roomId,
-      Sender_Id: senderId,
-      Receiver_Id: receiverId,
-      Service_Id: service.Service_Id,
-      Message: `สวัสดีครับ สนใจบริการ "${service.Title}" ราคา ${service.Price?.toLocaleString()} บาท ${service.Service_Id} `,
-      Type: "MESSAGE"
+    const res = await axios.get(`http://localhost:3000/api/listmyrooms/${senderId}`, {
+      headers: { authorization: localStorage.getItem("token") }
     })
-  // })
-    // ห้องมีอยู่แล้ว หรือสร้างเสร็จแล้ว → navigate ไปเลย
-    navigate("/chatpage", {
-      
-      state: { roomId,
-        serviceId: service.Service_Id,
-        senderId, 
-        receiverId,
-      offerPrice: service.Price,           // ← เพิ่ม
-    offerTitle: service.Title,           // ← เพิ่ม
-    isNewOffer: !existingRoom
-  },
-    })
+    const existingRoom = res.data.result.find(r => r.Room_Id === roomId)
 
+    if (!existingRoom) {
+      // ห้องใหม่ → ส่งข้อความแรกผ่าน HTTP
+      await axios.post("http://localhost:3000/api/newmessage", {
+        Room_Id: roomId,
+        Sender_Id: senderId,
+        Receiver_Id: receiverId,
+        Service_Id: service.Service_Id,
+        Message: `สวัสดีครับ สนใจบริการ "${service.Title}"`,
+        Type: "MESSAGE"
+      }, { headers: { authorization: localStorage.getItem("token") } })
+    }
+
+    // navigate ได้เลย — มั่นใจว่าห้องมีใน DB แล้ว
+    console.log("roomId:", roomId)
+    console.log("receiverId:", receiverId)  // ← เพิ่มก่อน navigate
+    navigate("/chatpage", { state: { 
+      roomId, receiverId, serviceUserId: service.Users_Id } })
   } catch (err) {
-    console.error("เกิดข้อผิดพลาด:", err)
-    alert("ไม่สามารถเปิดแชทได้ กรุณาลองใหม่")
-
+    console.error(err)
+    alert("ไม่สามารถเปิดแชทได้")
   }
 }
 
@@ -92,6 +74,7 @@ export default function ShowService({ service }) {
         src={`http://localhost:3000/uploads/${service.Image}`}
         alt={service.Title}
       />
+      <p>{service.Users_Id}</p>
       <p>{service.Title}</p>
       <p><strong>รายละเอียด:</strong> {service.Description}</p>
       <p><strong>ราคา:</strong> {service.Price?.toLocaleString()} บาท</p>
@@ -105,8 +88,10 @@ export default function ShowService({ service }) {
         </strong>
       </p></div>
 
-      <button className="button3" onClick={handleChat}>ติดต่อผู้รับงาน</button>
-    </div>
+{service.Users_Id !== userId && (
+  <button className="button3" onClick={handleChat}>ติดต่อผู้รับงาน</button>
+            )}    
+</div>
     </div>
   );
 }

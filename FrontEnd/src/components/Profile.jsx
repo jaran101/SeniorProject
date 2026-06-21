@@ -43,7 +43,7 @@ const changePage = (newPage) => {
         const response = await axios.get(`http://localhost:3000/api/readprofile/${id}`, {
           headers: { authorization: localStorage.getItem("token") },
         });
-        setProfile(response.data); // ✅ เก็บใน state เดียวพอ
+        setProfile(response.data.result); // ✅ เก็บใน state เดียวพอ
       } catch (error) {
         if (error.response?.status === 404) {
           setHasProfile(false); // ✅ ยังไม่มี profile

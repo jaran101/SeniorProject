@@ -1,0 +1,84 @@
+.main{
+
+      position: fixed; 
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      z-index:999;
+}
+
+.m2{
+        background: #fff; 
+        border-radius: 12px;
+        padding: 24px; 
+        width: 320px;
+        display: flex; 
+        flex-direction: column; 
+        gap: 16px;
+      }
+
+.m3{
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+}
+
+.ServiceName1{
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+      color: #111 ;
+}
+
+.Cade{
+      margin: 0;
+      font-size: 12px;
+      color: #6b7280 ;
+}
+
+.D1{
+              width: 100%;
+               padding: 8px;
+                margin-top: 4px;
+              border-radius: 8px;
+               border: 1px solid #ccc;
+              resize: none; 
+              box-sizing: border-box;
+            
+}
+
+.SS{
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #e37f22;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            
+}
+
+.CC{
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+}
+.BB{
+      display: flex;
+      gap: 8px;
+}
+
+.imgservice1{
+      height: 180px;
+      width: auto;     
+}
