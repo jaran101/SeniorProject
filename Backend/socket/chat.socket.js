@@ -14,18 +14,6 @@ export const chatSocket = (io) => {
           io.to(data.Room_Id).emit("receive_message", data);
           return;
         }
-        if (data.Type === "PRICE_ACCEPT") {
-          const order = await prisma.orders.create({
-            data: {
-              Users_Id: Number(data.Sender_Id),
-              Service_Id: Number(data.Service_Id),
-              Final_Price: Number(data.Price),
-              Work_Date: new Date(data.Work_Date),
-              Status: "ACCEPTED"
-            }
-          });
-          orderId = order.Order_Id;
-        }
         const chat = await prisma.chats.create({
           data: {
             Service_Id: Number(data.Service_Id),

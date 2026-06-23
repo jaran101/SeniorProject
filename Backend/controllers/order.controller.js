@@ -1,26 +1,19 @@
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
 
-export const createOrder = async (req, res, next) => {
+export const createOrder = async (req,res,next) => {
   try {
-    const {Users_Id,Service_Id,offerPrice,workDate} = req.body;
-    const service = await prisma.services.findUnique({
-      where: {
-        Service_Id: Number(Service_Id)
-      }
-    });
-    if (!service) {
-      createError(404, "Service not found");
-    }
-    const order = await prisma.orders.create({
-      data: {
-        Users_Id: Number(Users_Id),
-        Service_Id: Number(Service_Id),
-        Final_Price: Number(offerPrice),
-        Work_Date: new Date(workDate)
-      }
-    });
-    res.json({message: "Create Order Success",result: order});
+    const {Users_Id,Service_Id,Final_Price,Work_Date} = req.body;
+    const order =await prisma.orders.create({
+        data: {
+          Users_Id: Number(Users_Id),
+          Service_Id: Number(Service_Id),
+          Final_Price: Number(Final_Price),
+          Work_Date: new Date(Work_Date),
+          Status: "ACCEPTED"
+        }
+      });
+    res.json({message: "Create Order Success",result: order,});
   } catch (err) {
     next(err);
   }
