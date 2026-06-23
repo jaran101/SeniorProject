@@ -109,6 +109,7 @@ model Orders {
   Service_Id  Int
   Final_Price Float?
   Work_Date   DateTime?
+  Work_Date_End  DateTime?
   Status      OrderStatus @default(ACCEPTED)
   Created_At  DateTime    @default(now())
   Updated_At  DateTime    @updatedAt
@@ -142,6 +143,7 @@ model Chats {
   Message     String?
   Price       Float?
   Work_Date   DateTime?
+  Work_Date_End  DateTime?
   Image       String?
   Is_Read     Boolean   @default(false)
   Created_At  DateTime  @default(now())

@@ -3,13 +3,14 @@ import createError from "../utils/createError.js";
 
 export const createOrder = async (req,res,next) => {
   try {
-    const {Users_Id,Service_Id,Final_Price,Work_Date} = req.body;
+    const {Users_Id,Service_Id,Final_Price,Work_Date,Work_Date_End} = req.body;
     const order =await prisma.orders.create({
         data: {
           Users_Id: Number(Users_Id),
           Service_Id: Number(Service_Id),
           Final_Price: Number(Final_Price),
           Work_Date: new Date(Work_Date),
+          Work_Date_End:new Date(Work_Date_End),
           Status: "ACCEPTED"
         }
       });

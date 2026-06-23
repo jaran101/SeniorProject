@@ -72,13 +72,15 @@ export const readMessages = async (req, res, next) => {
 };
 export const offerPrice = async (req,res,next) => {
   try {
-    const {Service_Id,Room_Id,Sender_Id,Receiver_Id,Price,Message} = req.body;
+    const {Service_Id,Room_Id,Sender_Id,Receiver_Id,Price,Message,Work_Date,Work_Date_End} = req.body;
     const offer =await prisma.chats.create({
         data: {
           Service_Id:Number(Service_Id),
           Room_Id,
           Sender_Id:Number(Sender_Id),
           Receiver_Id:Number(Receiver_Id),
+          Work_Date: new Date(Work_Date),
+          Work_Date_End:new Date(Work_Date_End),
           Type: "PRICE_OFFER",
           Price: Number(Price),
           Message:Message ||"เสนอราคา"
