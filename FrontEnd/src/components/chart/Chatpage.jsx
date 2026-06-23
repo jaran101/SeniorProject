@@ -273,7 +273,9 @@ useEffect(() => {
       const res = await axios.post("http://localhost:3000/api/newmessage", formData, {
         headers: { authorization: token }
       })
-      setMessages((prev) => [...prev, res.data.result])  // เพิ่มรูปเข้า state
+            const newMsg = res.data.result
+            socket.emit("send_message",newMsg )  // ← ส่งให้อีกฝ่ายรับ real-time
+
     } catch (err) { console.log(err) }
   }
 
@@ -295,6 +297,9 @@ useEffect(() => {
   }
   fetchService()
 }, [activeRoom])
+
+
+console.log(rooms)
   // -----------------------------------------------------
   // UI
   // -----------------------------------------------------
@@ -342,26 +347,41 @@ useEffect(() => {
                       fontFamily: "sans-serif",
                       lineHeight: "1.5",
                     }}>
-
+{ /*--PRICE_OFFER-----------------------------------------------------------------------------------------------*/}
                       {msg.Type === "PRICE_OFFER" ? (
-                        <div style={{
-                          background: "#fff7ed",
-                          border: "1px solid #e37f22",
-                          borderRadius: "12px",
-                          padding: "12px 16px",
-                          minWidth: "180px"
-                        }}>
-                          <p style={{ margin: 0, fontSize: "12px", color: "#e37f22", fontWeight: 600 }}>💰 เสนอราคางาน {msg.Title} </p>
-                          <p style={{ margin: "6px 0 0", fontSize: "20px", fontWeight: 700, color: "#111" }}>
+                        <div className="priceoffer" >
+                          <p className="present">💰 เสนอราคางาน {msg.Title} </p>
+                          <p className="presentprice">
                             ฿{msg.Price?.toLocaleString()} 
                           </p>
                           {msg.Message && msg.Message !== "เสนอราคา" && (
                             <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#555" }}>{msg.Message}</p>
                           )}
+                                    {userId !== serviceUserId &&(
+                                                               <>
+                                                                <button>ยืนยัน</button>
+                                                                <button>ยกเลิก</button>
+                                                               </>
+
+
+                                    )}
                         </div>
-                      ) : msg.Type === "IMAGE" ? (
+                      ) : 
+/*--Image-----------------------------------------------------------------------------------------------*/
+                      msg.Type === "IMAGE" ? (
+                          <div className="image-wrapper">
+
                         <img src={`http://localhost:3000/uploads/${msg.Image}`} className="ImageL" />
-                      ) : (
+                       <div className="image-overlay">
+                        <img 
+                        src={`http://localhost:3000/uploads/${msg.Image}`} 
+                        className="ImageL-preview" 
+                      />
+                    </div>
+                        </div>
+                      ) : 
+/*--Message-----------------------------------------------------------------------------------------------*/
+                      (
                         <div>{msg.Message}</div>
                       )}
 
