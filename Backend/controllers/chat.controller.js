@@ -3,19 +3,19 @@ import createError from "../utils/createError.js";
 
 export const createMessage = async (req, res, next) => {
   try {
-    const { Service_Id, Room_Id, Order_Id, Sender_Id, Receiver_Id, Message,Price } = req.body;
+    const { Service_Id, Room_Id, Order_Id, Sender_Id, Receiver_Id, Message, Price } = req.body;
     const chat = await prisma.chats.create({
-  data: {
-    Service_Id: Number(Service_Id),
-    Room_Id,
-    Sender_Id: Number(Sender_Id),
-    Receiver_Id: Number(Receiver_Id),
-    Type: req.file? "IMAGE": "MESSAGE",
-    Message: Message || null,
-    Image: req.file?.filename || null,
-    Price: Price? Number(Price): null
-  }
-});
+      data: {
+        Service_Id: Number(Service_Id),
+        Room_Id,
+        Sender_Id: Number(Sender_Id),
+        Receiver_Id: Number(Receiver_Id),
+        Type: req.file ? "IMAGE" : "MESSAGE",
+        Message: Message || null,
+        Image: req.file?.filename || null,
+        Price: Price ? Number(Price) : null
+      }
+    });
     res.status(201).json({ message: "Send Message Success", result: chat });
   } catch (err) {
     next(err);
@@ -52,24 +52,38 @@ export const getMyRooms = async (req, res, next) => {
     next(err);
   }
 };
-export const offerPrice = async (req,res,next) => {
+export const offerPrice = async (req, res, next) => {
   try {
-    const {Service_Id,Room_Id,Sender_Id,Receiver_Id,Price,Message,Work_Date,Work_Date_End} = req.body;
-    const offer =await prisma.chats.create({
-        data: {
-          Service_Id:Number(Service_Id),
-          Room_Id,
-          Sender_Id:Number(Sender_Id),
-          Receiver_Id:Number(Receiver_Id),
-          Work_Date: new Date(Work_Date),
-          Work_Date_End:new Date(Work_Date_End),
-          Type: "PRICE_OFFER",
-          Price: Number(Price),
-          Message:Message ||"เสนอราคา"
-        }
-      });
-    res.json({message:"Offer Price Success",result: offer});
+    const { Service_Id, Room_Id, Sender_Id, Receiver_Id, Price, Message, Work_Date, Work_Date_End } = req.body;
+    const offer = await prisma.chats.create({
+      data: {
+        Service_Id: Number(Service_Id),
+        Room_Id,
+        Sender_Id: Number(Sender_Id),
+        Receiver_Id: Number(Receiver_Id),
+        Work_Date: new Date(Work_Date),
+        Work_Date_End: new Date(Work_Date_End),
+        Type: "PRICE_OFFER",
+        Price: Number(Price),
+        Message: Message || "เสนอราคา"
+      }
+    });
+    res.json({ message: "Offer Price Success", result: offer });
   } catch (err) {
     next(err);
   }
 };
+export const rejectOfferPrice = async (req, res, next) => {
+  try {
+    const { Chat_Id } = req.body
+    await prisma.chats.update({
+      where: { Chat_Id },
+      data: {
+        Type: "PRICE_REJECT"
+      }
+    })
+    res.json({message:"Price Reject Success"})
+  } catch (err) {
+    next(err);
+  }
+}
