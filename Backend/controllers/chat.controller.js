@@ -52,24 +52,6 @@ export const getMyRooms = async (req, res, next) => {
     next(err);
   }
 };
-export const readMessages = async (req, res, next) => {
-  try {
-    const { Room_Id, Users_Id } = req.body;
-    await prisma.chats.updateMany({
-      where: {
-        Room_Id,
-        Receiver_Id: Number(Users_Id),
-        Is_Read: false
-      },
-      data: {
-        Is_Read: true
-      }
-    });
-    res.json({ message: "Read Message Success" });
-  } catch (err) {
-    next(err);
-  }
-};
 export const offerPrice = async (req,res,next) => {
   try {
     const {Service_Id,Room_Id,Sender_Id,Receiver_Id,Price,Message,Work_Date,Work_Date_End} = req.body;

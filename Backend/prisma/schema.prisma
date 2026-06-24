@@ -145,7 +145,6 @@ model Chats {
   Work_Date   DateTime?
   Work_Date_End  DateTime?
   Image       String?
-  Is_Read     Boolean   @default(false)
   Created_At  DateTime  @default(now())
   Service     Services  @relation(fields: [Service_Id], references: [Service_Id])
   Order       Orders?   @relation(fields: [Order_Id], references: [Order_Id])
