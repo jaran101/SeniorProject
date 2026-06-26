@@ -40,7 +40,7 @@ app.use("/api",orderRoute)
 app.use("/api",reviewRoute)
 app.use("/api",chatRoute)
 app.use((err,req,res,next)=>{
-  res.status(err.code||500).json({msg:err.message||"server error"})
+  res.status(err.status||500).json({msg:err.message||"server error"})
 })
 const port =3000
 server.listen(port,()=>{console.log(`start with port ${port}`)})
