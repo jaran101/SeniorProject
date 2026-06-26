@@ -52,24 +52,23 @@ enum ChatType {
   PRICE_REJECT
 }
 
-model Users {
-  Users_Id   Int        @id @default(autoincrement())
-  Email      String     @unique
+model users {
+  Users_Id   Int      @id @default(autoincrement())
+  Email      String   @unique
   Password   String
   Role       Role
-  Status     Status     @default(ACTIVE)
-  Created_At DateTime   @default(now())
-  Updated_At DateTime   @updatedAt
-  Profile    Profiles?
-  Services   Services[]
-  Orders     Orders[]
+  Status     Status   @default(ACTIVE)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
 
-  @@map("users")
+  Profile  profiles?
+  Services services[]
+  Orders   orders[]
 }
 
-model Profiles {
-  Profile_Id      Int       @id @default(autoincrement())
-  Users_Id        Int       @unique
+model profiles {
+  Profile_Id      Int      @id @default(autoincrement())
+  Users_Id        Int      @unique
   First_Name      String?
   Last_Name       String?
   Phone           String?
@@ -79,75 +78,70 @@ model Profiles {
   Birth_Date      DateTime?
   Bio             String?
   Experience_Year Int?
-  Created_At      DateTime  @default(now())
-  Updated_At      DateTime  @updatedAt
-  User            Users     @relation(fields: [Users_Id], references: [Users_Id])
+  Created_At      DateTime @default(now())
+  Updated_At      DateTime @updatedAt
 
-  @@map("profiles")
+  User users @relation(fields: [Users_Id], references: [Users_Id])
 }
 
-model Services {
-  Service_Id  Int             @id @default(autoincrement())
+model services {
+  Service_Id  Int               @id @default(autoincrement())
   Users_Id    Int
   Title       String
   Category    ServiceCategory
   Description String?
   Price       Float
   Image       String?
-  Created_At  DateTime        @default(now())
-  Updated_At  DateTime        @updatedAt
-  User        Users           @relation(fields: [Users_Id], references: [Users_Id])
-  Orders      Orders[]
-  Chats       Chats[]
+  Created_At  DateTime          @default(now())
+  Updated_At  DateTime          @updatedAt
 
-  @@map("services")
+  User   users   @relation(fields: [Users_Id], references: [Users_Id])
+  Orders orders[]
+  Chats  chats[]
 }
 
-model Orders {
-  Order_Id    Int         @id @default(autoincrement())
-  Users_Id    Int
-  Service_Id  Int
-  Final_Price Float?
-  Work_Date   DateTime?
+model orders {
+  Order_Id       Int         @id @default(autoincrement())
+  Users_Id       Int
+  Service_Id     Int
+  Final_Price    Float?
+  Work_Date      DateTime?
   Work_Date_End  DateTime?
-  Status      OrderStatus @default(ACCEPTED)
-  Created_At  DateTime    @default(now())
-  Updated_At  DateTime    @updatedAt
-  User        Users       @relation(fields: [Users_Id], references: [Users_Id])
-  Service     Services    @relation(fields: [Service_Id], references: [Service_Id])
-  Chats       Chats[]
-  Review      Reviews?
+  Status         OrderStatus @default(ACCEPTED)
+  Created_At     DateTime    @default(now())
+  Updated_At     DateTime    @updatedAt
 
-  @@map("orders")
+  User    users    @relation(fields: [Users_Id], references: [Users_Id])
+  Service services @relation(fields: [Service_Id], references: [Service_Id])
+  Chats   chats[]
+  Review  reviews?
 }
 
-model Reviews {
+model reviews {
   Review_Id  Int      @id @default(autoincrement())
   Order_Id   Int      @unique
   Rating     Int
   Comment    String?
   Created_At DateTime @default(now())
-  Order      Orders   @relation(fields: [Order_Id], references: [Order_Id])
 
-  @@map("reviews")
+  Order orders @relation(fields: [Order_Id], references: [Order_Id])
 }
 
-model Chats {
-  Chat_Id     Int       @id @default(autoincrement())
-  Service_Id  Int
-  Room_Id     String
-  Order_Id    Int?
-  Sender_Id   Int
-  Receiver_Id Int
-  Type        ChatType  @default(MESSAGE)
-  Message     String?
-  Price       Float?
-  Work_Date   DateTime?
+model chats {
+  Chat_Id        Int       @id @default(autoincrement())
+  Service_Id     Int
+  Room_Id        String
+  Order_Id       Int?
+  Sender_Id      Int
+  Receiver_Id    Int
+  Type           ChatType  @default(MESSAGE)
+  Message        String?
+  Price          Float?
+  Work_Date      DateTime?
   Work_Date_End  DateTime?
-  Image       String?
-  Created_At  DateTime  @default(now())
-  Service     Services  @relation(fields: [Service_Id], references: [Service_Id])
-  Order       Orders?   @relation(fields: [Order_Id], references: [Order_Id])
+  Image          String?
+  Created_At     DateTime  @default(now())
 
-  @@map("chats")
+  Service services @relation(fields: [Service_Id], references: [Service_Id])
+  Order   orders?  @relation(fields: [Order_Id], references: [Order_Id])
 }
