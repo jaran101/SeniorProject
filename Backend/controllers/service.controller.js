@@ -123,6 +123,7 @@ export const updateService = async (req, res, next) => {
   }
 };
 export const deleteService = async (req, res, next) => {
+  
   try {
     const { id } = req.params;
     const service = await prisma.services.findUnique({

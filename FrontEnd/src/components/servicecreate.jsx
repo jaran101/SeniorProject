@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "./ServiceCreate.css"
 
-export default function ServiceCreate() {
+export default function ServiceCreate({ onClose ,onCreated }) {
   const data = localStorage.getItem("user");
   const id = JSON.parse(data).payload.id;
 
@@ -43,7 +43,9 @@ export default function ServiceCreate() {
         },
       });
       console.log(response.data);
+      await onCreated() 
       alert("สร้างงานสำเร็จ");
+      onClose()
     } catch (err) {
       console.log(err);
       console.log("error:", err.response?.data)
@@ -55,6 +57,7 @@ export default function ServiceCreate() {
     <>
       <div className="div1">
         <p >สร้างงานใหม่</p>
+        <button onClick={onClose}>X</button>
         <input className="input1" type="text" placeholder="ชื่องาน" value={title} onChange={(e) => setTitle(e.target.value)} />
         <input className="input1" type="text" placeholder="รายละเอียด" value={description} onChange={(e) => setDescription(e.target.value)} />
         <input className="input1" type="number" placeholder="ราคา" value={price} onChange={(e) => setPrice(e.target.value)} />

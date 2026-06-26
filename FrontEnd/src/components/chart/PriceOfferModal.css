@@ -7,17 +7,20 @@
       align-items: center; 
       justify-content: center;
       z-index:999;
+      
 }
 
-.m2{
-        background: #fff; 
-        border-radius: 12px;
-        padding: 24px; 
-        width: 320px;
-        display: flex; 
-        flex-direction: column; 
-        gap: 16px;
-      }
+.m2 {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 80vh;  /* ไม่เกิน 80% ของหน้าจอ */
+  overflow-y: auto;
+}
 
 .m3{
             background: #f8fafc;
@@ -81,4 +84,14 @@
 .imgservice1{
       height: 180px;
       width: auto;     
+}
+.lastprice{
+              width: 100%;
+            padding: 8px; 
+            margin-Top: 4px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+            
 }

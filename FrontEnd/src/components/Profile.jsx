@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Newprofile from "./newprofile";
 import ServiceCreate from "./servicecreate";
 import SearchMyservice from "./searchmyservice";
+import ReadOrder from"./readorder";
 
 
 export default function Profile() {
@@ -96,13 +97,14 @@ if (!user) return <p className="not-login">กรุณา login ก่อน</p
     <div className="profile-menu">
       <button onClick={()=>changePage("searchmyservice")}  className="profile-button">งานของฉัน</button>
       <button onClick={()=>changePage("calendar")} className="profile-button">ปฏิทินงาน</button>
-      <button  className="profile-button">งานที่ต้องส่ง</button>
+      <button onClick={()=>changePage("readorder")} className="profile-button">งานที่ต้องส่ง</button>
       <button onClick={()=>changePage("data")} className="profile-button">ข้อมูลส่วนตัว</button>
 
     </div>
    <div key={page} className={animate ? "page-animation active" : "page-animation"}>
      {page === "calendar" && <Calendar />}
      {page === "data" && <Data  profile={profile} />}
+     {page === "readorder" &&<ReadOrder/>}
      {page === "searchmyservice" && <SearchMyservice />}
    </div>
     </div>

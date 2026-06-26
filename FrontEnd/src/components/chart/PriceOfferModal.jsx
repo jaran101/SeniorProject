@@ -3,15 +3,23 @@ import "./PriceOfferModal.css"
 const PriceOfferModal = ({ onClose, onSend, service }) => {  // ← เพิ่ม service
   const [price, setPrice] = useState("");
   const [note, setNote] = useState("");
-
+  const [date,setDate]= useState("");
+  const [dateEnd,setDateEnd] = useState("");
   const handleConfirm = () => {
     if (!price || Number(price) <= 0) {
       alert("กรุณาระบุค่าบริการ")
       return
     }
-    onSend(price, note)
+  if(!date){
+    alert("กรุณาระบุวันเริ่มงาน")
+    return
   }
-console.log(service.Description)
+  if(!dateEnd){
+    alert("กรุณาระบุวันสิ้นสุดงาน")
+    return
+  }
+    onSend(price, note ,date,dateEnd)
+  }
   return (
     <div className="main">
       <div className="m2">
@@ -48,14 +56,19 @@ console.log(service.Description)
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="เช่น 500"
-            style={{
-              width: "100%", padding: "8px", marginTop: "4px",
-              borderRadius: "8px", border: "1px solid #ccc",
-              fontSize: "16px", boxSizing: "border-box"
-            }}
+          className="lastprice"
           />
         </div>
-
+        {/*ช่องระบุวันเริ่มงาน*/}
+        <div>
+          <input type="date" placeholder="ระบุวันเริ่มงาน" value={date} onChange={(e)=>setDate(e.target.value)} />
+        </div>
+        {/*ช่องระบุวันเริ่มงาน*/}
+        <div>
+          <input type="date" placeholder="ระบุวันเริ่มงาน" value={dateEnd} onChange={(e)=>setDateEnd(e.target.value)} />
+        </div>
+        
+        
         {/* ช่องกรอกหมายเหตุ */}
         <div>
           <label style={{ fontSize: "14px", color: "#555" }}>หมายเหตุ (ไม่บังคับ)</label>
@@ -67,6 +80,8 @@ console.log(service.Description)
             className="D1"
           />
         </div>
+
+
 
         {/* ปุ่ม */}
         <div className="BB">

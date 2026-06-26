@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./ServiceCreate.css";
 
-export default function ServiceOption({ serviceId }) {
+export default function ServiceOption({ serviceId ,onClose }) {
   const data = localStorage.getItem("user");
   const id = JSON.parse(data).payload.id;
 
@@ -27,6 +27,7 @@ export default function ServiceOption({ serviceId }) {
         setTitle(s.Title);
         setDescription(s.Description);
         setPrice(s.Price);
+        console.log("ser",serviceId)
         setCategory(s.Category);
         if (s.Image) {
           setPreviewUrl(`http://localhost:3000/uploads/${s.Image}`);
@@ -83,6 +84,7 @@ export default function ServiceOption({ serviceId }) {
   return (
     <div className="div1">
       <p>แก้ไขงาน (ID: {serviceId})</p>
+      <button onClick={onClose}>X</button>
       <input className="input1" type="text" placeholder="ชื่องาน" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input className="input1" type="text" placeholder="รายละเอียด" value={description} onChange={(e) => setDescription(e.target.value)} />
       <input className="input1" type="number" placeholder="ราคา" value={price} onChange={(e) => setPrice(e.target.value)} />

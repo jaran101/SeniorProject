@@ -42,17 +42,22 @@ const handleChat = async () => {
       headers: { authorization: localStorage.getItem("token") }
     })
     const existingRoom = res.data.result.find(r => r.Room_Id === roomId)
-
+      console.log("service ทั้งหมด:", service)
     if (!existingRoom) {
       // ห้องใหม่ → ส่งข้อความแรกผ่าน HTTP
-      await axios.post("http://localhost:3000/api/newmessage", {
-        Room_Id: roomId,
-        Sender_Id: senderId,
-        Receiver_Id: receiverId,
-        Service_Id: service.Service_Id,
-        Message: `สวัสดีครับ สนใจบริการ "${service.Title}"`,
-        Type: "MESSAGE"
-      }, { headers: { authorization: localStorage.getItem("token") } })
+      const message = `สวัสดีครับ สนใจบริการ "${service.Title}" 
+                      รายละเอียด: "${service.Description}" 
+                      ราคา"${service.Price?.toLocaleString()}"` //→ แปลงตัวเลขให้มี comma คั่น
+      console.log("Message ที่จะส่ง:", message)  // ← ดูตรงนี้
+
+await axios.post("http://localhost:3000/api/newmessage", {
+  Room_Id: roomId,
+  Sender_Id: senderId,
+  Receiver_Id: receiverId,
+  Service_Id: service.Service_Id,
+  Message: message,
+  Type: "MESSAGE"
+}, { headers: { authorization: localStorage.getItem("token") } })
     }
 
     // navigate ได้เลย — มั่นใจว่าห้องมีใน DB แล้ว
