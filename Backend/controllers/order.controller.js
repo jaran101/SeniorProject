@@ -1,4 +1,4 @@
-import { ChatType } from "@prisma/client";
+import { ChatType, Prisma } from "@prisma/client";
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
 
@@ -172,4 +172,12 @@ export const rejectOrder = async (req, res, next) => {
     next(err);
   }
 };
-
+export const getMyOder=async (req,res,next)=>{
+  const {id}=req.params
+  const orders=await prisma.orders.findMany({
+    where:{
+      Users_Id:Number(id)
+    }
+  })
+  res.json({ message: "Reject Order Success", result:orders});
+};
