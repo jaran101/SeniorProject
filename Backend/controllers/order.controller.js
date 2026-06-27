@@ -22,7 +22,7 @@ export const createOrder = async (req, res, next) => {
         Status: "ACCEPTED"
       }
     });
-    res.json({ message: "Create Order Success", result: {userorder,techoder} });
+    res.json({ message: "Create Order Success", result:userorder});
   } catch (err) {
     next(err);
   }
