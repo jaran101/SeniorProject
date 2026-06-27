@@ -10,7 +10,7 @@ export const chatSocket = (io) => {
     socket.on("send_message", async (data) => {
       try {
         let orderId = data.Order_Id ? Number(data.Order_Id) : null;
-        if (data.Type === "PRICE_OFFER"||"IMAGE") {
+        if (data.Type === "PRICE_OFFER" || data.Type === "IMAGE") {
           io.to(data.Room_Id).emit("receive_message", data);
           return;
         }
