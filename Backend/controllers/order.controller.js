@@ -4,25 +4,16 @@ import createError from "../utils/createError.js";
 
 export const createOrder = async (req, res, next) => {
   try {
-    const { Users_Id,TECH_Id, Service_Id, Final_Price, Work_Date, Work_Date_End, Chat_Id } = req.body;
+    const { Users_Id,Tech_Id, Service_Id, Final_Price, Work_Date, Work_Date_End, Chat_Id } = req.body;
     await prisma.chats.update({
       where: { Chat_Id },
       data: {
         Type: "PRICE_ACCEPT"
       }
     })
-    const techoder=await prisma.orders.create({
-      data: {
-        Users_Id: Number(TECH_Id),
-        Service_Id: Number(Service_Id),
-        Final_Price: Number(Final_Price),
-        Work_Date: new Date(Work_Date),
-        Work_Date_End: new Date(Work_Date_End),
-        Status: "ACCEPTED"
-      }
-    });
     const userorder = await prisma.orders.create({
       data: {
+        Tech_Id:Number(Tech_Id),
         Users_Id: Number(Users_Id),
         Service_Id: Number(Service_Id),
         Final_Price: Number(Final_Price),

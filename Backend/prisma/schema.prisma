@@ -63,7 +63,8 @@ model users {
 
   Profile  profiles?
   Services services[]
-  Orders   orders[]
+  CustomerOrders  orders[] @relation("CustomerOrders")
+  TechnicianOrders orders[] @relation("TechnicianOrders")
 }
 
 model profiles {
@@ -103,6 +104,7 @@ model services {
 model orders {
   Order_Id       Int         @id @default(autoincrement())
   Users_Id       Int
+  Tech_Id        Int
   Service_Id     Int
   Final_Price    Float?
   Work_Date      DateTime?
@@ -110,8 +112,8 @@ model orders {
   Status         OrderStatus @default(ACCEPTED)
   Created_At     DateTime    @default(now())
   Updated_At     DateTime    @updatedAt
-
-  User    users    @relation(fields: [Users_Id], references: [Users_Id])
+  User users @relation("CustomerOrders", fields: [Users_Id], references: [Users_Id])
+  TechUser users @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id])
   Service services @relation(fields: [Service_Id], references: [Service_Id])
   Chats   chats[]
   Review  reviews?
