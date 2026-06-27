@@ -30,7 +30,7 @@ export const chatSocket = (io) => {
         });
         io.to(data.Room_Id).emit("receive_message", chat);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     });
     socket.on("disconnect", () => {
