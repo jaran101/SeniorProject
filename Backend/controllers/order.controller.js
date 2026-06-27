@@ -43,12 +43,32 @@ export const getAllOrders = async (req, res, next) => {
     next(err);
   }
 };
-export const getOrderById = async (req, res, next) => {
+export const getOrderByIdUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const order = await prisma.orders.findUnique({
       where: {
         Order_Id: Number(id)
+      },
+      include: {
+        User: true,
+        Service: true
+      }
+    });
+    if (!order) {
+      createError(404, "Order not found");
+    }
+    res.json({ result: order });
+  } catch (err) {
+    next(err);
+  }
+};
+export const getOrderByIdTech = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const order = await prisma.orders.findUnique({
+      where: {
+        Tech_Id: Number(id)
       },
       include: {
         User: true,

@@ -1,12 +1,13 @@
 import express from "express";
 import { verifytoken } from "../middleware/verifytoken.js";
-import {createOrder,getAllOrders,getOrderById,updateOrderStatus,deleteOrder,
-startOrder,finishOrder,confirmOrder,rejectOrder,getMyOder} from "../controllers/order.controller.js";
+import {createOrder,getAllOrders,getOrderByIdUser,updateOrderStatus,deleteOrder,
+startOrder,finishOrder,confirmOrder,rejectOrder,getMyOder,getOrderByIdTech} from "../controllers/order.controller.js";
 
 const route = express.Router();
 route.post("/createorder",verifytoken,createOrder);
 route.get("/listorder", getAllOrders);
-route.get("/readorder/:id", getOrderById);
+route.get("/readuserorder/:id", getOrderByIdUser);
+route.get("/readtechorder/:id", getOrderByIdTech);
 route.patch("/updateorder/:id",verifytoken, updateOrderStatus);
 route.delete("/removeorder/:id",verifytoken, deleteOrder);
 route.patch("/startorders/:id",verifytoken,startOrder);
