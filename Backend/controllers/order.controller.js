@@ -46,7 +46,7 @@ export const getAllOrders = async (req, res, next) => {
 export const getOrderByIdUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const order = await prisma.orders.findUnique({
+    const order = await prisma.orders.findMany({
       where: {
         Order_Id: Number(id)
       },
@@ -66,7 +66,7 @@ export const getOrderByIdUser = async (req, res, next) => {
 export const getOrderByIdTech = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const order = await prisma.orders.findUnique({
+    const order = await prisma.orders.findMany({
       where: {
         Tech_Id: Number(id)
       },
