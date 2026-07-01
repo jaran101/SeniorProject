@@ -67,16 +67,14 @@ const handleShow = (service) => {
         </div>
       ))}
     </div>
-      {selectedService &&      (
-         <div className="modal-overlay" onClick={() => setSelectedService(null)}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+      {selectedService && (
+  <div className="modal-overlay" onClick={() => setSelectedService(null)}>
+    <div className="modal-box" onClick={(e) => e.stopPropagation()}>
       <button className="modal-close" onClick={() => setSelectedService(null)}>✕</button>
-        <div style={{margin:"30px 0px 0px 0px"}}>
-        <ShowService service={selectedService} />
-        </div>
-      </div>
+      <ShowService service={selectedService} data={data} />
     </div>
-      )}
+  </div>
+)}
        </div>  
   );
 }

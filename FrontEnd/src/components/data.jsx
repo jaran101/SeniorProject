@@ -36,9 +36,9 @@ console.log(profile)
         <p>ที่อยู่: {profile.Address}</p>
         <div>
           <button className="bdata" onClick={() => setShow(!show)}>
-            {show ? "ปิด" : "แก้ไข"}
+            {show ? "X" : "แก้ไข"}
           </button>
-          {show && <Editprofile />}
+          {show && <Editprofile  profile={profile} />}
         </div>
       </div>
     </div>

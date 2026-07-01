@@ -84,7 +84,7 @@ function ChatPage() {
   const [serviceDetail, setServiceDetail] = useState(null)
   const [showPriceModal, setShowPriceModal] = useState(false)
   const [viewImage, setViewImage] = useState(null)
-
+  const [tech,setTech]=useState(0)
   // -----------------------------------------------------
   // เชื่อม Socket + เช็ค Login
   // -----------------------------------------------------
@@ -110,7 +110,6 @@ function ChatPage() {
         const roomList = res.data.result
         setRooms(roomList)
 
-        roomList.forEach(room => socket.emit("join_room", room.Room_Id))
 
         if (incomingState?.roomId) {
           const targetRoom = roomList.find(r => r.Room_Id === incomingState.roomId)
@@ -166,7 +165,9 @@ function ChatPage() {
   // รับข้อความ Real-time จาก Socket
   // -----------------------------------------------------
   useEffect(() => {
+    socket.off("receive_message")
     socket.on("receive_message", (newMsg) => {
+    console.log("รับข้อความ:", newMsg.Chat_Id, newMsg.Message)  
       setMessages(prev => [...prev, newMsg])
       setRooms(prev => {
         const exists = prev.find(r => r.Room_Id === newMsg.Room_Id)
@@ -177,7 +178,7 @@ function ChatPage() {
               : r
           )
         }
-        return [newMsg, ...prev]
+        return prev
       })
     })
     return () => socket.off("receive_message")
@@ -187,17 +188,21 @@ function ChatPage() {
   // ส่งข้อความ
   // -----------------------------------------------------
   const sendMessage = () => {
-    if (!input.trim()) return
-    socket.emit("send_message", {
-      Room_Id: activeRoom.Room_Id,
-      Sender_Id: userId,
-      Receiver_Id: getOtherUserId(activeRoom, userId),
-      Message: input,
-      Service_Id: activeRoom.Service_Id,
-      Type: "MESSAGE"
-    })
-    setInput("")
+  if (!input.trim()) return
+
+  const data = {
+    Room_Id: activeRoom.Room_Id,
+    Sender_Id: userId,
+    Receiver_Id: getOtherUserId(activeRoom, userId),
+    Message: input,
+    Service_Id: activeRoom.Service_Id,
+    Type: "MESSAGE"
   }
+
+  console.log("ส่งข้อมูล:", data)  // ← ดูตรงนี้
+  socket.emit("send_message", data)
+  setInput("")
+}
 
   // -----------------------------------------------------
   // ส่งรูปภาพ
@@ -210,6 +215,7 @@ function ChatPage() {
     formData.append("Receiver_Id", getOtherUserId(activeRoom, userId))
     formData.append("Service_Id", activeRoom.Service_Id)
     formData.append("Type", "IMAGE")
+
     try {
       const res = await axios.post("http://localhost:3000/api/newmessage", formData, {
         headers: { authorization: token }
@@ -237,27 +243,50 @@ function ChatPage() {
       setShowPriceModal(false)
     } catch (err) { 
       console.log(err) 
-      console.log()
+      console.log(err.response.data)
     }
   }
   // -----------------------------------------------------
   // ลูกค้ายืนยัน Order
   // -----------------------------------------------------
   const createOrder = async (msg) => {
+    
+ const techId = userId !== msg.Receiver_Id ? msg.Receiver_Id : msg.Sender_Id
+
+  // ✅ ตรวจสอบค่าก่อนส่ง
+  console.log("msg:", msg)
+  console.log("activeRoom:", activeRoom)
+  console.log("userId:", userId)
+  console.log("techId:", techId)
+  console.log("Service_Id:", activeRoom?.Service_Id)
+  console.log("Final_Price:", msg.Price)
+  console.log("Work_Date:", msg.Work_Date)
     try {
       await axios.post("http://localhost:3000/api/createorder", {
+       
         Chat_Id: msg.Chat_Id,
         Users_Id: userId,
+        Tech_Id: techId,
         Service_Id: Number(activeRoom?.Service_Id),
         Final_Price: msg.Price,
         Work_Date: msg.Work_Date,
         Work_Date_End: msg.Work_Date_End,
-        Status: "ACCEPTED"
       }, { headers: { authorization: token } })
+
+      setMessages((prev) =>
+      prev.map((m) =>
+        m.Message_Id === msg.Message_Id
+          ? { ...m, Type: "PRICE_ACCEPT" }
+          : m
+      )
+    )
+
       alert("ยืนยันงานสำเร็จ ✅")
     } catch (err) {
       console.log(err.response?.data?.message)
     }
+      console.log(tech)
+
   }
 // -----------------------------------------------------
 // ลูกค้าปฏิเสธ Offer
@@ -287,10 +316,19 @@ const rejectOffer = async (msg) => {
     if (Type === "PRICE_REJECT") return "ลูกค้าปฎิเสธ";
     return "-";
   };
-console.log(activeRoom)
-  // -----------------------------------------------------
-  // UI
-  // -----------------------------------------------------
+
+
+
+
+
+
+// -----------------------------------------------------
+// UI
+// -----------------------------------------------------
+
+
+
+
   return (
     <div className="Uimain">
 
@@ -320,10 +358,10 @@ console.log(activeRoom)
           )}
 
           {/* แสดงข้อความ */}
-          {activeRoom && messages.map(msg => {
+          {activeRoom && messages.map((msg,index) => {
             const isMine = msg.Sender_Id === userId
             return (
-              <div key={msg.Chat_Id} style={{
+              <div key={msg.Chat_Id ?? index } style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: isMine ? "flex-end" : "flex-start",
@@ -336,7 +374,7 @@ console.log(activeRoom)
                                 ${msg.Type === "PRICE_OFFER" ? "bubble--offer" : ""}
                                 ${msg.Type === "IMAGE" ? "bubble--image" : ""}
                               `}>
-                  {/* --- PRICE_OFFER --- */   console.log(isMine)
+                  {/* --- PRICE_OFFER --- */   
 }
                   {(msg.Type === "PRICE_OFFER" ||msg.Type === "PRICE_ACCEPT" ||msg.Type === "PRICE_REJECT")&& (
                     <div className="priceoffer">

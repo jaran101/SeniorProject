@@ -1,72 +1,103 @@
-import { div } from "framer-motion/client";
-import { useState } from "react";
-
+import { useEffect, useState } from "react"
+import axios from "axios"
+import "./calendar.css"
 
 export default function Calendar() {
+  const [order, setOrder] = useState([]);
+  const token = localStorage.getItem("token")
+  const userId = Number(localStorage.getItem("id"))
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const year = currentMonth.getFullYear()
+  const month = currentMonth.getMonth()
+  const lastDayOfMonth = new Date(year, month + 1, 0)
+  const daysInMonth = lastDayOfMonth.getDate()
+  const firstDayOfMonth = new Date(year, month, 1)
+  const startWeekday = firstDayOfMonth.getDay()
+  const [selectedDateKey, setSelectedDateKey] = useState(null)
 
-const [currentDate, setCurrentDate] = useState(new Date());
-const today=new Date();
-const date=currentDate.getDate();
-const month=currentDate.getMonth();
-const year=currentDate.getFullYear();
-const prevMonth= ()=>setCurrentDate(new Date(year,month-1,date));
-const nextMonth= ()=>setCurrentDate(new Date(year,month+1,date));
-const daysInMonth = new Date(year, month + 1, 0).getDate();
-const firstDay = new Date(year, month, 1).getDay();
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const [techRes, userRes] = await Promise.all([
+          axios.get(`http://localhost:3000/api/readtechorder/${userId}`, {
+            headers: { authorization: token }
+          }),
+          axios.get(`http://localhost:3000/api/readorderbyuserid/${userId}`, {
+            headers: { authorization: token }
+          }),
+        ])
+        const techOrders = techRes.data.result.map(o => ({ ...o, type: 'tech' }));
+        const userOrders = userRes.data.result.map(o => ({ ...o, type: 'user' }));
+        setOrder([...techOrders, ...userOrders]);
+      } catch (err) {
+        console.log(err.response?.data?.message)
+      }
+    }
+    fetchOrder()
+  }, [userId])  // ✅ ลบ console.log(cells.length) ออกจากตรงนี้
 
-const isToday= (day) => day===new Date().getDate() && month===new Date().getMonth() && year===new Date().getFullYear();
-const getDayCol= (index)=>index%7;
-const mounthsNames=[
-  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
-  "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
-];
-const daysNames=[
-  "อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"
-];
+  // ✅ log แยกข้างนอก ดูค่าได้ทุกครั้งที่ component render
+  console.log("mount", month+1)
+  console.log(daysInMonth)
+  console.log(startWeekday)
+  console.log("firstDayOfMonth",firstDayOfMonth.getDay())
 
-const days=[];
-for(let i=0;i<firstDay;i++){
-  days.push("");
-}
-for(let i=1;i<=daysInMonth;i++){
-  days.push(i);
-}
+  const cells = []
+  for (let i = 0; i < startWeekday; i++) {
+    cells.push(null)
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push(new Date(year, month, d))
+  }
 
-return (
-  <div style={{ padding: "20px" }}>
-        <div className="calendar">
-            <h1>Calendar</h1>
-            <h2>{" วัน" + daysNames[today.getDay()]} {"เดือน" + mounthsNames[month]} {"ปี " + (year + 543)}</h2>
+  console.log(cells.length)  // ✅ ย้ายมา log ตรงนี้แทน (cells มีค่าแล้ว)
 
-            <button onClick={prevMonth}>Previous Month</button>
-            <button onClick={nextMonth}>Next Month</button>
-            <div className="weekdays">
-              <div>อาทิตย์</div>
-              <div>จันทร์</div>
-              <div>อังคาร</div>
-              <div>พุธ</div> 
-              <div>พฤหัสบดี</div>
-              <div>ศุกร์</div>
-              <div>เสาร์</div>
-            </div>
-            <div className="days-grid">
-              {days.map((day,index)=>(
-                <button key={index} className={["day",
-                !day ? "empty":"",
-                day && isToday(day) ? "today":"",
-                day && getDayCol(index)===0 ? "sunday":"",
-                day && getDayCol(index)===6 ? "saturday":"",
-                  
-              ].filter(Boolean).join(" ") }
-                disabled={!day}
-                
-                
-                >{day}</button>
-              ))}
+  const toDateKey = (date) => {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, "0")
+    const d = String(date.getDate()).padStart(2, "0")
+    return `${y}-${m}-${d}`
+  }
 
-            </div>
+  const eventsByDate = {}
+  order.forEach((o) => {  // ✅ แก้ orders → order
+    if (o.Work_Date) {
+      const key = toDateKey(new Date(o.Work_Date))
+      if (!eventsByDate[key]) eventsByDate[key] = []
+      eventsByDate[key].push(o)
+    }
+  })
 
-                </div>
-        </div>
-    );
+  return (
+    <div> 
+      
+
+      ปฏิทิน {order.length}
+      <p>{year} - {month + 1}</p>
+      <div className="oc-grid">
+  {cells.map((date, idx) => {
+        if (!date) return <div key={`empty-${idx}`} />
+
+        const key = toDateKey(date)
+        const dayOrders = eventsByDate[key] || []
+
+        return (
+         <button key={key} onClick={() => setSelectedDateKey(key)}>
+          {date.getDate()}
+          {dayOrders.length > 0 && <span>●</span>}
+</button>
+        )
+  })}
+  
+      </div>
+      {selectedDateKey && (
+  <div>
+    <p>นัดหมายวันที่ {selectedDateKey}</p>
+    {(eventsByDate[selectedDateKey] || []).map((o) => (
+      <p key={o.Order_Id}>{o.Service?.Title}</p>
+    ))}
+  </div>
+)}
+    </div>
+  )
 }

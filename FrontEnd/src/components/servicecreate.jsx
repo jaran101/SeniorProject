@@ -75,10 +75,12 @@ export default function ServiceCreate({ onClose ,onCreated }) {
         </select>
 
         {previewUrl && (
-          <img src={previewUrl} alt="ภาพที่เลือก" style={{ maxWidth: "100%", marginTop: "8px" }} />
+          <img src={previewUrl} alt="ภาพที่เลือก" className="PC"/>
         )}
 
         <button className="button1" onClick={handleCreateService}>สร้างงานใหม่</button>
+            <br />
+
       </div>
     </>
   );

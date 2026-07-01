@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 
-export default function Editprofile() {
+export default function Editprofile({profile}) {
 const [loading, setLoading] = useState(true); // ✅ เช็คสถานะโหลด
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -13,40 +13,31 @@ const [loading, setLoading] = useState(true); // ✅ เช็คสถานะ
   const [birthday, setBirthday] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-
   const navigate = useNavigate();
 
   const data = JSON.parse(localStorage.getItem("user"));
   const myid = data.payload.id;
+  console.log(myid)
+  console.log(profile.First_Name)
 
+
+
+//----------------------------------------------------------------------------------------
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/readprofile/${myid}`, {
-          headers: { authorization: localStorage.getItem("token") },
-        });
-        const p = response.data;
-
-        // ✅ โหลดข้อมูลเดิมเข้า input
-        setFirstName(p.First_Name || "");
-        setLastName(p.Last_Name || "");
-        setPhone(p.Phone || "");
-        setAddress(p.Address || "");
-        setGender(p.Gender || "MALE");
-        setBirthday(p.Birth_Date ? p.Birth_Date.slice(0, 10) : "");
-        if (p.Avatar) {
-          setPreviewUrl(`http://localhost:3000/uploads/${p.Avatar}`);
+     if (!profile) return
+        setFirstName(profile.First_Name || "");
+        setLastName(profile.Last_Name || "");
+        setPhone(profile.Phone || "");
+        setAddress(profile.Address || "");
+        setGender(profile.Gender || "MALE");
+        setBirthday(profile.Birth_Date ? profile.Birth_Date.slice(0, 10) : "");
+        if (profile.Avatar) {
+          setPreviewUrl(`http://localhost:3000/uploads/${profile.Avatar}`);
         }
 
-      } catch (error) {
-        console.error("โหลดข้อมูลไม่สำเร็จ:", error);
-      } finally {
-        setLoading(false); // ✅ โหลดเสร็จแล้วไม่ว่าจะสำเร็จหรือไม่
-      }
-    };
-    loadProfile();
-  }, []);
-
+      
+  }, [profile]);
+//---------------------------------------------------------------------------
   // ✅ ฟังก์ชันบันทึก
   const handleSave = async () => {
     try {
@@ -81,7 +72,7 @@ const [loading, setLoading] = useState(true); // ✅ เช็คสถานะ
       alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
     }
   };
-
+//--------------------------------------------------------------------------
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -89,10 +80,14 @@ const [loading, setLoading] = useState(true); // ✅ เช็คสถานะ
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  if (loading) return <p>กำลังโหลด...</p>; // ✅ รอโหลดก่อน render
+  // if (loading) return <p>กำลังโหลด...</p>; // ✅ รอโหลดก่อน render
+//-----------------------------------------------------------------------------
+//UI
+//-----------------------------------------------------------------------------
 
-  return (
+  return ( 
     <div>
+      <hr className="Line"/>
       <p className="f1">ข้อมูลส่วนตัว</p>
       <div>
         <div className="row">

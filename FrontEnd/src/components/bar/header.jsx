@@ -36,7 +36,7 @@ export default function Header() {
           localStorage.removeItem("id");
           localStorage.removeItem("user");
           localStorage.removeItem("token");
-          navigate("/");
+          navigate("/lar");
         }
       }
     };

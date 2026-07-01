@@ -94,3 +94,46 @@
   border: 0.5px solid #e0cdb8;
 }
 
+.modal-overlay {
+    position: fixed;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+
+}
+.modal-box{
+  display: flex;
+  overflow-y: auto;
+    position: relative; /* เพิ่มตรงนี้ */
+      border-radius: 5px;
+      height: 80vh;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  color: #555;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.3);
+  color: #111;
+}
+
+
+

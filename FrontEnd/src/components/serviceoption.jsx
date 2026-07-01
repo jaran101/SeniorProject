@@ -104,6 +104,7 @@ export default function ServiceOption({ serviceId ,onClose }) {
         <img src={previewUrl} alt="ภาพที่เลือก" style={{ maxWidth: "100%", marginTop: "8px" }} />
       )}
       <button className="button1" onClick={handleUpdateService}>บันทึกการแก้ไข</button>
+      <br />
     </div>
   );
 }

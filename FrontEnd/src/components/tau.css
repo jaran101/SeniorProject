@@ -1,0 +1,40 @@
+.tau-wrap {
+  border-radius: 0px 0px 15px 1 5px;
+  width: 352px;
+  overflow: hidden; /* ✅ เพิ่มตรงนี้ */
+}
+
+.tau-tab:hover:not(.active) {
+  background: #fcb864; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  color: #a67c5b;
+}
+
+.tau-tab.active {
+  color: #2f2828;
+  background: #ffb861; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  font-weight: 400;
+}
+
+.tau-tab {
+  flex: 1;
+  padding: 14px;
+  font-family: 'Kanit', sans-serif; /* เพิ่ม font ให้ตรงกับที่อื่น */
+  font-size: 15px;
+  font-weight: 300;
+  background: none;
+  /* border-radius: 0px 0px 5px 0px; เพิ่ม border-radius ให้ดูนุ่มขึ้น */
+  border: none;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s, background 0.2s;
+}
+.tau-panel {
+  padding: 2rem;
+  animation: fadeSlide 0.35s ease;
+}
+
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

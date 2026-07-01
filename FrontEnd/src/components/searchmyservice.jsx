@@ -110,7 +110,8 @@ const handleEditService =()=>{
 <div className="oo">
   <ServiceCreate onClose={() => setShowCreate(false)}
     onCreated={fetchMyServices}
-    /></div>
+    />
+  </div>
 
 )}
 </div>
@@ -118,6 +119,7 @@ const handleEditService =()=>{
 {showEdit &&(
   <div className="oo">
     <ServiceOption onClose={()=> setShowEdit(false)} serviceId={serviceId} />
+
   </div>
 )}
 

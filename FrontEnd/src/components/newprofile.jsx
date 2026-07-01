@@ -10,18 +10,29 @@ export default function Newprofile() {
   const [gender, setGender] = useState("");
   const [birthday, setBirthday] = useState("");
   const [avatar, setAvatar] = useState(null); // ✅ เก็บไฟล์ไว้ใน state
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   // ✅ แค่เก็บไฟล์ไว้ก่อน ยังไม่ส่ง
   const handleFileChange = (e) => {
     setAvatar(e.target.files[0])
   }
+//-----------------------------------------------------------------------------------------
+//สร้างโปรไฟล์ใหม่
+//-----------------------------------------------------------------------------------------
 
   const handleCreateProfile = async () => {
     if (!firstName || !lastName || !phone || !gender || !birthday || !address) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน");
       return;
     }
+     const phoneRegex = /^0\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก ขึ้นต้นด้วย 0)"); // ✅ alert string ตรงๆ
+      return;
+    }
+  
 
     const token = localStorage.getItem("token");
     const id = JSON.parse(localStorage.getItem("user")).payload.id;
@@ -63,7 +74,9 @@ export default function Newprofile() {
       alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
     }
   };
-
+//-----------------------------------------------------------------------------------------
+//UI
+//-----------------------------------------------------------------------------------------
   return (
     <div>
       <p className="f1">ข้อมูลส่วนตัว</p>

@@ -73,3 +73,7 @@
 
 /* วันเสาร์ */
 .day.saturday { color: #4a90d9; }
+
+.oc-grid{
+  display: grid; grid-template-columns: repeat(7, 1fr)
+}
