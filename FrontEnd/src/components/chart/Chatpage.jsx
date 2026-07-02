@@ -7,7 +7,7 @@ import PriceOfferModal from "./PriceOfferModal"
 import "./Chatpage.css"
 
 // -----------------------------------------------------
-// หา ID ของอีกฝ่ายในห้อง
+// Helper: หา ID ของผู้ใช้อีกฝั่งในห้องแชท
 // -----------------------------------------------------
 const getOtherUserId = (room, userId) => {
   if (!room) return null
@@ -15,7 +15,8 @@ const getOtherUserId = (room, userId) => {
 }
 
 // -----------------------------------------------------
-// RoomSidebarItem — แสดงแต่ละห้องใน Sidebar
+// Child component: แสดงรายการห้องแชทใน sidebar
+// พร้อมชื่อคู่สนทนาและข้อความล่าสุดของห้องนั้น
 // -----------------------------------------------------
 const RoomSidebarItem = ({ room, isActive, userId, onClick }) => {
   const profile = usePartnerProfile(getOtherUserId(room, userId))
@@ -51,7 +52,7 @@ const RoomSidebarItem = ({ room, isActive, userId, onClick }) => {
 }
 
 // -----------------------------------------------------
-// แปลงวันที่เป็นภาษาไทย
+// Helper: แปลงวันที่ให้เป็นข้อความภาษาไทย
 // -----------------------------------------------------
 const formatDate = (date) => {
   if (!date) return "ไม่ระบุวัน"
@@ -72,7 +73,8 @@ function ChatPage() {
   const incomingState = location.state || null
 
   // -----------------------------------------------------
-  // STATE
+  // State หลักของหน้าแชท
+  // เก็บห้องแชท ข้อความที่แสดง และข้อมูลที่เกี่ยวข้องกับห้องที่เลือก
   // -----------------------------------------------------
   const [rooms, setRooms] = useState([])
   const [activeRoom, setActiveRoom] = useState(null)
@@ -86,7 +88,7 @@ function ChatPage() {
   const [viewImage, setViewImage] = useState(null)
   const [tech,setTech]=useState(0)
   // -----------------------------------------------------
-  // เชื่อม Socket + เช็ค Login
+  // Effect: ตรวจสถานะ login และเชื่อมต่อ socket เมื่อเปิดหน้า
   // -----------------------------------------------------
   useEffect(() => {
     if (!userId || !token) {
@@ -99,7 +101,7 @@ function ChatPage() {
   }, [])
 
   // -----------------------------------------------------
-  // ดึงรายการห้องแชททั้งหมด (Sidebar)
+  // Effect: ดึงรายการห้องแชททั้งหมดมาแสดงใน sidebar
   // -----------------------------------------------------
   useEffect(() => {
     async function fetchRooms() {
@@ -121,7 +123,7 @@ function ChatPage() {
   }, [])
 
   // -----------------------------------------------------
-  // เมื่อเลือกห้อง → ดึงข้อความ + ดึงข้อมูล Service
+  // Effect: เมื่อเลือกห้องใหม่ จะเข้าร่วมห้องและโหลดข้อความกับข้อมูลบริการที่เกี่ยวข้อง
   // -----------------------------------------------------
   useEffect(() => {
     if (!activeRoom) return
@@ -162,7 +164,7 @@ function ChatPage() {
   }
 
   // -----------------------------------------------------
-  // รับข้อความ Real-time จาก Socket
+  // Effect: รับข้อความแบบ real-time จาก socket และอัปเดตทั้งหน้าจอและ sidebar
   // -----------------------------------------------------
   useEffect(() => {
     socket.off("receive_message")
@@ -185,7 +187,7 @@ function ChatPage() {
   }, [])
 
   // -----------------------------------------------------
-  // ส่งข้อความ
+  // Action: ส่งข้อความปกติลงห้องแชท
   // -----------------------------------------------------
   const sendMessage = () => {
   if (!input.trim()) return
@@ -205,7 +207,7 @@ function ChatPage() {
 }
 
   // -----------------------------------------------------
-  // ส่งรูปภาพ
+  // Action: ส่งรูปภาพเข้าในห้องแชท
   // -----------------------------------------------------
   const sendImage = async (file) => {
     const formData = new FormData()
@@ -225,7 +227,7 @@ function ChatPage() {
   }
 
   // -----------------------------------------------------
-  // ช่างเสนอราคา
+  // Action: ช่างส่งข้อเสนอราคาให้ลูกค้า
   // -----------------------------------------------------
   const sendPrice = async (price, note, date, dateEnd) => {
     try {
@@ -247,7 +249,7 @@ function ChatPage() {
     }
   }
   // -----------------------------------------------------
-  // ลูกค้ายืนยัน Order
+  // Action: ลูกค้ายืนยันคำสั่งซื้อจากข้อเสนอราคา
   // -----------------------------------------------------
   const createOrder = async (msg) => {
     
@@ -289,7 +291,7 @@ function ChatPage() {
 
   }
 // -----------------------------------------------------
-// ลูกค้าปฏิเสธ Offer
+// Action: ลูกค้าปฏิเสธข้อเสนอราคา
 // -----------------------------------------------------
 const rejectOffer = async (msg) => {
   try {
@@ -308,7 +310,7 @@ const rejectOffer = async (msg) => {
   }
 }
 // -----------------------------------------------------
-// แสดงสถานะ
+// Helper: แปลงประเภทข้อความให้เป็นข้อความแสดงสถานะที่อ่านง่าย
 // -----------------------------------------------------
  const formatType = (Type) => {
     if (Type === "PRICE_OFFER") return "กำลังพิจารณา";
@@ -323,12 +325,8 @@ const rejectOffer = async (msg) => {
 
 
 // -----------------------------------------------------
-// UI
+// UI: แสดง sidebar, กล่องข้อความและแถบป้อนข้อความ
 // -----------------------------------------------------
-
-
-
-
   return (
     <div className="Uimain">
 
@@ -350,14 +348,14 @@ const rejectOffer = async (msg) => {
       <div className="mainChat">
         <div className="messages">
 
-          {/* ยังไม่เลือกห้อง */}
+          {/* แสดงสถานะเมื่อยังไม่ได้เลือกห้องแชท */}
           {!activeRoom && (
             <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#9ca3af" }}>
               เลือกห้องแชททางซ้าย
             </div>
           )}
 
-          {/* แสดงข้อความ */}
+          {/* แสดงข้อความทั้งหมดในห้องที่เลือกอยู่ */}
           {activeRoom && messages.map((msg,index) => {
             const isMine = msg.Sender_Id === userId
             return (
@@ -374,8 +372,7 @@ const rejectOffer = async (msg) => {
                                 ${msg.Type === "PRICE_OFFER" ? "bubble--offer" : ""}
                                 ${msg.Type === "IMAGE" ? "bubble--image" : ""}
                               `}>
-                  {/* --- PRICE_OFFER --- */   
-}
+                  {/* แสดงข้อความประเภทเสนอราคา/ยืนยัน/ปฏิเสธ */}
                   {(msg.Type === "PRICE_OFFER" ||msg.Type === "PRICE_ACCEPT" ||msg.Type === "PRICE_REJECT")&& (
                     <div className="priceoffer">
                       <p className="present">💰 เสนอราคางาน {msg.Title}</p>
@@ -407,7 +404,7 @@ const rejectOffer = async (msg) => {
                     </div>
                   )}
 
-                  {/* --- IMAGE --- */}
+                  {/* แสดงข้อความประเภทรูปภาพ */}
                   {msg.Type === "IMAGE" && (
                     <img
                       src={`http://localhost:3000/uploads/${msg.Image}`}
@@ -416,7 +413,7 @@ const rejectOffer = async (msg) => {
                     />
                   )}
 
-                  {/* --- MESSAGE --- */}
+                  {/* แสดงข้อความประเภทข้อความทั่วไป */}
                   {msg.Type === "MESSAGE" && (
                     <div>{msg.Message}</div>
                   )}
@@ -435,7 +432,7 @@ const rejectOffer = async (msg) => {
           })}
         </div>
 
-        {/* -------- Input Bar -------- */}
+        {/* แถบป้อนข้อความและปุ่มต่าง ๆ สำหรับส่งข้อความ */}
         {activeRoom && (
           <div className="divInput">
 
