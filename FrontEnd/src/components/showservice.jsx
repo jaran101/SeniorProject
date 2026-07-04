@@ -6,13 +6,19 @@ import socket from "./chart/useSocket"
 
 
 export default function ShowService({ service ,data }) {
-  const navigate = useNavigate();
+//------------------------------------------------------------------------------------------------------------
+//state
+//------------------------------------------------------------------------------------------------------------
+    const [user, setUser] = useState(null);  
+    const navigate = useNavigate();
     const [receiverData, setReceiverData] = useState(null);
     const userId = Number(localStorage.getItem("id"))
     const receiverId = service?.Users_Id;
 
 //------------------------------------------------------------------------------------------------------------
-      useEffect(() => {
+//โหลดข้อมูลผู้ใช้ที่เป็นเจ้าของบริการ
+//------------------------------------------------------------------------------------------------------------      
+  useEffect(() => {
       const fethuser = async () => {
         try {
           const response = await axios.get(`http://localhost:3000/api/readprofile/${receiverId}`, {
@@ -30,7 +36,9 @@ export default function ShowService({ service ,data }) {
       fethuser();
     },[receiverId]);
 
-    //----------------------------------------
+//------------------------------------------------------------------------------------------------------------
+//ฟังก์ชันสำหรับเปิดหน้าต่างแชทกับเจ้าของบริการ
+//------------------------------------------------------------------------------------------------------------
 const handleChat = async () => {
    console.log("receiverId ตอนเริ่ม:", receiverId) 
   const senderId = Number(localStorage.getItem("id"))
@@ -60,7 +68,6 @@ await axios.post("http://localhost:3000/api/newmessage", {
 }, { headers: { authorization: localStorage.getItem("token") } })
     }
 
-    // navigate ได้เลย — มั่นใจว่าห้องมีใน DB แล้ว
     console.log("roomId:", roomId)
     console.log("receiverId:", receiverId)  // ← เพิ่มก่อน navigate
     navigate("/chatpage", { state: { 
@@ -70,7 +77,8 @@ await axios.post("http://localhost:3000/api/newmessage", {
     alert("ไม่สามารถเปิดแชทได้")
   }
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//UI
 //-----------------------------------------------------------------------------------------------------------------------------
   return (
     <div className="BBK">

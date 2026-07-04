@@ -3,6 +3,7 @@ import axios from "axios";
 import Newprofile from "./newprofile";
 
 export default function Register() {
+  // State สำหรับข้อมูลแบบฟอร์มและสถานะการทำงาน
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -11,6 +12,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
 
+  // ตรวจสอบความถูกต้องของข้อมูลก่อนส่งลงทะเบียน
   const validate = () => {
     const nextErrors = {};
 
@@ -40,6 +42,7 @@ export default function Register() {
     return Object.keys(nextErrors).length === 0;
   };
 
+  // ส่งคำขอสมัครสมาชิก และเข้าสู่ระบบอัตโนมัติเมื่อสำเร็จ
   const handleRegister = async () => {
     if (!validate()) {
       return;
@@ -77,8 +80,10 @@ export default function Register() {
 
   return (
     <div>
+      {/* ส่วนหัวของฟอร์ม */}
       <p className="f1">สมัครสมาชิก</p>
 
+      {/* ช่องกรอกอีเมล */}
       <div>
         <label className="f3">Email</label>
         <input
@@ -91,6 +96,7 @@ export default function Register() {
         {errors.Email && <p className="err-msg">{errors.Email}</p>}
       </div>
 
+      {/* ช่องกรอกรหัสผ่านและยืนยันรหัสผ่าน */}
       <div className="row">
         <div>
           <label className="f3">รหัสผ่าน</label>
@@ -117,14 +123,17 @@ export default function Register() {
         </div>
       </div>
 
+      {/* ข้อความสถานะจากระบบ */}
       {message && <p className="msg">{message}</p>}
 
       <hr className="hr1" />
 
+      {/* ปุ่มสมัครสมาชิก */}
       <button className="button" onClick={handleRegister} disabled={loading}>
         {loading ? "กำลังดำเนินการ..." : "สมัครสมาชิก"}
       </button>
 
+      {/* แสดงคอมโพเนนต์สร้างโปรไฟล์หลังสมัครสำเร็จ */}
       <div>{show && <Newprofile />}</div>
     </div>
   );

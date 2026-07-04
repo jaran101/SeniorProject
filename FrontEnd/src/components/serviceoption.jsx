@@ -3,9 +3,11 @@ import axios from "axios";
 import "./ServiceCreate.css";
 
 export default function ServiceOption({ serviceId, onClose }) {
+  // ดึงข้อมูลผู้ใช้จาก localStorage เพื่อแนบเป็นผู้แก้ไขงาน
   const data = localStorage.getItem("user");
   const id = JSON.parse(data).payload.id;
 
+  // state สำหรับเก็บข้อมูลฟอร์มแก้ไขงาน
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -13,6 +15,7 @@ export default function ServiceOption({ serviceId, onClose }) {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [category, setCategory] = useState("");
 
+  // โหลดข้อมูลงานเดิมเมื่อได้รับ serviceId
   useEffect(() => {
     if (!serviceId) {
       return;
@@ -44,6 +47,7 @@ export default function ServiceOption({ serviceId, onClose }) {
     fetchService();
   }, [serviceId]);
 
+  // เมื่อผู้ใช้เลือกภาพใหม่ จะเก็บไฟล์และแสดง preview
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -54,6 +58,7 @@ export default function ServiceOption({ serviceId, onClose }) {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // ส่งข้อมูลที่แก้ไขไปยัง API เพื่ออัปเดตงาน
   const handleUpdateService = async () => {
     const token = localStorage.getItem("token");
 
@@ -89,9 +94,12 @@ export default function ServiceOption({ serviceId, onClose }) {
       alert("เกิดข้อผิดพลาด: " + err.response?.data?.msg);
     }
   };
-
+//--------------------------------------------------------------------------------
+//UI
+//-------------------------------------------------------------------------------- 
   return (
     <div className="div1">
+      {/* ส่วนฟอร์มแก้ไขงาน */}
       <p>แก้ไขงาน (ID: {serviceId})</p>
       <button onClick={onClose}>X</button>
 
@@ -123,6 +131,7 @@ export default function ServiceOption({ serviceId, onClose }) {
         onChange={handleImageChange}
       />
 
+      {/* เลือกประเภทงาน */}
       <select
         className="input_option"
         value={category}
@@ -139,6 +148,7 @@ export default function ServiceOption({ serviceId, onClose }) {
         <option value="OTHER">อื่นๆ</option>
       </select>
 
+      {/* แสดงตัวอย่างภาพที่เลือกหรือภาพเดิม */}
       {previewUrl && (
         <img
           src={previewUrl}
@@ -147,6 +157,7 @@ export default function ServiceOption({ serviceId, onClose }) {
         />
       )}
 
+      {/* ปุ่มบันทึกการแก้ไข */}
       <button className="button1" onClick={handleUpdateService}>
         บันทึกการแก้ไข
       </button>

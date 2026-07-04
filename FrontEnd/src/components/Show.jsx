@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ShowService from "./showservice";
 
+// แปลงชื่อหมวดหมู่ที่แสดงใน UI เป็นรหัสหมวดหมู่ที่ API ใช้
 const categoryMap = {
   ไฟฟ้า: "ELECTRICAL",
   ประปา: "PLUMBING",
@@ -14,9 +15,12 @@ const categoryMap = {
 };
 
 export default function Show({ data }) {
+  // state สำหรับเก็บรายการบริการและบริการที่ถูกเลือกเพื่อแสดงรายละเอียด
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
-
+//------------------------------------------------------------------------------------------------------------
+// โหลดบริการตามหมวดหมู่เมื่อ prop data เปลี่ยน
+//------------------------------------------------------------------------------------------------------------
   useEffect(() => {
     if (!data || typeof data !== "string") {
       return;
@@ -37,11 +41,16 @@ export default function Show({ data }) {
     fetchByCategory();
   }, [data]);
 
+  // ถ้าไม่มีหมวดหมู่ที่เลือกให้ไม่แสดงอะไร
   if (!data) {
     return null;
   }
+//------------------------------------------------------------------------------------------------------------  
+//UI
+//------------------------------------------------------------------------------------------------------------
   return (
     <div className="show-card">
+      {/* ส่วนหัวของหมวดหมู่และสถิติจำนวนรายการ */}
       <div className="dd">
         <span className="show-category">ประเภทงาน : {data}</span>
         {services.length === 0 && (
@@ -52,6 +61,7 @@ export default function Show({ data }) {
         )}
       </div>
 
+      {/* แสดงรายการบริการในหมวดหมู่นั้น ๆ */}
       <div className="show-c2">
         {services.map((service) => (
           <div
@@ -71,6 +81,7 @@ export default function Show({ data }) {
         ))}
       </div>
 
+      {/* Modal สำหรับแสดงรายละเอียดบริการที่เลือก */}
       {selectedService && (
         <div className="modal-overlay" onClick={() => setSelectedService(null)}>
           <div className="modal-box" onClick={(event) => event.stopPropagation()}>

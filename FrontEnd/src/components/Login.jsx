@@ -15,11 +15,9 @@ export default function Login() {
     if (!email) {
       nextErrors.Email = "กรุณากรอกอีเมล";
     }
-
     if (!password) {
       nextErrors.Password = "กรุณากรอกรหัสผ่าน";
     }
-
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -46,6 +44,7 @@ export default function Login() {
       }
     } catch (error) {
       setErrors({ api: "email หรือ password ไม่ถูกต้อง" });
+      console.error("Login error:", error.response.data);
     } finally {
       setLoading(false);
     }

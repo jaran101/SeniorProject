@@ -3,9 +3,11 @@ import axios from "axios";
 import "./ServiceCreate.css"
 
 export default function ServiceCreate({ onClose ,onCreated }) {
+  // ดึงข้อมูลผู้ใช้จาก localStorage เพื่อแนบเป็นผู้สร้างงาน
   const data = localStorage.getItem("user");
   const id = JSON.parse(data).payload.id;
 
+  // state สำหรับเก็บข้อมูลฟอร์มการสร้างงาน
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -14,6 +16,7 @@ export default function ServiceCreate({ onClose ,onCreated }) {
   const [category, setCategory] = useState("");
 
 
+  // เมื่อผู้ใช้เลือกภาพใหม่ จะเก็บไฟล์และสร้าง preview สำหรับแสดงผล
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -21,6 +24,7 @@ export default function ServiceCreate({ onClose ,onCreated }) {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // ส่งข้อมูลงานใหม่ไปยัง API พร้อมแนบรูปภาพถ้ามี
   const handleCreateService = async () => {
     const token = localStorage.getItem("token");
     if (!title || !description || !price) {
@@ -52,16 +56,21 @@ export default function ServiceCreate({ onClose ,onCreated }) {
       alert("เกิดข้อผิดพลาด"+err.response.data.msg);
     }
   };
-
-  return (
+//--------------------------------------------------------------------------------
+//UI
+//-------------------------------------------------------------------------------- 
+return (
     <>
+      {/* ส่วนฟอร์มสร้างงานใหม่ */}
       <div className="div1">
-        <p >สร้างงานใหม่</p>
+        <p>สร้างงานใหม่</p>
         <button onClick={onClose}>X</button>
+        {/* ช่องกรอกข้อมูลพื้นฐานของงาน */}
         <input className="input1" type="text" placeholder="ชื่องาน" value={title} onChange={(e) => setTitle(e.target.value)} />
         <input className="input1" type="text" placeholder="รายละเอียด" value={description} onChange={(e) => setDescription(e.target.value)} />
         <input className="input1" type="number" placeholder="ราคา" value={price} onChange={(e) => setPrice(e.target.value)} />
         <input className="input1" type="file" accept="image/*" onChange={handleImageChange} />
+        {/* เลือกประเภทงาน */}
         <select className="input_option" value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">เลือกประเภทงาน</option>
           <option value="ELECTRICAL">งานไฟฟ้า</option>
@@ -74,10 +83,12 @@ export default function ServiceCreate({ onClose ,onCreated }) {
           <option value="OTHER">อื่นๆ</option>
         </select>
 
+        {/* แสดงตัวอย่างภาพก่อนบันทึก */}
         {previewUrl && (
           <img src={previewUrl} alt="ภาพที่เลือก" className="PC"/>
         )}
 
+        {/* ปุ่มสร้างงาน */}
         <button className="button1" onClick={handleCreateService}>สร้างงานใหม่</button>
             <br />
 

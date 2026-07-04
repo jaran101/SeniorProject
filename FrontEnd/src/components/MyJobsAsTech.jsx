@@ -50,13 +50,8 @@ useEffect(()=>{
   }
 fetchService()
 },[userId])
-
-
-
-
-
 //---------------------------------------------------
-//UI
+//แปลงข้อความStatus Order เป็นภาษาไทย
 //---------------------------------------------------
 const ShowStatus=(Order) => {
   if(Order.Status==="ACCEPTED") return"ยืนยันแล้ว"
@@ -66,9 +61,9 @@ const ShowStatus=(Order) => {
   if(Order.Status==="CANCELLED") return"ยกเลิกแล้ว"
 };
 
-
-
-
+//---------------------------------------------------
+//UI
+//---------------------------------------------------
   return(
 <div>
     <div className="order-page">

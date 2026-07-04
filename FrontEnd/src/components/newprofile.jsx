@@ -3,25 +3,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Newprofile() {
+  // --- State สำหรับเก็บข้อมูลฟอร์มข้อมูลส่วนตัว ---
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [gender, setGender] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [avatar, setAvatar] = useState(null); // ✅ เก็บไฟล์ไว้ใน state
+  // --- State สำหรับเก็บไฟล์ภาพที่เลือกไว้ก่อนอัปโหลด ---
+  const [avatar, setAvatar] = useState(null); 
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  // ✅ แค่เก็บไฟล์ไว้ก่อน ยังไม่ส่ง
+  // --- ฟังก์ชันเลือกไฟล์ภาพจากอุปกรณ์ ---
   const handleFileChange = (e) => {
     setAvatar(e.target.files[0])
   }
-//-----------------------------------------------------------------------------------------
-//สร้างโปรไฟล์ใหม่
-//-----------------------------------------------------------------------------------------
-
+// --- ฟังก์ชันสร้างโปรไฟล์ใหม่เมื่อผู้ใช้กดบันทึก ---
   const handleCreateProfile = async () => {
     if (!firstName || !lastName || !phone || !gender || !birthday || !address) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -49,7 +48,7 @@ export default function Newprofile() {
           Birth_Date: birthday,
           Address: address,
         },
-        { headers: { Authorization: token } }
+        { headers: { authorization: token } }
       );
 
       // ✅ ขั้นตอนที่ 2 — อัปโหลดรูป
@@ -61,7 +60,7 @@ export default function Newprofile() {
         await axios.post("/api/uploadprofile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: token,
+            authorization: token,
           },
         })
       }
@@ -79,7 +78,10 @@ export default function Newprofile() {
 //-----------------------------------------------------------------------------------------
   return (
     <div>
+      {/* --- ส่วนหัวของฟอร์ม --- */}
       <p className="f1">ข้อมูลส่วนตัว</p>
+
+      {/* --- กล่องฟอร์มกรอกข้อมูลผู้ใช้ --- */}
       <div className="">
         <div className="row">
           <input className="i1" type="text" placeholder="ชื่อ" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -100,11 +102,12 @@ export default function Newprofile() {
           <input className="i1" type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} />
         </div>
 
-        {/* ✅ เลือกรูปภาพ */}
+        {/* --- ตัวเลือกอัปโหลดรูปภาพ --- */}
         <input type="file" accept="image/*" onChange={handleFileChange} />
         {avatar && <p>เลือกไฟล์: {avatar.name}</p>}
       </div>
 
+      {/* --- ปุ่มบันทึกข้อมูล --- */}
       <hr className="hr1" />
       <button className="button" onClick={handleCreateProfile}>
         บันทึก
