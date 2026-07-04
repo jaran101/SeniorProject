@@ -37,15 +37,23 @@ export const getMessages = async (req, res, next) => {
 export const getMyRooms = async (req, res, next) => {
   try {
     const { Users_Id } = req.params;
-    const rooms = await prisma.chats.findMany({
+    const chats = await prisma.chats.findMany({
       where: {
         OR: [
           { Sender_Id: Number(Users_Id) },
           { Receiver_Id: Number(Users_Id) }
         ]
       },
-      distinct: ["Room_Id"],
-      orderBy: { Created_At: "desc" }
+      orderBy: {
+        Created_At: "desc"
+      }
+    });
+    const rooms = [];
+    chats.forEach((chat) => {
+      const room = rooms.find((item) => item.Room_Id === chat.Room_Id);
+      if (!room) {
+        rooms.push(chat);
+      }
     });
     res.json({ result: rooms });
   } catch (err) {
@@ -82,7 +90,7 @@ export const rejectOfferPrice = async (req, res, next) => {
         Type: "PRICE_REJECT"
       }
     })
-    res.json({message:"Price Reject Success"})
+    res.json({ message: "Price Reject Success" })
   } catch (err) {
     next(err);
   }
