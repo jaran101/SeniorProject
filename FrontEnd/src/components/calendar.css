@@ -1,8 +1,8 @@
 /* ── Calendar container ── */
 .calendar-container {
-  width: 100%;           /* เปลี่ยนจาก 400px → responsive */
+  width: 100%;          
   max-width: 480px;
-  height: auto;          /* เปลี่ยนจาก 400px → ไม่ตัดเนื้อหา */
+  height: auto;         
   margin: 1rem auto;
   padding: 1.5rem;
   background: #fff;
@@ -19,7 +19,7 @@
   text-align: center;
   font-family: 'Kanit', sans-serif;
   font-size: 12px;
-  font-weight: 400;      /* เปลี่ยนจาก bold → เบาลง */
+  font-weight: 400;     
   color: #6b5b45;
 }
 
@@ -30,13 +30,13 @@
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;              /* ลดจาก 10px → พอดีกว่า */
+  gap: 6px;             
   margin-top: 8px;
 }
 
 /* ── วันที่แต่ละช่อง ── */
 .day {
-  background: #fdf6ee;   /* เปลี่ยนจาก #eee → น้ำตาลอ่อน */
+  background: #fdf6ee;  
   padding: 8px 4px;
   text-align: center;
   border-radius: 8px;
@@ -50,7 +50,7 @@
 }
 
 .day:hover:not(.empty):not(.today) {
-  background: #f0d9bc;   /* เปลี่ยนจาก #ddd → น้ำตาล */
+  background: #f0d9bc;  
   color: #a67c5b;
 }
 

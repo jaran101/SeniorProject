@@ -1,8 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useMemo } from "react";
 import axios from "axios";
+import { memo } from "react";
 import "./calendar.css";
 
-export default function Calendar() {
+function toDateKey(date) {
+  const yearValue = date.getFullYear();
+  const monthValue = String(date.getMonth() + 1).padStart(2, "0");
+  const dayValue = String(date.getDate()).padStart(2, "0");
+  return `${yearValue}-${monthValue}-${dayValue}`;
+}
+
+export default memo(function Calendar() {
+  //-------------------------------------------------------------
+  // State
+  //-------------------------------------------------------------
   const [order, setOrder] = useState([]);
   const token = localStorage.getItem("token");
   const userId = Number(localStorage.getItem("id"));
@@ -45,33 +56,30 @@ useEffect(() => {
   fetchOrder()
 }, [userId])
 
-  const cells = [];
+ const cells = useMemo(() => {
+  const result = [];
   for (let i = 0; i < startWeekday; i += 1) {
-    cells.push(null);
+    result.push(null);
   }
-
   for (let day = 1; day <= daysInMonth; day += 1) {
-    cells.push(new Date(year, month, day));
+    result.push(new Date(year, month, day));
   }
+  return result;
+}, [startWeekday, daysInMonth, year, month]);
 
-  const toDateKey = (date) => {
-    const yearValue = date.getFullYear();
-    const monthValue = String(date.getMonth() + 1).padStart(2, "0");
-    const dayValue = String(date.getDate()).padStart(2, "0");
-
-    return `${yearValue}-${monthValue}-${dayValue}`;
-  };
-
-  const eventsByDate = {};
+const eventsByDate = useMemo(() => {
+  const map = {};
   order.forEach((orderItem) => {
     if (orderItem.Work_Date) {
       const key = toDateKey(new Date(orderItem.Work_Date));
-      if (!eventsByDate[key]) {
-        eventsByDate[key] = [];
+      if (!map[key]) {
+        map[key] = [];
       }
-      eventsByDate[key].push(orderItem);
+      map[key].push(orderItem);
     }
   });
+  return map;
+}, [order]);
 
   return (
     <div>
@@ -106,4 +114,4 @@ useEffect(() => {
       )}
     </div>
   );
-}
+});

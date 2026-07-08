@@ -1,7 +1,7 @@
 .tau-wrap {
   border-radius: 0px 0px 15px 1 5px;
   width: 352px;
-  overflow: hidden; /* ✅ เพิ่มตรงนี้ */
+  overflow: hidden;
 }
 
 .tau-tab:hover:not(.active) {

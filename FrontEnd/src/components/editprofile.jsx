@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Editprofile({ profile }) {
+export default function Editprofile({ profile, onProfileUpdated }) {
   // --- State สำหรับเก็บข้อมูลฟอร์มที่ผู้ใช้แก้ไข ---
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -14,7 +14,7 @@ export default function Editprofile({ profile }) {
 
   // --- ดึง ID ของผู้ใช้จาก localStorage เพื่อแนบไปกับคำขออัปเดต ---
   const data = JSON.parse(localStorage.getItem("user"));
-  const myId = data.payload.id;
+  const myId = data?.payload?.id;
 
   // --- โหลดข้อมูลโปรไฟล์เดิมเข้าฟอร์มตอน component ถูก render ครั้งแรก ---
   useEffect(() => {
@@ -61,10 +61,9 @@ export default function Editprofile({ profile }) {
       });
 
       alert("บันทึกสำเร็จ!");
-      window.location.reload();
+      onProfileUpdated?.();
     } catch (error) {
       console.error("บันทึกไม่สำเร็จ:", error);
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
       alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
     }
   };

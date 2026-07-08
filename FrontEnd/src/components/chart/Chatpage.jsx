@@ -25,7 +25,7 @@ const RoomSidebarItem = ({ room, isActive, userId, onClick }) => {
   const lastMessage = room.Image
     ? "ได้ส่งรูปภาพ"
     : room.Type === "PRICE_OFFER"
-    ? "เสนอราคา 💰"
+    ? "เสนอราคา"
     : room.Message || "(ไม่มีข้อความ)"
 
   return (
@@ -64,7 +64,7 @@ const formatDate = (date) => {
 // -----------------------------------------------------
 // ChatPage — Main Component
 // -----------------------------------------------------
-function ChatPage() {
+export default function ChatPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -189,7 +189,7 @@ function ChatPage() {
   // -----------------------------------------------------
   // Action: ส่งข้อความปกติลงห้องแชท
   // -----------------------------------------------------
-  const sendMessage = () => {
+  const sendMessage = async () => {
   if (!input.trim()) return
 
   const data = {
@@ -201,8 +201,30 @@ function ChatPage() {
     Type: "MESSAGE"
   }
 
-  console.log("ส่งข้อมูล:", data)  // ← ดูตรงนี้
-  socket.emit("send_message", data)
+  const messageData =new FormData()
+  messageData.append("Room_Id", activeRoom.Room_Id)
+  messageData.append("Sender_Id", userId)
+  messageData.append("Receiver_Id", getOtherUserId(activeRoom, userId))
+  messageData.append("Message", input)
+  messageData.append("Service_Id", activeRoom.Service_Id)
+  messageData.append("Type", "MESSAGE")
+  console.log("ส่งข้อความ:", messageData.get("Message"))  // ← ดูตรงนี้
+
+
+
+    try{
+      const res = await axios.post("http://localhost:3000/api/newmessage", messageData, {
+        headers: { authorization: token }
+      })
+      console.log("ส่งข้อความสำเร็จ:", res.data.result)
+        socket.emit("send_message", res.data.result)
+          console.log("ส่งข้อมูล:", res.data.result)  // ← ดูตรงนี้
+
+    }catch(err){
+      console.log(err.res.message) 
+    }
+
+
   setInput("")
 }
 
@@ -255,7 +277,7 @@ function ChatPage() {
     
  const techId = userId !== msg.Receiver_Id ? msg.Receiver_Id : msg.Sender_Id
 
-  // ✅ ตรวจสอบค่าก่อนส่ง
+  //  ตรวจสอบค่าก่อนส่ง
   console.log("msg:", msg)
   console.log("activeRoom:", activeRoom)
   console.log("userId:", userId)
@@ -283,7 +305,7 @@ function ChatPage() {
       )
     )
 
-      alert("ยืนยันงานสำเร็จ ✅")
+      alert("ยืนยันงานสำเร็จ")
     } catch (err) {
       console.log(err.response?.data?.message)
     }
@@ -375,7 +397,7 @@ const rejectOffer = async (msg) => {
                   {/* แสดงข้อความประเภทเสนอราคา/ยืนยัน/ปฏิเสธ */}
                   {(msg.Type === "PRICE_OFFER" ||msg.Type === "PRICE_ACCEPT" ||msg.Type === "PRICE_REJECT")&& (
                     <div className="priceoffer">
-                      <p className="present">💰 เสนอราคางาน {msg.Title}</p>
+                      <p className="present"> เสนอราคางาน {msg.Title}</p>
                       <p className="presentprice">฿{msg.Price?.toLocaleString()}</p>
                       <p style={{"color":"black"}}>สถานะ :{formatType(msg.Type)}</p>
                         <p style={{ fontSize: "13px", color: "#555" }}>

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Newprofile from "./newprofile";
 import Editprofile from "./editprofile";
+import { memo } from "react";
+  
 
-export default function Data({ profile }) {
+export default memo(function Data({ profile , onProfileUpdated }) {
   // --- State สำหรับควบคุมการแสดงฟอร์มแก้ไขข้อมูล ---
   const [show, setShow] = useState(false);
 
@@ -46,9 +48,15 @@ export default function Data({ profile }) {
           <button className="bdata" onClick={() => setShow(!show)}>
             {show ? "X" : "แก้ไข"}
           </button>
-          {show && <Editprofile profile={profile} />}
+          {show && (<Editprofile
+              profile={profile}
+              onProfileUpdated={() => {
+                onProfileUpdated?.();
+                setShow(false); 
+              }}
+            />)}
         </div>
       </div>
     </div>
   );
-}
+});

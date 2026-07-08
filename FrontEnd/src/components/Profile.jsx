@@ -16,32 +16,26 @@ export default function Profile() {
   const [animate, setAnimate] = useState(false);
   const [profile, setProfile] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
+  const [pendingPage, setPendingPage] = useState(null);
+
   const navigate = useNavigate();
 
 // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
   const changePage = (newPage) => {
-    if (newPage === page) return;
-
+    if (newPage === page|| newPage === pendingPage) return;
+      setPendingPage(newPage);
     setAnimate(false);
-    setTimeout(() => {
-      setPage(newPage);
-      setAnimate(true);
-    }, 50);
   };
 
-  // โหลดข้อมูลผู้ใช้และข้อมูลโปรไฟล์เมื่อ component ถูกแสดงครั้งแรก
-  useEffect(() => {
-    const data = localStorage.getItem("user");
-    const id = JSON.parse(data).payload.id;
-
+  const handleTransitionEnd = () => {
+  if (pendingPage) {
+    setPage(pendingPage);
+    setPendingPage(null);
     setAnimate(true);
+  }
+};
 
-    if (data) {
-      setUser(JSON.parse(data));
-    }
-
-// ดึงข้อมูลโปรไฟล์จาก API หากยังไม่มีข้อมูลจะตั้งค่าสถานะให้แสดงหน้าสร้างโปรไฟล์
-    const loadProfile = async () => {
+ const loadProfile = async (id) => {
       try {
         const response = await axios.get(`http://localhost:3000/api/readprofile/${id}`, {
           headers: { authorization: localStorage.getItem("token") },
@@ -60,7 +54,24 @@ export default function Profile() {
       }
     };
 
-    loadProfile();
+
+  // โหลดข้อมูลผู้ใช้และข้อมูลโปรไฟล์เมื่อ component ถูกแสดงครั้งแรก
+  useEffect(() => {
+    const data = localStorage.getItem("user");
+    const id = JSON.parse(data)?.payload?.id;
+    
+
+    setAnimate(true);
+
+      if (!data || !id) {
+    return; // ไม่มี user หรือไม่มี id เลย ไม่ต้องยิง API
+  }
+      setUser(JSON.parse(data));
+    
+    
+
+// ดึงข้อมูลโปรไฟล์จาก API หากยังไม่มีข้อมูลจะตั้งค่าสถานะให้แสดงหน้าสร้างโปรไฟล์
+   loadProfile(id);
   }, []);
 
 // ถ้ายังไม่มีข้อมูลโปรไฟล์ ให้แสดงหน้าแบบสร้างโปรไฟล์แทน
@@ -118,9 +129,11 @@ export default function Profile() {
       </div>
 
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
-      <div key={page} className={animate ? "page-animation active" : "page-animation"}>
+      <div  
+      className={animate ? "page-animation active" : "page-animation"}
+      onTransitionEnd={handleTransitionEnd}>
         {page === "calendar" && <Calendar />}
-        {page === "data" && <Data profile={profile} />}
+        {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
         {page === "Tau" && <Tau />}
         {page === "searchmyservice" && <SearchMyservice />}
       </div>

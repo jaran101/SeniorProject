@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./PriceOfferModal.css"
-const PriceOfferModal = ({ onClose, onSend, service }) => {  // ← เพิ่ม service
+
+export default function PriceOfferModal({ onClose, onSend, service }) {  
   const [price, setPrice] = useState("");
   const [note, setNote] = useState("");
   const [date,setDate]= useState("");
@@ -23,7 +24,7 @@ const PriceOfferModal = ({ onClose, onSend, service }) => {  // ← เพิ่
   return (
     <div className="main">
       <div className="m2">
-        <h3 style={{ margin: 0 }}>💰 เสนอราคา</h3>
+        <h3 style={{ margin: 0 }}> เสนอราคา</h3>
 
         {/* รายละเอียดงาน */}
         {service && (
@@ -63,7 +64,7 @@ const PriceOfferModal = ({ onClose, onSend, service }) => {  // ← เพิ่
         <div>
           <input type="date" placeholder="ระบุวันเริ่มงาน" value={date} onChange={(e)=>setDate(e.target.value)} />
         </div>
-        {/*ช่องระบุวันเริ่มงาน*/}
+        {/*ช่องระบุวันสิ้นสุดงาน*/}
         <div>
           <input type="date" placeholder="ระบุวันเริ่มงาน" value={dateEnd} onChange={(e)=>setDateEnd(e.target.value)} />
         </div>
@@ -99,4 +100,3 @@ const PriceOfferModal = ({ onClose, onSend, service }) => {  // ← เพิ่
   )
 }
 
-export default PriceOfferModal

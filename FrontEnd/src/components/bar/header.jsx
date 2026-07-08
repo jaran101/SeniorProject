@@ -1,8 +1,8 @@
 import Logout from "../Logout";
 import { useEffect, useState } from "react";
-import TokenStatus from "../TokenStatus";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 export default function Header() {
   const location = useLocation();
@@ -64,7 +64,6 @@ export default function Header() {
       </div>
 
       {/* ส่วนแสดงสถานะ token เพื่อช่วยตรวจสอบว่าเข้าสู่ระบบหรือยัง */}
-      {/* <TokenStatus /> */}
 
       {/* เมนูหลักสำหรับนำทาง */}
       <div className="menu">

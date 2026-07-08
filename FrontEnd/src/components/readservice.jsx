@@ -2,7 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Readservice() {
+  //------------------------------------------------------
   // state สำหรับเก็บรายการบริการที่ดึงมาจาก API
+  //------------------------------------------------------
   const [services, setServices] = useState([]);
 
   // ดึงข้อมูลบริการเมื่อ component ถูกแสดงครั้งแรก

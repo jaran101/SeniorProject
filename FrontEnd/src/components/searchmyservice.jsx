@@ -2,20 +2,20 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import ServiceCreate from "./servicecreate"
 import ServiceOption from "./serviceoption"
-
-export default function SearchMyservice() {
+import {memo} from "react"
+export default memo(function SearchMyservice() {
   const token = localStorage.getItem("token")
-  const userId = JSON.parse(localStorage.getItem("user")).payload.id  // ✅ ย้ายออกมานอก useEffect
+  const userId = JSON.parse(localStorage.getItem("user")).payload.id  
 
   const [data, setData] = useState([])
-  const [showCreate, setShowCreate] = useState(false)   // ✅ modal สร้างงาน
-  const [showEdit, setShowEdit] = useState(false)       // ✅ modal แก้ไขงาน
+  const [showCreate, setShowCreate] = useState(false)   //  showหน้าสร้างงาน
+  const [showEdit, setShowEdit] = useState(false)       //  showหน้าแก้ไขงาน
   const [serviceId, setServiceId] = useState(0)
 
   // -----------------------------------------------------
   // ดึงงานของฉัน
   // -----------------------------------------------------
-  const fetchMyServices = async () => {   // ✅ แยกเป็น function ใช้ซ้ำได้
+  const fetchMyServices = async () => {  
     try {
       const response = await axios.get(`http://localhost:3000/api/searchmyservice/${userId}`, {
         headers: { authorization: token }
@@ -42,8 +42,7 @@ export default function SearchMyservice() {
         headers: { authorization: token },
         data: { Service_Id: Number(Service_Id),Users_Id:userId
             
-
-         }  // ✅ ใช้ userId ที่ประกาศด้านบน
+      }  
       })
       alert("ลบงานสำเร็จ")
       setData(prev => prev.filter(item => item.Service_Id !== Service_Id))
@@ -126,4 +125,4 @@ const handleEditService =()=>{
 
 </div>  
 )
-}
+})

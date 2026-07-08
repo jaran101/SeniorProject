@@ -38,7 +38,7 @@
   padding: 1.5rem 2rem;
   border-radius: 0 0 0px 0px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;      /* ✅ เพิ่ม */
+  box-sizing: border-box;      
 }
 
 /* ── รูปโปรไฟล์ ── */
@@ -107,12 +107,12 @@
 .page-animation {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.3s ease;
 }
 
 .page-animation.active {
   opacity: 1;
-    animation: fadeSlide 0.35s ease forwards;
+  transform: translateY(0);
 }
 
 /* ── ยังไม่ได้ login ── */

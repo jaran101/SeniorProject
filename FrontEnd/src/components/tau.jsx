@@ -1,10 +1,10 @@
 import { useState } from "react";
-
+import { memo } from "react";
 import MyJobsAsTech from "./MyJobsAsTech";
 import MyJobsAsUser from "./MyJobsAsUser";
 import "./tau.css";
 
-export default function Tau() {
+export default memo(function Tau() {
   // state สำหรับเก็บหน้าที่เลือกแสดงในส่วนงานของฉัน
   const [page, setPage] = useState("MyJobsAsTech");
 
@@ -35,4 +35,4 @@ export default function Tau() {
       </div>
     </div>
   );
-}
+})

@@ -3,11 +3,11 @@ html, body, #root {
   padding: 0;
   height: 100%;
   width: 100%;
-   box-sizing: border-box;      /* ✅ เพิ่ม */
+   box-sizing: border-box;     
   overflow-x: hidden; 
 }
 *, *::before, *::after {
-  box-sizing: border-box;      /* ✅ เพิ่ม — ครอบทุก element */
+  box-sizing: border-box;      
 }
 .page {
   display: flex;

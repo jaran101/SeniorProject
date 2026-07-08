@@ -3,7 +3,9 @@ import axios from "axios";
 import Newprofile from "./newprofile";
 
 export default function Register() {
+  //------------------------------------------------------
   // State สำหรับข้อมูลแบบฟอร์มและสถานะการทำงาน
+  //------------------------------------------------------
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -11,43 +13,11 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
-
-  // ตรวจสอบความถูกต้องของข้อมูลก่อนส่งลงทะเบียน
-  const validate = () => {
-    const nextErrors = {};
-
-    if (!email) {
-      nextErrors.Email = "กรุณากรอกอีเมล";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      nextErrors.Email = "รูปแบบอีเมลไม่ถูกต้อง";
-    }
-
-    if (!password) {
-      nextErrors.Password = "กรุณากรอกรหัสผ่าน";
-    } else if (password.length < 6) {
-      nextErrors.Password = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
-    } else if (!/\d/.test(password) || !/[A-Za-z]/.test(password)) {
-      nextErrors.Password = "รหัสผ่านต้องประกอบด้วยตัวอักษรและตัวเลข";
-    } else if (/\s/.test(password)) {
-      nextErrors.Password = "รหัสผ่านไม่ควรมีช่องว่าง";
-    }
-
-    if (!confirmPassword) {
-      nextErrors.confirmPassword = "กรุณากรอกยืนยันรหัสผ่าน";
-    } else if (password !== confirmPassword) {
-      nextErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
+  //-----------------------------------------------------
   // ส่งคำขอสมัครสมาชิก และเข้าสู่ระบบอัตโนมัติเมื่อสำเร็จ
+  //------------------------------------------------------
   const handleRegister = async () => {
-    if (!validate()) {
-      return;
-    }
-
+   
     setLoading(true);
 
     try {
@@ -77,7 +47,9 @@ export default function Register() {
       setLoading(false);
     }
   };
-
+//------------------------------------------------------
+//UI
+//------------------------------------------------------
   return (
     <div>
       {/* ส่วนหัวของฟอร์ม */}

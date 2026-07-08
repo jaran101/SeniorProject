@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -12,9 +12,6 @@ import Register from "./components/register";
 import Lar from "./components/lar";
 import Newprofile from "./components/newprofile";
 import Editprofile from "./components/editprofile";
-import Jk from "./components/test/Jk";
-import Bu from "./components/test/Bu";
-import Pc from "./components/test/pc";
 import ServiceCreate from "./components/servicecreate";
 import ListService from "./components/listservice";
 import Readservice from "./components/readservice";
@@ -22,7 +19,6 @@ import SearchMyservice from "./components/searchmyservice";
 import ServiceOption from "./components/serviceoption";
 import ChatPage from "./components/chart/Chatpage";
 import ShowService from "./components/showservice";
-import PriceOfferModal from "./components/chart/PriceOfferModal";
 import "./components/servicecreate.css";
 import "./components/bar/header.css";
 import "./components/bar/footer.css"; 
@@ -71,10 +67,6 @@ export default function App() {
         <Route path="/serviceoption" element={<><ServiceOption /><br /></>} />
         <Route path="/chatpage" element={<Layout><ChatPage /></Layout>} />
         <Route path="/showservice" element={<><ShowService /><br /></>} />
-        <Route path="/jk" element={<><Jk /><br /></>} />
-        <Route path="/bu" element={<><Bu /><br /></>} />
-        <Route path="/pc" element={<><Pc /><br /></>} />
-
       </Routes>
     )   
 }

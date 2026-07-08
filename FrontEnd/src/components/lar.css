@@ -4,17 +4,17 @@
   align-items: center;
   min-height: 100vh;
   padding: 2rem 1rem;
-  background-color: #FFECCD; /* เพิ่ม bg ให้เข้า theme */
+  background-color: #FFECCD; 
 }
 
 .lar-card {
   background: #fff;
-  border: 0.5px solid #e0cdb8; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
-  border-radius: 16px;          /* เพิ่มจาก 12px → ดูนุ่มขึ้น */
+  border: 0.5px solid #e0cdb8; 
+  border-radius: 16px;         
   width: 100%;
   max-width: 500px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* เพิ่มเงา */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); 
 }
 
 .lar-tab-row {
@@ -25,7 +25,7 @@
 .lar-tab {
   flex: 1;
   padding: 14px;
-  font-family: 'Kanit', sans-serif; /* เพิ่ม font ให้ตรงกับที่อื่น */
+  font-family: 'Kanit', sans-serif; 
   font-size: 15px;
   font-weight: 300;
   background: none;
@@ -36,13 +36,13 @@
 }
 
 .lar-tab:hover:not(.active) {
-  background: #fdf0e0; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  background: #fdf0e0; 
   color: #a67c5b;
 }
 
 .lar-tab.active {
   color: #2f2828;
-  background: #fdf0e0; /* เปลี่ยนจากเทา → น้ำตาลอ่อน */
+  background: #fdf0e0; 
   font-weight: 400;
 }
 

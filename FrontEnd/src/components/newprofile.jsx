@@ -28,7 +28,7 @@ export default function Newprofile() {
     }
      const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(phone)) {
-      alert("กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก ขึ้นต้นด้วย 0)"); // ✅ alert string ตรงๆ
+      alert("กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก ขึ้นต้นด้วย 0)"); //alert string ตรงๆ
       return;
     }
   
@@ -37,7 +37,7 @@ export default function Newprofile() {
     const id = JSON.parse(localStorage.getItem("user")).payload.id;
 
     try {
-      // ✅ ขั้นตอนที่ 1 — สร้าง Profile
+      // ขั้นตอนที่ 1 — สร้าง Profile
       await axios.post("/api/newprofile",
         {
           Users_Id: id,
@@ -51,7 +51,7 @@ export default function Newprofile() {
         { headers: { authorization: token } }
       );
 
-      // ✅ ขั้นตอนที่ 2 — อัปโหลดรูป
+      //  ขั้นตอนที่ 2 — อัปโหลดรูป
       if (avatar) {
         const formData = new FormData()
         formData.append("file", avatar)
