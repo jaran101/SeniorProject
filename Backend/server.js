@@ -1,13 +1,11 @@
 import express from "express"
 import morgan from "morgan"
-import cors from "cors"
 import authRoute from "./routes/auth.route.js"
 import profileRoute from "./routes/profile.route.js"
 import serviceRoute from "./routes/service.route.js"
 import orderRoute from "./routes/order.route.js"
 import reviewRoute from "./routes/review.route.js"
 import chatRoute from "./routes/chat.route.js"
-import helmet from 'helmet'
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { chatSocket }from "./socket/chat.socket.js";
@@ -21,15 +19,6 @@ const io = new Server(server,
   }
 );
 chatSocket(io);
-// app.use(helmet({
-//   contentSecurityPolicy: {
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self'"]
-//     }
-//   }
-// }));
-app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 app.use('/uploads',express.static('uploads'))
