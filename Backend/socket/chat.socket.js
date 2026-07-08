@@ -9,7 +9,7 @@ export const chatSocket = (io) => {
     );
     socket.on("send_message", async (data) => {
       try {
-        io.to(data.Room_Id).emit("receive_message", chat);
+        io.to(data.Room_Id).emit("receive_message",data);
       } catch (err) {
         throw err;
       }
