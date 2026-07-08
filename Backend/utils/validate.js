@@ -1,54 +1,14 @@
 import { object, string, number } from "yup";
 export const registerscheema=object().shape({
-  Email:string().email().required('Must not be empty').test(
-      'no-script-tag',
-      'The text must not contain <script> tags or JavaScript code',
-      (value) => {
-        if (!value) return true; 
-        const forbiddenPattern = /<\s*script.*?>.*?<\s*\/\s*script\s*>|javascript:|on\w+=/gis;
-        return !forbiddenPattern.test(value);
-      }
-    ),
-  Password:string().min(6).test(
-      'no-script-tag',
-      'The text must not contain <script> tags or JavaScript code',
-      (value) => {
-        if (!value) return true; 
-        const forbiddenPattern = /<\s*script.*?>.*?<\s*\/\s*script\s*>|javascript:|on\w+=/gis;
-        return !forbiddenPattern.test(value);
-      }
-    )
+  Email:string().email().required('Must not be empty'),
+  Password:string().min(6)
 })
 export const loginscheema=object().shape({
-  Email:string().email().required('Must not be empty').test(
-      'no-script-tag',
-      'The text must not contain <script> tags or JavaScript code',
-      (value) => {
-        if (!value) return true; 
-        const forbiddenPattern = /<\s*script.*?>.*?<\s*\/\s*script\s*>|javascript:|on\w+=/gis;
-        return !forbiddenPattern.test(value);
-      }
-    ),
-  Password:string().min(6).test(
-      'no-script-tag',
-      'The text must not contain <script> tags or JavaScript code',
-      (value) => {
-        if (!value) return true; 
-        const forbiddenPattern = /<\s*script.*?>.*?<\s*\/\s*script\s*>|javascript:|on\w+=/gis;
-        return !forbiddenPattern.test(value);
-      }
-    )
+  Email:string().email().required('Must not be empty'),
+  Password:string().min(6)
 })
 export const updateemailcheema=object().shape({
-  Email:string().email().required('Must not be empty').test(
-      'no-script-tag',
-      'The text must not contain <script> tags or JavaScript code',
-      (value) => {
-        if (!value) return true; 
-        const forbiddenPattern = /<\s*script.*?>.*?<\s*\/\s*script\s*>|javascript:|on\w+=/gis;
-        return !forbiddenPattern.test(value);
-      }
-    )
+  Email:string().email().required('Must not be empty')
 })
 export const createServiceSchema = object({
   Users_Id: number().typeError("User ID must be a valid number.").required("User ID is required."),

@@ -43,7 +43,7 @@ export const getAllOrders = async (req, res, next) => {
     next(err);
   }
 };
-export const getOrderByIdUser = async (req, res, next) => {
+export const getOrderByIdOder= async (req, res, next) => {
   try {
     const { id } = req.params;
     const order = await prisma.orders.findMany({
@@ -79,52 +79,6 @@ export const getOrderByIdTech = async (req, res, next) => {
       createError(404, "Order not found");
     }
     res.json({ result: order });
-  } catch (err) {
-    next(err);
-  }
-};
-export const updateOrderStatus = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { Status } = req.body;
-    const order = await prisma.orders.findUnique({
-      where: {
-        Order_Id: Number(id)
-      }
-    });
-    if (!order) {
-      (404, "Order not found");
-    }
-    const result = await prisma.orders.update({
-      where: {
-        Order_Id: Number(id)
-      },
-      data: {
-        Status
-      }
-    });
-    res.json({ message: "Update Order Success", result });
-  } catch (err) {
-    next(err);
-  }
-};
-export const deleteOrder = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const order = await prisma.orders.findUnique({
-      where: {
-        Order_Id: Number(id)
-      }
-    });
-    if (!order) {
-      createError(404, "Order not found");
-    }
-    await prisma.orders.delete({
-      where: {
-        Order_Id: Number(id)
-      }
-    });
-    res.json({ message: "Delete Order Success" });
   } catch (err) {
     next(err);
   }

@@ -3,7 +3,7 @@ import createError from "../utils/createError.js";
 
 export const createMessage = async (req, res, next) => {
   try {
-    const { Service_Id, Room_Id, Order_Id, Sender_Id, Receiver_Id, Message, Price } = req.body;
+    const { Service_Id, Room_Id, Sender_Id, Receiver_Id, Message, Price } = req.body;
     const chat = await prisma.chats.create({
       data: {
         Service_Id: Number(Service_Id),
