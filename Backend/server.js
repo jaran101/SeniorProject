@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from "morgan"
+import cors from "cors"
 import authRoute from "./routes/auth.route.js"
 import profileRoute from "./routes/profile.route.js"
 import serviceRoute from "./routes/service.route.js"
@@ -19,6 +20,7 @@ const io = new Server(server,
   }
 );
 chatSocket(io);
+app.use(cors("*"))
 app.use(morgan('dev'))
 app.use(express.json())
 app.use('/uploads',express.static('uploads'))
