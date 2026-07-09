@@ -10,7 +10,7 @@ export default memo(function Data({ profile , onProfileUpdated }) {
 
   // --- ดึงข้อมูลผู้ใช้จาก localStorage เพื่อใช้แสดง ID ของผู้ใช้ ---
   const data = JSON.parse(localStorage.getItem("user"));
-  const myId = data.payload.id;
+  const myId = data?.payload?.id;
 
   // --- ฟังก์ชันแปลงค่าเพศให้เป็นข้อความที่อ่านง่าย ---
   const formatGender = (gender) => {
@@ -30,9 +30,12 @@ export default memo(function Data({ profile , onProfileUpdated }) {
     );
   }
 
+  //-----------------------------------------------------
+  //UI
+    //-----------------------------------------------------
+
   return (
     <div>
-      {/* --- แสดงข้อมูลโปรไฟล์ของผู้ใช้ --- */}
       <div className="data-container">
         <p>Id: {myId}</p>
         <p>
@@ -43,17 +46,16 @@ export default memo(function Data({ profile , onProfileUpdated }) {
         <p>วันเกิด: {profile.Birth_Date.slice(0, 10)}</p>
         <p>ที่อยู่: {profile.Address}</p>
 
-        {/* --- ปุ่มสำหรับเปิด/ปิดฟอร์มแก้ไขและแสดงคอมโพเนนต์แก้ไข --- */}
         <div>
           <button className="bdata" onClick={() => setShow(!show)}>
             {show ? "X" : "แก้ไข"}
           </button>
           {show && (<Editprofile
               profile={profile}
-              onProfileUpdated={() => {
-                onProfileUpdated?.();
+              onProfileUpdated={(updated) => {
+            onProfileUpdated?.(updated);
                 setShow(false); 
-              }}
+                 }}
             />)}
         </div>
       </div>

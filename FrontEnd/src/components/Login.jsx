@@ -22,9 +22,13 @@ export default function Login() {
     return Object.keys(nextErrors).length === 0;
   };
 
+
   const handleLogin = async () => {
+    console.log("validate",validate())
     if (!validate()) {
-      return;
+          console.log("!validate",!validate())
+
+    return;
     }
 
     setLoading(true);
@@ -43,18 +47,24 @@ export default function Login() {
         navigate("/");
       }
     } catch (error) {
-      setErrors({ api: "email หรือ password ไม่ถูกต้อง" });
-      console.error("Login error:", error.response.data);
+     const messageE = error.response?.status === 429 ? "คุณได้พยายามเข้าสู่ระบบมากเกินไป กรุณารอสักครู่แล้วลองใหม่ หลังจาก 15 นาที" : "Email หรือ Password ผิดพลาด กรุณาลองใหม่";
+      setErrors({ api: messageE || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ" });
+      console.error("Login error:", error.response?.response?.data || error.message);
+
     } finally {
       setLoading(false);
+      console.log("validate",validate())
+      console.log("!validate",!validate())
     }
   };
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleLogin();
     }
   };
+
+
+  
 
   return (
     <div>
@@ -88,7 +98,7 @@ export default function Login() {
         />
         {errors.Password && <p className="err-msg">{errors.Password}</p>}
       </div>
-
+      
       <br />
 
       <button className="button" onClick={handleLogin} disabled={loading}>

@@ -43,7 +43,7 @@ export default function Profile() {
         setProfile(response.data.result);
       } catch (error) {
         if (error.response?.status === 404) {
-          setHasProfile(false);
+          setHasProfile(false); 
         } else {
           console.error("เกิดข้อผิดพลาด:", error);
           alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);

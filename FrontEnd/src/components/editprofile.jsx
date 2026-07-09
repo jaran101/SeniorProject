@@ -11,6 +11,7 @@ export default function Editprofile({ profile, onProfileUpdated }) {
   const [birthday, setBirthday] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   // --- ดึง ID ของผู้ใช้จาก localStorage เพื่อแนบไปกับคำขออัปเดต ---
   const data = JSON.parse(localStorage.getItem("user"));
@@ -34,6 +35,8 @@ export default function Editprofile({ profile, onProfileUpdated }) {
 
   // --- ฟังก์ชันบันทึกข้อมูลเมื่อผู้ใช้กดปุ่มบันทึก ---
   const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
     try {
       if (!firstName || !lastName || !phone || !address) {
         alert("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -53,7 +56,7 @@ export default function Editprofile({ profile, onProfileUpdated }) {
         formData.append("file", avatar);
       }
 
-      await axios.patch("http://localhost:3000/api/updateprofile", formData, {
+        const respons= await axios.patch("http://localhost:3000/api/updateprofile", formData, {
         headers: {
           authorization: localStorage.getItem("token"),
           "Content-Type": "multipart/form-data",
@@ -61,11 +64,14 @@ export default function Editprofile({ profile, onProfileUpdated }) {
       });
 
       alert("บันทึกสำเร็จ!");
-      onProfileUpdated?.();
+      onProfileUpdated?.(respons.data.result); // เรียก callback เพื่อแจ้งให้ component แม่ทราบว่ามีการอัปเดต
     } catch (error) {
       console.error("บันทึกไม่สำเร็จ:", error);
       alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
+    }finally {
+      setSaving(false);
     }
+
   };
 
   // --- ฟังก์ชันเลือกภาพและแสดงตัวอย่างก่อนอัปโหลด ---
@@ -74,6 +80,7 @@ export default function Editprofile({ profile, onProfileUpdated }) {
     if (!file) return;
 
     setAvatar(file);
+    if(previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(file));
   };
 

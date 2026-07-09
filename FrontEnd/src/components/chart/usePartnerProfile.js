@@ -6,7 +6,7 @@ const getToken = () => localStorage.getItem("token")
 const authHeaders = () => ({ headers: { authorization: getToken() } })
 
 
-const usePartnerProfile = (partnerId) => {
+export default function usePartnerProfile (partnerId) {
     const [profile, setProfile]= useState(null)
 
     useEffect(() => {
@@ -29,4 +29,3 @@ const usePartnerProfile = (partnerId) => {
     },[partnerId])
 return profile
 }
-export default usePartnerProfile

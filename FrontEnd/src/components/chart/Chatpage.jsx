@@ -70,7 +70,7 @@ export default function ChatPage() {
 
   const userId = Number(localStorage.getItem("id"))
   const token = localStorage.getItem("token")
-  const incomingState = location.state || null
+  const incomingState = location.state || null //รับค่าที่ส่งมาจากหน้า showservice
 
   // -----------------------------------------------------
   // State หลักของหน้าแชท
@@ -98,7 +98,7 @@ export default function ChatPage() {
     }
     socket.connect()
     return () => socket.disconnect()
-  }, [])
+  }, [userId, token, navigate])
 
   // -----------------------------------------------------
   // Effect: ดึงรายการห้องแชททั้งหมดมาแสดงใน sidebar
@@ -160,7 +160,7 @@ export default function ChatPage() {
       const s = res.data.result
       setServiceDetail(s)
       setServiceUserId(s.Users_Id)
-    } catch (err) { console.log(err) }
+    } catch (err) { console.log(err.response?.data.message) }
   }
 
   // -----------------------------------------------------
@@ -210,8 +210,6 @@ export default function ChatPage() {
   messageData.append("Type", "MESSAGE")
   console.log("ส่งข้อความ:", messageData.get("Message"))  // ← ดูตรงนี้
 
-
-
     try{
       const res = await axios.post("http://localhost:3000/api/newmessage", messageData, {
         headers: { authorization: token }
@@ -219,12 +217,10 @@ export default function ChatPage() {
       console.log("ส่งข้อความสำเร็จ:", res.data.result)
         socket.emit("send_message", res.data.result)
           console.log("ส่งข้อมูล:", res.data.result)  // ← ดูตรงนี้
-
+            
     }catch(err){
-      console.log(err.res.message) 
+      console.log(err.res.data.message) 
     }
-
-
   setInput("")
 }
 
@@ -340,10 +336,6 @@ const rejectOffer = async (msg) => {
     if (Type === "PRICE_REJECT") return "ลูกค้าปฎิเสธ";
     return "-";
   };
-
-
-
-
 
 
 // -----------------------------------------------------
@@ -542,4 +534,3 @@ const rejectOffer = async (msg) => {
   )
 }
 
-export default ChatPage

@@ -69,7 +69,7 @@ await axios.post("http://localhost:3000/api/newmessage", {
     }
 
     console.log("roomId:", roomId)
-    console.log("receiverId:", receiverId)  // ← เพิ่มก่อน navigate
+    console.log("receiverId:", receiverId)
     navigate("/chatpage", { state: { 
       roomId, receiverId, serviceUserId: service.Users_Id } })
   } catch (err) {
