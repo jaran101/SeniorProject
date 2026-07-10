@@ -49,7 +49,8 @@ export default function Login() {
     } catch (error) {
      const messageE = error.response?.status === 429 ? "คุณได้พยายามเข้าสู่ระบบมากเกินไป กรุณารอสักครู่แล้วลองใหม่ หลังจาก 15 นาที" : "Email หรือ Password ผิดพลาด กรุณาลองใหม่";
       setErrors({ api: messageE || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ" });
-      console.error("Login error:", error.response?.response?.data || error.message);
+
+      console.log("Login error:", error.response?.data || error.message);
 
     } finally {
       setLoading(false);

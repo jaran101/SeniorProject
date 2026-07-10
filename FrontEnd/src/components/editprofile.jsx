@@ -67,7 +67,8 @@ export default function Editprofile({ profile, onProfileUpdated }) {
       onProfileUpdated?.(respons.data.result); // เรียก callback เพื่อแจ้งให้ component แม่ทราบว่ามีการอัปเดต
     } catch (error) {
       console.error("บันทึกไม่สำเร็จ:", error);
-      alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
+      console.log("testError",error)
+      alert("เกิดข้อผิดพลาด: " + error.response?.data?.message);
     }finally {
       setSaving(false);
     }

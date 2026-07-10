@@ -39,7 +39,7 @@ export default function Header() {
         setProfile(response.data.result);
       } catch (error) {
         if (error.response?.status !== 404) {
-          console.error("เกิดข้อผิดพลาด:", error);
+          console.log("เกิดข้อผิดพลาด:", error.response?.data.message);
           localStorage.removeItem("id");
           localStorage.removeItem("user");
           localStorage.removeItem("token");

@@ -26,7 +26,8 @@ export default function Readservice() {
         if (error.response?.status === 404) {
           alert("ไม่มีข้อมูล");
         }
-        console.log(error);
+        alert("เกิดข้อผิดพลาด: " + error.response?.data?.message);
+
       }
     };
 

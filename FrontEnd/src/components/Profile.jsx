@@ -46,7 +46,7 @@ export default function Profile() {
           setHasProfile(false); 
         } else {
           console.error("เกิดข้อผิดพลาด:", error);
-          alert("เกิดข้อผิดพลาด: " + error.response?.data?.msg);
+        alert("เกิดข้อผิดพลาด: " + error.response?.data?.message);
           localStorage.removeItem("user");
           localStorage.removeItem("token");
           navigate("/");

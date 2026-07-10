@@ -23,9 +23,9 @@ try{
         });
         setOrder(response.data.result);
         console.log(response.data.result);
-      }catch(err){
-        console.log(err)
-        console.log(err.response.data.message)
+      }catch(error){
+        console.log(error)
+        console.log("เกิดข้อผิดพลาด:",error.response.data.message)
     }
 }
 FetchOrder()

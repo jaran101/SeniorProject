@@ -48,8 +48,8 @@ useEffect(() => {
       setOrder(allOrders)
 
       console.log("order ทั้งหมด:", allOrders)
-    } catch (err) {
-      console.log(err.response?.data?.message)
+    } catch (error) {
+      console.log(error.response?.data?.message)
     }
   }
 

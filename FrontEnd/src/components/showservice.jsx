@@ -28,7 +28,7 @@ export default function ShowService({ service ,data }) {
           setReceiverData(response.data.result)
           console.log("โหลดข้อมูลสำเร็จ:", response.data);
         } catch (error) {
-          console.error("โหลดข้อมูลไม่สำเร็จ:", error);
+          console.log("โหลดข้อมูลไม่สำเร็จ:", error);
           console.log("error:", error.response?.data);
           alert("เกิดข้อผิดพลาด กรุณาลองใหม่: " + error.response?.data?.msg);
         }
@@ -72,8 +72,8 @@ await axios.post("http://localhost:3000/api/newmessage", {
     console.log("receiverId:", receiverId)
     navigate("/chatpage", { state: { 
       roomId, receiverId, serviceUserId: service.Users_Id } })
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.log(error)
     alert("ไม่สามารถเปิดแชทได้")
   }
 }
