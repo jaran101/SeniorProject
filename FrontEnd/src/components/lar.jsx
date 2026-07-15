@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Login from "./Login";
 import Register from "./register";
-import NewProfile from "./newprofile";
 export default function Lar() {
   const [page, setPage] = useState("login");
 

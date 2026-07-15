@@ -2,17 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Calendar from "./Calendar";
 import Data from "./data";
 import Newprofile from "./newprofile";
 import SearchMyservice from "./searchmyservice";
-import Tau from "./tau";
 import "./Profile.css";
 
 export default function Profile() {
 //Ustate---------------------------------------------------------------------------------
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState("calendar");
+  const [page, setPage] = useState("data");
   const [animate, setAnimate] = useState(false);
   const [profile, setProfile] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
@@ -117,12 +115,7 @@ export default function Profile() {
         <button onClick={() => changePage("searchmyservice")} className="profile-button">
           งานของฉัน
         </button>
-        <button onClick={() => changePage("calendar")} className="profile-button">
-          ปฏิทินงาน
-        </button>
-        <button onClick={() => changePage("Tau")} className="profile-button">
-          กำหนดการ
-        </button>
+        
         <button onClick={() => changePage("data")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
@@ -132,9 +125,7 @@ export default function Profile() {
       <div  
       className={animate ? "page-animation active" : "page-animation"}
       onTransitionEnd={handleTransitionEnd}>
-        {page === "calendar" && <Calendar />}
         {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
-        {page === "Tau" && <Tau />}
         {page === "searchmyservice" && <SearchMyservice />}
       </div>
     </div>

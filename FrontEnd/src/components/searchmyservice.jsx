@@ -2,8 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import ServiceCreate from "./servicecreate"
 import ServiceOption from "./serviceoption"
-import {memo} from "react"
-export default memo(function SearchMyservice() {
+export default function SearchMyservice() {
   const token = localStorage.getItem("token")
   const userId = JSON.parse(localStorage.getItem("user")).payload.id  
 
@@ -125,4 +124,4 @@ const handleEditService =()=>{
 
 </div>  
 )
-})
+}

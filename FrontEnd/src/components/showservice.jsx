@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect,useState } from "react";
 import "./ShowService.css";
-import socket from "./chart/useSocket"
 
 
 export default function ShowService({ service ,data }) {
@@ -36,47 +35,7 @@ export default function ShowService({ service ,data }) {
       fethuser();
     },[receiverId]);
 
-//------------------------------------------------------------------------------------------------------------
-//ฟังก์ชันสำหรับเปิดหน้าต่างแชทกับเจ้าของบริการ
-//------------------------------------------------------------------------------------------------------------
-const handleChat = async () => {
-   console.log("receiverId ตอนเริ่ม:", receiverId) 
-  const senderId = Number(localStorage.getItem("id"))
-  const ids = [senderId, receiverId].sort((a, b) => a - b)
-  const roomId = `room_${ids[0]}_${ids[1]}_${service.Service_Id}`
 
-  try {
-    const res = await axios.get(`http://localhost:3000/api/listmyrooms/${senderId}`, {
-      headers: { authorization: localStorage.getItem("token") }
-    })
-    const existingRoom = res.data.result.find(r => r.Room_Id === roomId)
-      console.log("service ทั้งหมด:", service)
-    if (!existingRoom) {
-      // ห้องใหม่ → ส่งข้อความแรกผ่าน HTTP
-      const message = `สวัสดีครับ สนใจบริการ "${service.Title}" 
-                      รายละเอียด: "${service.Description}" 
-                      ราคา"${service.Price?.toLocaleString()}"` //→ แปลงตัวเลขให้มี comma คั่น
-      console.log("Message ที่จะส่ง:", message)  // ← ดูตรงนี้
-
-await axios.post("http://localhost:3000/api/newmessage", {
-  Room_Id: roomId,
-  Sender_Id: senderId,
-  Receiver_Id: receiverId,
-  Service_Id: service.Service_Id,
-  Message: message,
-  Type: "MESSAGE"
-}, { headers: { authorization: localStorage.getItem("token") } })
-    }
-
-    console.log("roomId:", roomId)
-    console.log("receiverId:", receiverId)
-    navigate("/chatpage", { state: { 
-      roomId, receiverId, serviceUserId: service.Users_Id } })
-  } catch (error) {
-    console.log(error)
-    alert("ไม่สามารถเปิดแชทได้")
-  }
-}
 //-----------------------------------------------------------------------------------------------------------------------------
 //UI
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -103,9 +62,7 @@ await axios.post("http://localhost:3000/api/newmessage", {
         </p>
       
 </div>
-{service.Users_Id !== userId && (
-  <button className="button3" onClick={handleChat}>ติดต่อผู้รับงาน</button>
-            )}    
+   
 </div>
     </div>
   );

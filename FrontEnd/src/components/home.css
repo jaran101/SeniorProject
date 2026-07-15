@@ -79,6 +79,8 @@
   margin: 0 40px;
   border-radius: 16px;
   scroll-behavior: smooth;
+    background: #ffffffc9;
+
 }
 
 /* Scrollbar */
@@ -166,7 +168,7 @@
 ══════════════════════════════════════ */
 
 .job {
-  background-color: #E3C9A8;
+  background-color: #eee8e0;
   width: 90%;
   height: auto;
   display: flex;

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Editprofile({ profile, onProfileUpdated }) {
+export default function Editprofile({ profile, onProfileUpdated ,myId
+ }) {
   // --- State สำหรับเก็บข้อมูลฟอร์มที่ผู้ใช้แก้ไข ---
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,10 +13,6 @@ export default function Editprofile({ profile, onProfileUpdated }) {
   const [avatar, setAvatar] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [saving, setSaving] = useState(false);
-
-  // --- ดึง ID ของผู้ใช้จาก localStorage เพื่อแนบไปกับคำขออัปเดต ---
-  const data = JSON.parse(localStorage.getItem("user"));
-  const myId = data?.payload?.id;
 
   // --- โหลดข้อมูลโปรไฟล์เดิมเข้าฟอร์มตอน component ถูก render ครั้งแรก ---
   useEffect(() => {
@@ -89,7 +86,7 @@ export default function Editprofile({ profile, onProfileUpdated }) {
     <div>
       {/* --- ส่วนหัวของฟอร์มแสดงข้อความข้อมูลส่วนตัว --- */}
       <hr className="Line" />
-      <p className="f1">ข้อมูลส่วนตัว</p>
+      <p className="f1">ข้อมูลส่วนตัว {myId}</p>
 
       {/* --- กล่องฟอร์มสำหรับกรอกข้อมูลผู้ใช้ --- */}
       <div>

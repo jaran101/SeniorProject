@@ -41,7 +41,6 @@ export default function Login() {
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("id", response.data.payload.id);
         localStorage.setItem("user", JSON.stringify(response.data));
         alert("เข้าสู่ระบบสำเร็จ");
         navigate("/");

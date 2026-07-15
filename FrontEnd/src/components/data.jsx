@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useMemo } from "react";
 import Newprofile from "./newprofile";
 import Editprofile from "./editprofile";
 import { memo } from "react";
@@ -9,8 +9,14 @@ export default memo(function Data({ profile , onProfileUpdated }) {
   const [show, setShow] = useState(false);
 
   // --- ดึงข้อมูลผู้ใช้จาก localStorage เพื่อใช้แสดง ID ของผู้ใช้ ---
-  const data = JSON.parse(localStorage.getItem("user"));
-  const myId = data?.payload?.id;
+ const [myId] = useState(() => {
+  const user = localStorage.getItem("user") ?? null;
+  if (!user) return null;
+  const parsedUser = JSON.parse(user);
+  const userId = parsedUser?.payload?.id;
+  return userId;
+});
+
 
   // --- ฟังก์ชันแปลงค่าเพศให้เป็นข้อความที่อ่านง่าย ---
   const formatGender = (gender) => {
@@ -30,6 +36,8 @@ export default memo(function Data({ profile , onProfileUpdated }) {
     );
   }
 
+
+  
   //-----------------------------------------------------
   //UI
     //-----------------------------------------------------
@@ -43,7 +51,7 @@ export default memo(function Data({ profile , onProfileUpdated }) {
         </p>
         <p>เบอร์โทรศัพท์: {profile.Phone}</p>
         <p>เพศ: {formatGender(profile.Gender)}</p>
-        <p>วันเกิด: {profile.Birth_Date.slice(0, 10)}</p>
+        <p>วันเกิด: {profile.Birth_Date? profile.Birth_Date.slice(0, 10):"-"}</p>
         <p>ที่อยู่: {profile.Address}</p>
 
         <div>
@@ -52,10 +60,11 @@ export default memo(function Data({ profile , onProfileUpdated }) {
           </button>
           {show && (<Editprofile
               profile={profile}
+              myId={myId}
               onProfileUpdated={(updated) => {
             onProfileUpdated?.(updated);
                 setShow(false); 
-                 }}
+            }}
             />)}
         </div>
       </div>

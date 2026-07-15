@@ -55,7 +55,6 @@ export default function Header() {
 
   return (
     <div className="header">
-      {/* ส่วนหัวของ header แสดงชื่อแอปและชื่อผู้ใช้ที่โหลดจาก profile */}
       <div className="header-brand">
         <span className="brand-name">Fix Chang</span>
         <span className="brand-user">
@@ -63,9 +62,7 @@ export default function Header() {
         </span>
       </div>
 
-      {/* ส่วนแสดงสถานะ token เพื่อช่วยตรวจสอบว่าเข้าสู่ระบบหรือยัง */}
 
-      {/* เมนูหลักสำหรับนำทาง */}
       <div className="menu">
         <button className="menu-btn">Menu</button>
         <div className="dropdown">
@@ -89,9 +86,6 @@ export default function Header() {
                   <a href="/profile">Profile</a>
                 </li>
               )}
-              <li className="p1">
-                <a href="/chatpage">Chat</a>
-              </li>
             </>
           )}
         </div>
