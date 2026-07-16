@@ -24,31 +24,11 @@ export default function Header() {
     if (!storedUser) return;
 
     const parsedUser = JSON.parse(storedUser);
-    const userId = parsedUser?.payload?.id;
 
     setUser(parsedUser?.payload);
-
-    const loadProfile = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/readprofile/${userId}`,
-          {
-            headers: { authorization: token },
-          }
-        );
-        setProfile(response.data.result);
-      } catch (error) {
-        if (error.response?.status !== 404) {
-          console.log("เกิดข้อผิดพลาด:", error.response?.data.message);
-          localStorage.removeItem("id");
-          localStorage.removeItem("user");
-          localStorage.removeItem("token");
-          navigate("/lar");
-        }
-      }
-    };
-
-    loadProfile();
+    console.log(token);
+    console.log("User from localStorage:", parsedUser?.payload);
+    
   }, [navigate, token]);
 
 
@@ -58,7 +38,6 @@ export default function Header() {
       <div className="header-brand">
         <span className="brand-name">Fix Chang</span>
         <span className="brand-user">
-          {profile ? `${profile.First_Name} ${profile.Last_Name}` : "ยังไม่ได้ login"}
         </span>
       </div>
 
