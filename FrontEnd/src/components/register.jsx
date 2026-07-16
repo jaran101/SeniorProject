@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import Newprofile from "./newprofile";
+import { object, string, ref } from "yup";
+
 
 export default function Register() {
   //------------------------------------------------------
@@ -13,15 +15,52 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  //-------------------------------------------------------
+  // กำหนด Schema สำหรับตรวจสอบการสมัครสมาชิก
+  //-------------------------------------------------------
+  const registerSchema = object().shape({
+  Email: string()
+    .email("รูปแบบอีเมลไม่ถูกต้อง")
+    .required("กรุณากรอกอีเมล"),
+  Password: string()
+    .min(6, "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร")
+    .required("กรุณากรอกรหัสผ่าน"),
+  confirmPassword: string()
+    .oneOf([ref("Password"), null], "รหัสผ่านไม่ตรงกัน")
+    .required("กรุณายืนยันรหัสผ่าน"),
+});
   //-----------------------------------------------------
   // ส่งคำขอสมัครสมาชิก และเข้าสู่ระบบอัตโนมัติเมื่อสำเร็จ
   //------------------------------------------------------
   const handleRegister = async () => {
-   
+
     setLoading(true);
+    setMessage("");
+    setErrors({}); // ล้าง Error เก่าออกก่อน
 
     try {
-      const response = await axios.post("http://localhost:3000/api/register", {
+      //------------------------------------------------------
+  // ตรวจสอบข้อมูลด้วย Yup ก่อนส่ง Backend
+  //------------------------------------------------------
+  try {
+    await registerSchema.validate(
+      { Email: email, Password: password, confirmPassword: confirmPassword },
+      { abortEarly: false }  // ให้เก็บ Error ทั้งหมด ไม่หยุดแค่ตัวแรก
+    );
+  } catch (validationError) {
+    // แปลงรูปแบบ Error จาก Yup ให้เหมือนเดิม
+    const formattedErrors = {};
+    validationError.inner.forEach((err) => {
+      formattedErrors[err.path] = err.message;
+    });
+    setErrors(formattedErrors);
+    setLoading(false);
+    return;  // หยุดการทำงานทันที ไม่ส่งไป Backend
+  }
+  //------------------------------------------------------
+  // ส่งข้อมูลไป Backend
+  //------------------------------------------------------
+  const response = await axios.post("http://localhost:3000/api/register", {
         Email: email,
         Password: password,
       });
