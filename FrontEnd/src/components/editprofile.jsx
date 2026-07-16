@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { object, string } from "yup";
+
+const profileSchema = object().shape({
+  firstName: string().required("กรุณากรอกชื่อจริง"),
+  lastName: string().required("กรุณากรอกนามสกุล"),
+  phone: string()
+    .min(10 ,"กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 ตัวอักษร")
+    .max(10,"กรุณากรอกเบอร์โทรศัพท์ไม่เกิน 10 ตัวอักษร")
+  .required("กรุณากรอกเบอร์โทรศัพท์"),
+  address: string().required("กรุณากรอกที่อยู่"),
+  gender: string().required("กรุณาเลือกเพศ"),
+  birthday: string().required("กรุณาเลือกวันเกิด"),
+});
+
 
 export default function Editprofile({ profile, onProfileUpdated ,myId
  }) {
@@ -13,6 +27,7 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
   const [avatar, setAvatar] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // --- โหลดข้อมูลโปรไฟล์เดิมเข้าฟอร์มตอน component ถูก render ครั้งแรก ---
   useEffect(() => {
@@ -35,11 +50,30 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
     if (saving) return;
     setSaving(true);
     try {
-      if (!firstName || !lastName || !phone || !address) {
-        alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-        return;
+      await profileSchema.validate(
+        {
+          firstName,
+          lastName,
+          phone,
+          address,
+          gender,
+          birthday,
+        },
+        { abortEarly: false } // เก็บ Error ของทุกช่อง
+      );
+    } catch (validationError) {
+      if (validationError.name === "ValidationError") {
+        const formattedErrors = {};
+        validationError.inner.forEach((err) => {
+          formattedErrors[err.path] = err.message;
+        });
+        setErrors(formattedErrors);
       }
+      setSaving(false);
+      return; // หยุดการทำงาน ไม่ส่งคำขอไปยัง API
+    }
 
+    try {
       const formData = new FormData();
       formData.append("Users_Id", myId);
       formData.append("First_Name", firstName);
@@ -53,7 +87,7 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
         formData.append("file", avatar);
       }
 
-        const respons= await axios.patch("http://localhost:3000/api/updateprofile", formData, {
+      const respons = await axios.patch("http://localhost:3000/api/updateprofile", formData, {
         headers: {
           authorization: localStorage.getItem("token"),
           "Content-Type": "multipart/form-data",
@@ -64,12 +98,11 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
       onProfileUpdated?.(respons.data.result); // เรียก callback เพื่อแจ้งให้ component แม่ทราบว่ามีการอัปเดต
     } catch (error) {
       console.error("บันทึกไม่สำเร็จ:", error);
-      console.log("testError",error)
+      console.log("testError", error);
       alert("เกิดข้อผิดพลาด: " + error.response?.data?.message);
-    }finally {
+    } finally {
       setSaving(false);
     }
-
   };
 
   // --- ฟังก์ชันเลือกภาพและแสดงตัวอย่างก่อนอัปโหลด ---
@@ -91,23 +124,30 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
       {/* --- กล่องฟอร์มสำหรับกรอกข้อมูลผู้ใช้ --- */}
       <div>
         <div className="row">
-          <input
+          <div>
+            <input
             className="i1"
             type="text"
             placeholder="ชื่อ"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
-          <input
+          {errors.firstName && <p className="err-msg">{errors.firstName}</p>}
+          </div>
+          <div>
+            <input
             className="i1"
             type="text"
             placeholder="นามสกุล"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
-        </div>
+          {errors.lastName && <p className="err-msg">{errors.lastName}</p>}
+          </div>
+          </div>
 
         <div className="rownw">
+          <div>
           <input
             className="i1"
             type="text"
@@ -115,7 +155,9 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-          <br />
+          {errors.phone && <p className="err-msg">{errors.phone}</p>}
+          </div>
+          <div>
           <input
             className="i1"
             type="text"
@@ -123,9 +165,11 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
+          {errors.address && <p className="err-msg">{errors.address}</p>}
+          </div>
         </div>
-
         <div className="row">
+          <div>
           <select
             className="i1"
             value={gender}
@@ -135,12 +179,17 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
             <option value="FEMALE">หญิง</option>
             <option value="OTHER">อื่นๆ</option>
           </select>
+          </div>
+          <div>
           <input
             className="i1"
             type="date"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
           />
+          {errors.gender && <p className="err-msg">{errors.gender}</p>}
+          {errors.birthday && <p className="err-msg">{errors.birthday}</p>}
+          </div>
         </div>
 
         <input type="file" accept="image/*" onChange={handleImageChange} />
