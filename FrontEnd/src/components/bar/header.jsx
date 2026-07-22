@@ -26,8 +26,7 @@ export default function Header() {
     const parsedUser = JSON.parse(storedUser);
 
     setUser(parsedUser?.payload);
-    console.log(token);
-    console.log("User from localStorage:", parsedUser?.payload);
+ 
     
   }, [navigate, token]);
 

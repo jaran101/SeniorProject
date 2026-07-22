@@ -2,9 +2,9 @@
     display: flex;
     flex-direction: column;
     width: 400px;
+    height: auto;
     align-items: center;
     margin: auto;
-    height: 80vh;
     background-color: rgb(210, 210, 210);
     padding: 5px;
     grid-gap: 2px;
@@ -12,7 +12,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition: 1s;
       overflow-y: auto;
-
+    z-index: 999;
 
 }
 

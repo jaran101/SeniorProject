@@ -53,7 +53,6 @@ export default function Profile() {
     };
 
 
-  // โหลดข้อมูลผู้ใช้และข้อมูลโปรไฟล์เมื่อ component ถูกแสดงครั้งแรก
   useEffect(() => {
     const data = localStorage.getItem("user");
     const id = JSON.parse(data)?.payload?.id;
@@ -62,17 +61,13 @@ export default function Profile() {
     setAnimate(true);
 
       if (!data || !id) {
-    return; // ไม่มี user หรือไม่มี id เลย ไม่ต้องยิง API
+    return;
   }
       setUser(JSON.parse(data));
     
-    
-
-// ดึงข้อมูลโปรไฟล์จาก API หากยังไม่มีข้อมูลจะตั้งค่าสถานะให้แสดงหน้าสร้างโปรไฟล์
-   loadProfile(id);
+    loadProfile(id);
   }, []);
 
-// ถ้ายังไม่มีข้อมูลโปรไฟล์ ให้แสดงหน้าแบบสร้างโปรไฟล์แทน
   if (!hasProfile) {
     return (
       <div className="data-container">
@@ -82,12 +77,13 @@ export default function Profile() {
     );
   }
 
-// ถ้ายังไม่ได้เข้าสู่ระบบ ให้แสดงข้อความเตือนก่อน
   if (!user) {
     return <p className="not-login">กรุณา login ก่อน</p>;
   }
-//Ui--------------------------------------------------------------------------------
-  return (
+//------------------------------------------------------------------------------------  
+//Ui----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------
+return (
     <div>
       {/* ส่วนแสดงข้อมูลผู้ใช้และรูปโปรไฟล์ */}
       <div className="profile-container">
@@ -110,23 +106,23 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* แสดงเมนูสำหรับสลับหน้าเนื้อหาต่าง ๆ */}
       <div className="profile-menu">
         <button onClick={() => changePage("searchmyservice")} className="profile-button">
           งานของฉัน
         </button>
-        
         <button onClick={() => changePage("data")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
+        <button className="profile-button">ปฎิทินธ์</button>
+        <button className="profile-button">กำหนดการ</button>
       </div>
-
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
       <div  
       className={animate ? "page-animation active" : "page-animation"}
       onTransitionEnd={handleTransitionEnd}>
         {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
         {page === "searchmyservice" && <SearchMyservice />}
+
       </div>
     </div>
   );

@@ -16,6 +16,11 @@ import ListService from "./components/listservice";
 import SearchMyservice from "./components/searchmyservice";
 import ServiceOption from "./components/serviceoption";
 import ShowService from "./components/showservice";
+import ChatPage from "./components/Chat/chatPage";
+//--------------------------------
+import ChatContainer from "./components/Chat/ChatContainer";
+
+//--------------------------------
 import "./components/servicecreate.css";
 import "./components/bar/header.css";
 import "./components/bar/footer.css"; 
@@ -59,6 +64,8 @@ export default function App() {
         <Route path="/searchmyservice" element={<><SearchMyservice /><br /></>} />
         <Route path="/serviceoption" element={<><ServiceOption /><br /></>} />
         <Route path="/showservice" element={<><ShowService /><br /></>} />
+        <Route path="/chatpage" element={<Layout><ChatPage /><br /></Layout>} />
+        <Route path="/chat" element={<Layout><ChatContainer /></Layout>} />
       </Routes>
     )   
 }

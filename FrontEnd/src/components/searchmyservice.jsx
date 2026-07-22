@@ -93,7 +93,7 @@ const handleEditService =()=>{
                           ()=>{setServiceId(service.Service_Id)
                           handleEditService()}
                           }>แก้ไข</button>
-                        <button className="Cancle" onClick={()=>{
+                        <button className="Cancel" onClick={()=>{
                           console.log("service =", service)
                           console.log("Service_Id =", service.Service_Id)
                           handleRemove(service.Service_Id)}}>ยกเลิก</button>
@@ -105,7 +105,7 @@ const handleEditService =()=>{
 {console.log(showCreate)}
 <div >
   {showCreate &&(
-<div className="oo">
+<div className="">
   <ServiceCreate onClose={() => setShowCreate(false)}
     onCreated={fetchMyServices}
     />

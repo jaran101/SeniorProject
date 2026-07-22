@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect,useState } from "react";
 import "./ShowService.css";
+import { generateRoomId } from "../utils/generateRoomId"; // ปรับ path ตามจริง
 
 
 export default function ShowService({ service ,data }) {
@@ -11,7 +12,7 @@ export default function ShowService({ service ,data }) {
     const [user, setUser] = useState(null);  
     const navigate = useNavigate();
     const [receiverData, setReceiverData] = useState(null);
-    const userId = Number(localStorage.getItem("id"))
+ const userId = JSON.parse(localStorage.getItem("user"))?.payload?.id
     const receiverId = service?.Users_Id;
 
 //------------------------------------------------------------------------------------------------------------
@@ -37,6 +38,27 @@ export default function ShowService({ service ,data }) {
 
 
 //-----------------------------------------------------------------------------------------------------------------------------
+//สร้าง room
+//-----------------------------------------------------------------------------------------------------------------------------
+function handleChatClick() {
+
+  const roomId = generateRoomId(service?.Service_Id, userId, receiverId);
+
+  navigate("/chat",{
+    state:{
+      Room_Id: roomId,
+      Service_Id: service?.Service_Id,
+      Sender_Id: userId,
+      Receiver_Id: receiverId,
+      Tech_Id: receiverId,   // 👈 เพิ่ม: ระบุชัดเจนว่าใครคือช่าง
+    Users_Id: userId,      // 👈 เพิ่ม: ระบุชัดเจนว่าใครคือลูกค้า
+      otherUserName: `${receiverData?.First_Name ?? service?.First_Name} ${receiverData?.Last_Name ?? service?.Last_Name}`,
+
+    }
+  })
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
 //UI
 //-----------------------------------------------------------------------------------------------------------------------------
   return (
@@ -60,7 +82,7 @@ export default function ShowService({ service ,data }) {
           ผู้รับงาน: {receiverData?.First_Name ?? service.First_Name}{" "}
           {receiverData?.Last_Name ?? service.Last_Name}
         </p>
-      
+      <button onClick={handleChatClick}>แชทกับผู้รับงาน</button>
 </div>
    
 </div>
