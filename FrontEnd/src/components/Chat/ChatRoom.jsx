@@ -69,12 +69,11 @@ function formatDate(dateString) {
 //Function HandleOfferSubmit
 //-------------------------
   function handleOfferSubmit() {
-    // TODO 1: เช็คว่ากรอกครบทั้ง 3 ช่องไหม (ถ้าไม่ครบ return ออกไปเลย ไม่ต้องส่ง)
+
     if(!offerPrice || !offerStartDate || !offerEndDate){
       return
     }
-    // TODO 2: เรียก onSendOffer(...) ส่งค่าที่กรอกไป (ยังไม่ต้องเขียนฟังก์ชันนี้จริง 
-    //         จะไปเขียนใน ChatContainer.jsx ขั้นต่อไป)
+
     onSendOffer({
       price:offerPrice,
       startDate:offerStartDate,
