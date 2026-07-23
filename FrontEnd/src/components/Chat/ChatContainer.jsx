@@ -80,7 +80,7 @@ const fetchHistory= async() => {
       const response = await axios.get(`http://localhost:3000/api/readmessages/${activeRoom.Room_Id}`
         ,{headers:{authorization:localStorage.getItem("token")}}
       )
-      console.log("History response:", response.data); // 👈 เพิ่ม
+      console.log("History response:", response.data); 
 
       setMessages(response.data.result)
     } catch (err) {
