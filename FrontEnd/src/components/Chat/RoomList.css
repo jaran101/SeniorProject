@@ -1,0 +1,13 @@
+.message-preview{
+    font-size: 14px;
+    color: #666;
+}
+
+.room-item{
+    cursor: pointer;
+    background-color: #e0cece98;
+    padding-left: 10px;
+}
+.room-item:hover {
+  background-color: #b3b3b3;
+}

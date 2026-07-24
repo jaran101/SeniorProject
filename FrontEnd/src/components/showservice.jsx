@@ -50,8 +50,8 @@ function handleChatClick() {
       Service_Id: service?.Service_Id,
       Sender_Id: userId,
       Receiver_Id: receiverId,
-      Tech_Id: receiverId,   // 👈 เพิ่ม: ระบุชัดเจนว่าใครคือช่าง
-    Users_Id: userId,      // 👈 เพิ่ม: ระบุชัดเจนว่าใครคือลูกค้า
+      Tech_Id: receiverId,  
+    Users_Id: userId,     
       otherUserName: `${receiverData?.First_Name ?? service?.First_Name} ${receiverData?.Last_Name ?? service?.Last_Name}`,
 
     }

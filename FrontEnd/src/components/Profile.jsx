@@ -5,6 +5,8 @@ import axios from "axios";
 import Data from "./data";
 import Newprofile from "./newprofile";
 import SearchMyservice from "./searchmyservice";
+import OrderCalendar from "./OrderCalendar";
+import Tau from "./techUser/tau";
 import "./Profile.css";
 
 export default function Profile() {
@@ -113,8 +115,8 @@ return (
         <button onClick={() => changePage("data")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
-        <button className="profile-button">ปฎิทินธ์</button>
-        <button className="profile-button">กำหนดการ</button>
+        <button onClick={() => changePage("OrderCalendar")} className="profile-button">ปฎิทินธ์</button>
+        <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ</button>
       </div>
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
       <div  
@@ -122,6 +124,9 @@ return (
       onTransitionEnd={handleTransitionEnd}>
         {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
         {page === "searchmyservice" && <SearchMyservice />}
+        {page === "OrderCalendar" && <OrderCalendar />}
+        {page === "tau" && <Tau />}
+        
 
       </div>
     </div>

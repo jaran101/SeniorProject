@@ -127,7 +127,7 @@ const sendMessage = async (text, file) => {
   if (!activeRoom || !socket) return;
 
   try {
-        const otherUserId = getOtherUserId(activeRoom, currentUserId); // 👈 เพิ่มบรรทัดนี้
+        const otherUserId = getOtherUserId(activeRoom, currentUserId); 
 
     const formData = new FormData();
   

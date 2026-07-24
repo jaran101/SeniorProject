@@ -10,10 +10,10 @@ export default function Header() {
 
   // เก็บข้อมูลผู้ใช้และโปรไฟล์ที่โหลดจาก API
   const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
 
   // ตรวจสถานะหน้าเพื่อแสดงเมนูให้เหมาะสม
   const isProfilePage = location.pathname === "/profile";
+  const isChatPage = location.pathname === "/chat";
   const isHomePage = location.pathname === "/";
 
   // Token ที่เก็บไว้ใน browser เพื่อใช้เรียก API
@@ -36,8 +36,13 @@ export default function Header() {
     <div className="header">
       <div className="header-brand">
         <span className="brand-name">Fix Chang</span>
-        <span className="brand-user">
+        {token?(
+        <span className="brand-user">สวัสดี
         </span>
+        ):(
+          <span className="brand-user">ยังไม่มีข้อมูล
+          </span>
+        )}
       </div>
 
 
@@ -56,9 +61,6 @@ export default function Header() {
           )}
           {user && (
             <>
-              <li className="buttonLogout">
-                <Logout />
-              </li>
               {token && !isProfilePage && (
                 <li className="p1">
                   <a href="/profile">Profile</a>
@@ -66,6 +68,16 @@ export default function Header() {
               )}
             </>
           )}
+          {user && !isChatPage && (
+            <li className="p1">
+              <a href="/chat">Chat</a>
+            </li>
+          )}
+
+          
+          <li className="buttonLogout">
+            <Logout />
+          </li>
         </div>
       </div>
     </div>
