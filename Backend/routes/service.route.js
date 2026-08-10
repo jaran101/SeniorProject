@@ -1,7 +1,7 @@
 import express from "express";
 
 import {createService,getAllServices,getServiceById,updateService,deleteService,
-searchServices,FilterService,getMyServices,createServiceArea,deleteServiceArea,FilterService
+searchServices,FilterService,getMyServices,createServiceArea,deleteServiceArea
 } from "../controllers/service.controller.js";
 import { verifytoken } from "../middleware/verifytoken.js";
 import upload from "../middleware/upload.js";
