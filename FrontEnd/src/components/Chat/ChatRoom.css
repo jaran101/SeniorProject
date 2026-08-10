@@ -1,0 +1,115 @@
+.message {
+  display: flex;
+  margin-bottom: 10px;
+}
+.mine {
+  justify-content: flex-end;
+}
+.theirs {
+  justify-content: flex-start;
+}
+
+
+
+.chat-room {
+display: flex;
+flex-direction: column;
+width: 100%;
+flex: 1;
+min-width: 0;
+min-height: 0;
+}
+
+.chat-header {
+display: flex;
+align-items: center;
+padding: 2px;
+background-color: #d4b39f;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+background-color: #d4b39f;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.chat-messages {
+display: flex;
+flex-direction: column;
+flex: 1;
+padding: 16px;
+overflow-y: auto;
+  /* ซ่อน scrollbar แต่ยัง scroll ได้ */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE, Edge เก่า */
+}
+
+
+
+.chat-messages::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge (Chromium) */
+}
+
+.chat-offer-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffffce;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.MessageImage{
+  border-radius: 8px;
+}
+
+.BubbleMessage {
+  background-color: #d4b39f;
+  padding: 10px;
+  border-radius: 8px;
+  width: fit-content;
+  max-width: 55%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.BubbleMessage.mine {
+  background-color: #d4b39f;
+  color: rgb(0, 0, 0);
+  align-self: flex-end;
+}
+.BubbleMessage.theirs {
+  background-color: #f1f0f0;
+  color: black;
+  align-self: flex-start;
+}
+
+
+.message-time {
+  font-size: 0.8em;
+  color: #888;
+  margin-top: 4px;  
+}
+
+
+.message-bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.message.mine .message-bubble-wrapper {
+  align-items: flex-end;
+}
+
+.message.theirs .message-bubble-wrapper {
+  align-items: flex-start;
+}
+
+
+

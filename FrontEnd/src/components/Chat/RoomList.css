@@ -1,6 +1,10 @@
-.message-preview{
-    font-size: 14px;
-    color: #666;
+.message-preview {
+  font-size: 14px;
+  color: #666;
+  max-width: 100px;           
+  white-space: nowrap;         
+  overflow: hidden;             
+  text-overflow: ellipsis;      
 }
 
 .room-item{

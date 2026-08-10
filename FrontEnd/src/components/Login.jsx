@@ -24,7 +24,6 @@ export default function Login() {
 
 
   const handleLogin = async () => {
-    console.log("validate",validate())
     if (!validate()) {
           console.log("!validate",!validate())
 
@@ -53,8 +52,7 @@ export default function Login() {
 
     } finally {
       setLoading(false);
-      console.log("validate",validate())
-      console.log("!validate",!validate())
+
     }
   };
   const handleKeyDown = (event) => {

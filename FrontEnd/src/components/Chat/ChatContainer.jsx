@@ -3,6 +3,7 @@ import useSocket from "../hooks/useSocket";
 import RoomList from "./RoomList";
 import ChatRoom from "./ChatRoom";
 import { useLocation } from "react-router-dom";
+import "./ChatContainer.css"
 import axios from "axios"; 
 
 function getOtherUserId(room, currentUserId) {
@@ -22,14 +23,14 @@ export default function ChatContainer() {
   const [activeRoom , setActiveRoom]=useState(location.state||null)
   const [messages, setMessages] = useState([]); 
   const [roomsList, setRoomsList] = useState([]);
-    const currentUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
-
+  const currentUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
+   const [showOfferModal, setShowOfferModal] = useState(false);
   const isTechnician = activeRoom && currentUserId === activeRoom.Receiver_Id;
 function updateRoomLastMessage(newMessage) {
   setRoomsList(prev =>
     prev.map(room =>
       room.Room_Id === newMessage.Room_Id
-        ? { ...room, Message: newMessage.Message }
+        ? { ...room, Message: newMessage.Message, Type: newMessage.Type, Image: newMessage.Image }
         : room
     )
   );
@@ -245,8 +246,12 @@ const rejectOffer = async (offerMessage) => {
 
 
   return (
-    <div style={{ display: "flex" }}>
-  <RoomList rooms={roomsList} onSelectRoom={setActiveRoom} />
+    <div className="chat-container">
+  
+  <RoomList rooms={roomsList} 
+    onSelectRoom={setActiveRoom} 
+    disabled={showOfferModal}
+    />
   
   <ChatRoom 
   room={activeRoom} 
@@ -255,8 +260,10 @@ const rejectOffer = async (offerMessage) => {
   currentUserId={currentUserId} 
   isTechnician={isTechnician}
   onSendOffer={sendOffer}
-    onAcceptOffer={acceptOffer}
+  onAcceptOffer={acceptOffer}
   onRejectOffer={rejectOffer}
+  showOfferModal={showOfferModal}        
+        setShowOfferModal={setShowOfferModal}  
   />           
   
   </div>
