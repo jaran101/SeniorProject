@@ -123,7 +123,7 @@ export const updateService = async (req, res, next) => {
   }
 };
 export const deleteService = async (req, res, next) => {
-  
+
   try {
     const { id } = req.params;
     const service = await prisma.services.findUnique({
@@ -154,29 +154,27 @@ export const deleteService = async (req, res, next) => {
 };
 export const searchServices = async (req, res, next) => {
   try {
-    const { q, category, minPrice, maxPrice } = req.query;
-    const services = await prisma.services.findMany({
-      where: {
-        AND: [
-          {
-            OR: [
-              {
-                Title: {
-                  contains: q || ""
-                }
-              },
-              {
-                Description: {
-                  contains: q || ""
-                }
-              }
-            ]
-          },
-          {
-            Category: category || undefined
+    const { q, Category } = req.query;
+    const where = {};
+    if (q) {
+      where.OR = [
+        {
+          Title: {
+            contains: q
           }
-        ]
-      },
+        },
+        {
+          Description: {
+            contains: q
+          }
+        }
+      ];
+    }
+    if (Category) {
+      where.Category = Category;
+    }
+    const services = await prisma.services.findMany({
+      where,
       include: {
         User: {
           select: {
@@ -201,27 +199,40 @@ export const searchServices = async (req, res, next) => {
     next(err);
   }
 };
-export const searchServiceByCategory = async (req, res, next) => {
+export const FilterService = async (req, res, next) => {
   try {
-    const { category } = req.params;
-    const services = await prisma.services.findMany({
-      where: {
-        Category: category
-      },
-      include: {
-        User: {
-          select: {
-            Users_Id: true,
-            Email: true,
-            Profile: true
-          }
+    const { Category, Province, District } = req.query;
+    const where = {};
+    if (Category) {
+      where.Services = {
+        some: {
+          Category
         }
+      };
+    }
+    if (Province || District) {
+      where.ServicesAreas = {
+        some: {
+          OR: [
+            ...(Province ? [{ Province }] : []),
+            ...(District ? [{ District }] : [])
+          ]
+        }
+      };
+    }
+    const services = await prisma.users.findMany({
+      where,
+      select: {
+        Users_Id: true,
+        Email: true,
+        Profile: true,
+        Services: true
       },
       orderBy: {
         Created_At: "desc"
       }
     });
-    res.json({result: services});
+    res.json({ result: services });
   } catch (err) {
     next(err);
   }
@@ -237,7 +248,51 @@ export const getMyServices = async (req, res, next) => {
         Created_At: "desc"
       }
     });
-    res.json({result: services});
+    res.json({ result: services });
+  } catch (err) {
+    next(err);
+  }
+};
+export const createServiceArea = async (req, res, next) => {
+  try {
+    const {Users_Id,Province,District} = req.body;
+    const user = await prisma.users.findUnique({
+      where: {
+        Users_Id: Number(Users_Id)
+      }
+    });
+    if (!user) {
+      createError(404, "User not found");
+    }
+    const area = await prisma.service_areas.create({
+      data: {
+        Users_Id: Number(Users_Id),
+        Province,
+        District
+      }
+    });
+    res.json({message: "Create Service Area Success",result: area});
+  } catch (err) {
+    next(err);
+  }
+};
+export const deleteServiceArea = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const area = await prisma.service_areas.findUnique({
+      where: {
+        Area_Id: Number(id)
+      }
+    });
+    if (!area) {
+      createError(404, "Area not found");
+    }
+    await prisma.service_areas.delete({
+      where: {
+        Area_Id: Number(id)
+      }
+    });
+    res.json({message: "Delete Success"});
   } catch (err) {
     next(err);
   }
