@@ -1,3 +1,4 @@
+import { tuple } from "yup";
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
 import bcrypt from "bcrypt";
@@ -5,7 +6,7 @@ import fs from "fs";
 
 export const createProfile = async (req, res, next) => {
   try {
-    const {Users_Id,First_Name,Last_Name,Phone,Gender,Birth_Date,Address,} = req.body;
+    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date, Address, } = req.body;
     if (!Users_Id) {
       createError(400, "Users_Id is required");
     }
@@ -37,7 +38,7 @@ export const createProfile = async (req, res, next) => {
       }
     });
 
-    res.json({result:profile});
+    res.json({ result: profile });
   } catch (err) {
     next(err);
   }
@@ -57,7 +58,7 @@ export const upProfile = async (req, res, next) => {
         Avatar: req.file.filename
       }
     });
-    res.json({message: "Upload avatar success"});
+    res.json({ message: "Upload avatar success" });
   } catch (err) {
     next(err);
   }
@@ -74,7 +75,7 @@ export const getProfileById = async (req, res, next) => {
     if (!profile) {
       createError(400, "Profile not found");
     }
-    res.json({result:profile});
+    res.json({ result: profile });
   } catch (err) {
     next(err);
   }
@@ -82,7 +83,7 @@ export const getProfileById = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const {Users_Id,First_Name,Last_Name,Phone,Gender,Birth_Date,Address} = req.body;
+    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date, Address } = req.body;
     let Avatar
     const profile = await prisma.profiles.findUnique({
       where: {
@@ -93,13 +94,13 @@ export const updateProfile = async (req, res, next) => {
       createError(400, "Profile not found");
     }
     if (req.file) {
-          if (profile.Avatar) {
-            if (fs.existsSync(`uploads/${profile.Avatar}`)) {
-              fs.unlinkSync(`uploads/${profile.Avatar}`);
-            }
-          }
-          Avatar= req.file.filename;
+      if (profile.Avatar) {
+        if (fs.existsSync(`uploads/${profile.Avatar}`)) {
+          fs.unlinkSync(`uploads/${profile.Avatar}`);
         }
+      }
+      Avatar = req.file.filename;
+    }
     const result = await prisma.profiles.update({
       where: {
         Users_Id: Number(Users_Id)
@@ -115,7 +116,7 @@ export const updateProfile = async (req, res, next) => {
         Avatar
       }
     });
-    res.json({message:"update profile success",result});
+    res.json({ message: "update profile success", result });
   } catch (err) {
     next(err);
   }
@@ -140,7 +141,7 @@ export const updateEmail = async (req, res, next) => {
         Email
       }
     });
-    res.json({message: "update email success"});
+    res.json({ message: "update email success" });
   } catch (err) {
     next(err);
   }
@@ -166,7 +167,7 @@ export const updatePassword = async (req, res, next) => {
         Password: hashPassword
       }
     });
-    res.json({message: "update password success"});
+    res.json({ message: "update password success" });
   } catch (err) {
     next(err);
   }
@@ -183,7 +184,7 @@ export const updateRole = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    const result=await prisma.users.update({
+    const result = await prisma.users.update({
       where: {
         Users_Id: Number(Users_Id)
       },
@@ -191,7 +192,7 @@ export const updateRole = async (req, res, next) => {
         Role
       }
     });
-    res.json({message: "update role success",result});
+    res.json({ message: "update role success", result });
   } catch (err) {
     next(err);
   }
@@ -208,7 +209,7 @@ export const updateStatus = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    const result=await prisma.users.update({
+    const result = await prisma.users.update({
       where: {
         Users_Id: Number(Users_Id)
       },
@@ -217,7 +218,7 @@ export const updateStatus = async (req, res, next) => {
       }
     });
 
-    res.json({message: "update status success",result});
+    res.json({ message: "update status success", result });
   } catch (err) {
     next(err);
   }
@@ -230,7 +231,7 @@ export const getAllUser = async (req, res, next) => {
         Profile: true
       }
     });
-    res.json({result:users});
+    res.json({ result: users });
   } catch (err) {
     next(err);
   }
@@ -250,7 +251,7 @@ export const getUserById = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    res.json({result:user});
+    res.json({ result: user });
   } catch (err) {
     next(err);
   }
@@ -270,7 +271,7 @@ export const getUserByEmail = async (req, res, next) => {
     if (!user) {
       createError(404, "User not found");
     }
-    res.json({result:user});
+    res.json({ result: user });
   } catch (err) {
     next(err);
   }
@@ -279,8 +280,41 @@ export const getUserByEmail = async (req, res, next) => {
 export const amountUser = async (req, res, next) => {
   try {
     const count = await prisma.users.count();
-    res.json({result: count});
+    res.json({ result: count });
   } catch (err) {
     next(err);
   }
 };
+
+export const editServiceArea = async (req, res, next) => {
+  try {
+    const { Users_Id, Province, District } = req.body;
+    const user = await prisma.users.findUnique({
+      where: {
+        Users_Id: Number(Users_Id)
+      },
+      select:{
+        ServicesAreas:{
+          select:{
+            Area_Id:true
+          }
+        }
+      }
+    });
+    const where = user.ServicesAreas[0];
+    console.log(where)
+    if (!user) {
+      createError(404, "User not found");
+    }
+    const update = await prisma.service_areas.update({
+      where,
+      data: {
+        Province: Province || undefined,
+        District: District || undefined
+      }
+    });
+    res.json({ result: update })
+  } catch (err) {
+    next(err);
+  }
+}

@@ -3,7 +3,7 @@ import multer from "../middleware/upload.js";
 import { verifytoken } from "../middleware/verifytoken.js";
 import {validate,updateemailcheema} from "../utils/validate.js";
 import {createProfile,upProfile,getProfileById,updateProfile,updateEmail,updatePassword,
-  updateRole,updateStatus,getAllUser,getUserById,getUserByEmail,amountUser
+  updateRole,updateStatus,getAllUser,getUserById,getUserByEmail,amountUser,editServiceArea
 } from "../controllers/profile.controller.js";
 const route = express.Router();
 route.post("/newprofile", verifytoken, createProfile);
@@ -18,5 +18,5 @@ route.patch("/updateemail",verifytoken,validate(updateemailcheema),updateEmail);
 route.patch("/updatepassword", verifytoken,updatePassword);
 route.patch("/updaterole",verifytoken,updateRole);
 route.patch("/updatestatus",verifytoken,updateStatus);
-
+route.patch("/updateservicearea",verifytoken,editServiceArea);
 export default route;

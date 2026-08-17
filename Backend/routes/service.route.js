@@ -15,7 +15,6 @@ route.get("/readservice/:id",getServiceById);
 route.get("/searchmyservice/:Users_Id",getMyServices);
 route.patch("/updateservice",verifytoken,upload,updateService);
 route.delete("/removeservice/:id",verifytoken,deleteService);
-route.get("/FilterService",FilterService)
 route.post("/newservicearea",createServiceArea)
 route.delete("/removeservicearea/:id",deleteServiceArea)
 
