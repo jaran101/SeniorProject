@@ -37,6 +37,7 @@
 .imguser {
     width: auto;
     height: 50px;
+    border-radius: 50px;
 }
 
 .user{
@@ -50,6 +51,8 @@
     border: 2px solid #ccc;
     background-color: #fff;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
 }
 
 .techName{

@@ -82,6 +82,8 @@ return (
           <option value="CLEANING">งานทำความสะอาด</option>
           <option value="OTHER">อื่นๆ</option>
         </select>
+        
+  
 
         {/* แสดงตัวอย่างภาพก่อนบันทึก */}
         {previewUrl && (

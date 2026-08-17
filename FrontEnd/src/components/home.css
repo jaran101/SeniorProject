@@ -35,7 +35,7 @@
   margin: 12px auto; /* จัดกึ่งกลางอัตโนมัติ */
   border: none;
   border-top: 2px #C8A27C !important;
-  width: 90%!important    ;
+  width: 90%!important;
   height: 0;
 }
 
@@ -73,14 +73,22 @@
 
 .job-scroll {
   display: flex;
+  align-items: center;        /* จัดปุ่มให้อยู่กึ่งกลางแนวตั้ง */
+
   overflow-x: auto;
+  overflow-y: hidden;
   gap: 10px;
-  padding: 12px 40px;
+  padding: 12px 4px;
   margin: 0 40px;
+  min-height: 100px;           /* ความสูงขั้นต่ำของกล่อง */
+
   border-radius: 16px;
   scroll-behavior: smooth;
-    background: #ffffffc9;
 
+  background: #ffffffc9;
+
+  box-sizing: border-box;
+  width: auto;
 }
 
 /* Scrollbar */

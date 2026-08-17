@@ -72,7 +72,7 @@ function handleChatClick() {
       <p><strong>บริการ:</strong> {service.Title}</p>
       <p><strong>รายละเอียด:</strong> {service.Description}</p>
       <p><strong>ราคา:</strong> {service.Price?.toLocaleString()} บาท</p>
-      <p><strong>ประเภทงาน:</strong> {data}</p>
+      <p><strong>ประเภทงาน:</strong> {service.Category}</p>
       <div className="user">
                 <div className="imageUser">
                   <img className="imguser" src={`http://localhost:3000/uploads/${receiverData?.Avatar ?? 

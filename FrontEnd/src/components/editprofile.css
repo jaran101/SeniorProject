@@ -1,0 +1,87 @@
+.avatar-preview{
+  max-width: 90%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.avatar-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+}
+
+
+.input_option{
+    width: 80%;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    transition: all 0.3s ease;
+
+}
+
+.input_option:focus{
+        border-color: #ff9408;
+        box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
+        outline: none;
+    }
+
+.input_option:hover{
+    transform: scale(1.02);
+    transition: 5ms all;
+}
+
+.input_profile {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 88%;          /* เปลี่ยนจาก 408px → 100% */
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding: 8px 12px;
+  background: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_profile:focus {
+  border-color: #ff9408;
+  box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
+}
+
+
+.input_option_Province option {
+  color: #333;
+  background-color: #ffffff;
+  font-family: 'Kanit', sans-serif;
+  font-size: 15px;
+  padding: 8px;
+}
+
+.input_profile_District{
+  
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 80%;          /* เปลี่ยนจาก 408px → 100% */
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding: 2px 9px;
+  background: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_profile_District:focus {
+  border-color: #ff9408;
+  box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
+}

@@ -2,10 +2,11 @@
   background: #fff;
   border: 0.5px solid #e0cdb8;
   border-radius: 16px;
-    overflow: hidden;
+  overflow: hidden;
   margin: 1rem auto;
   gap: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  flex:1;
 }
 .show-c2{
   display: flex;

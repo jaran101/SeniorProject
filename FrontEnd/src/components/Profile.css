@@ -113,6 +113,7 @@
 .page-animation.active {
   opacity: 1;
   transform: translateY(0);
+  
 }
 
 /* ── ยังไม่ได้ login ── */
@@ -123,6 +124,7 @@
   text-align: center;
   margin-top: 3rem;
   color: #6b5b45;
+  
 }
 
 @keyframes fadeSlide{

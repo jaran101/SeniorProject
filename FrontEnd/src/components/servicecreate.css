@@ -37,15 +37,7 @@
         transform: scale(1.02)
     }
 
-.input_option{
-    width: 80%;
-    border-radius: 5px;
-    border: 2px;
-    padding: 5px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
 
-}
 
 .button1{
     margin-top: 10px;
