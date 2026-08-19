@@ -78,7 +78,7 @@ export default function Newprofile() {
 
     try {
       // ขั้นตอนที่ 1 — สร้าง Profile
-      await axios.post("/api/newprofile",
+      await axios.post("http://localhost:3000/api/newprofile",
         {
           Users_Id: id,
           First_Name: firstName,
@@ -91,19 +91,29 @@ export default function Newprofile() {
         { headers: { authorization: token } }
       );
 
+      await axios.post("http://localhost:3000/api/newservicearea",
+        {
+          Users_Id:id,
+          Province:Province,
+          District:District,
+
+        }
+      )
       //  ขั้นตอนที่ 2 — อัปโหลดรูป
       if (avatar) {
         const formData = new FormData()
         formData.append("file", avatar)
         formData.append("Users_Id", id)
 
-        await axios.post("/api/uploadprofile", formData, {
+        await axios.post("http://localhost:3000/api/uploadprofile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             authorization: token,
           },
         })
       }
+
+
 
       alert("สร้างโปรไฟล์สำเร็จ");
       navigate("/");

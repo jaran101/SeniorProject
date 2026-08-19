@@ -97,6 +97,8 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
         },
       });
 
+      // const restponseAreaEdit = await axios.patch()
+
       alert("บันทึกสำเร็จ!");
       onProfileUpdated?.(respons.data.result); // เรียก callback เพื่อแจ้งให้ component แม่ทราบว่ามีการอัปเดต
     } catch (error) {

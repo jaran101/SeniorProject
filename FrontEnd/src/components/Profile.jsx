@@ -41,6 +41,11 @@ export default function Profile() {
           headers: { authorization: localStorage.getItem("token") },
         });
         setProfile(response.data.result);
+
+        const responseArea = await axios.get(`http://localhost:3000/api/readprofile/${id}`)
+
+
+
       } catch (error) {
         if (error.response?.status === 404) {
           setHasProfile(false); 
