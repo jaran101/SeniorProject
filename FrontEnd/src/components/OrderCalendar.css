@@ -1,0 +1,105 @@
+/* OrderCalendar.css */
+
+.calendar-container {
+    max-width: 380px;
+    font-family: "Sarabun", "Kanit", sans-serif;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    overflow-y: hidden  ;
+    margin-left: 10px;
+}
+
+/* --- Header: เดือน/ปี + ปุ่มเลื่อน --- */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.calendar-header span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.calendar-header button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.calendar-header button:hover {
+    background: #e0e0e0;
+}
+
+/* --- ตาราง --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead th {
+    padding: 8px 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #888;
+    text-align: center;
+}
+
+/* --- ช่องวันที่ --- */
+td {
+    text-align: center;
+    padding: 0;
+    height: 56px;
+    vertical-align: middle;
+    position: relative;
+}
+
+td.day {
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+}
+
+td.day:hover {
+    background: #f5f7ff;
+}
+
+td.day .day-number {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* วันที่ถูกเลือก */
+td.day.selected {
+    background: #4f6ef7;
+}
+
+td.day.selected .day-number {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* จุดบอกว่ามีออเดอร์วันนั้น */
+.dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff6b6b;
+    margin: 2px auto 0;
+}
+
+td.day.selected .dot {
+    background: #fff;
+}

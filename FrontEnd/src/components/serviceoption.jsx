@@ -14,6 +14,8 @@ export default function ServiceOption({ serviceId, onClose }) {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [category, setCategory] = useState("");
+  
+  
 
   // โหลดข้อมูลงานเดิมเมื่อได้รับ serviceId
   useEffect(() => {

@@ -120,7 +120,6 @@ return (
         <button onClick={() => changePage("data")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
-        <button onClick={() => changePage("OrderCalendar")} className="profile-button">ปฎิทินธ์</button>
         <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ</button>
       </div>
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
@@ -129,7 +128,6 @@ return (
       onTransitionEnd={handleTransitionEnd}>
         {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
         {page === "searchmyservice" && <SearchMyservice />}
-        {page === "OrderCalendar" && <OrderCalendar />}
         {page === "tau" && <Tau />}
         
 

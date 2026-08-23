@@ -75,7 +75,7 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
       setSaving(false);
       return; // หยุดการทำงาน ไม่ส่งคำขอไปยัง API
     }
-
+    
     try {
       const formData = new FormData();
       formData.append("Users_Id", myId);
@@ -121,14 +121,15 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
   };
 
   return (
-    <div>
+    <div className="Edit">
       {/* --- ส่วนหัวของฟอร์มแสดงข้อความข้อมูลส่วนตัว --- */}
       <hr className="Line" />
-      <p className="f1">ข้อมูลส่วนตัว</p>
 
       {/* --- กล่องฟอร์มสำหรับกรอกข้อมูลผู้ใช้ --- */}
-      <div>
-        <div className="row">
+      <div className="EditContainer">
+      <div className="Editdata">
+
+        <div className="rowEdit">
           <div>
             <input
             className="input_profile"
@@ -173,7 +174,13 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
           {errors.address && <p className="err-msg">{errors.address}</p>}
           </div>
         </div>
-        <div className="row">
+        <button className="buttonEdit" onClick={handleSave}>
+        บันทึก
+      </button>
+        </div>
+
+<div className="Editdata">
+        <div className="rowEdit">
           <div>
           <select
             className="input_profile"
@@ -196,7 +203,6 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
           {errors.birthday && <p className="err-msg">{errors.birthday}</p>}
           </div>
         </div>
-
         <select className="input_option"
         value={Province}
         onChange={(e) => setProvince(e.target.value)}
@@ -283,15 +289,16 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
       </select>
         <input className="input_profile_District" type="text" 
         placeholder="อำเภอ/เขต" value={District} onChange={(e) => setDistrict(e.target.value)} />
+</div>
 
 
 
 
-
-        <input type="file" accept="image/*" onChange={handleImageChange} />
+<div>
+        <input type="file" accept="image/*" onChange={handleImageChange}  />
        <div className="avatar-preview-container">
          {previewUrl && (
-          <img
+          <img onChange={handleImageChange}
             src={previewUrl}
             alt="ภาพที่เลือก"
             className="avatar-preview"
@@ -300,12 +307,10 @@ export default function Editprofile({ profile, onProfileUpdated ,myId
        </div>
    
       </div>
-
+</div>
       {/* --- ปุ่มบันทึกข้อมูล --- */}
       <hr className="hr1" />
-      <button className="button" onClick={handleSave}>
-        บันทึก
-      </button>
+      
     </div>
   );
 }

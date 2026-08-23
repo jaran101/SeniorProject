@@ -44,8 +44,10 @@ export default memo(function Data({ profile , onProfileUpdated }) {
 
   return (
     <div>
-      <div className="data-container">
-        <p>Id: {myId}</p>
+<div
+    className="data-container" style={{ width: show === true ? "1200px" : "400px" }}
+>       <div className="data">
+         <p>Id: {myId}</p>
         <p>
           ชื่อ: {profile.First_Name} {profile.Last_Name}
         </p>
@@ -53,6 +55,7 @@ export default memo(function Data({ profile , onProfileUpdated }) {
         <p>เพศ: {formatGender(profile.Gender)}</p>
         <p>วันเกิด: {profile.Birth_Date? profile.Birth_Date.slice(0, 10):"-"}</p>
         <p>ที่อยู่: {profile.Address}</p>
+       </div>
 
         <div>
           <button className="bdata" onClick={() => setShow(!show)}>

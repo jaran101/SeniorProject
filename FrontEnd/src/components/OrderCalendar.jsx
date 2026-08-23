@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useEffect, useState, useMemo } from "react"
-
+import "./OrderCalendar.css"
 
 function buildMonthGrid(year, month) {
     const firstDay = new Date(year, month, 1)
@@ -111,53 +111,50 @@ export default function OrderCalendar() {
 
 
    return (
-    <div>
+    <div className="calendar-container">
         <div>
             <button onClick={goPrevMonth}>{"<"}</button>
             <span>{year}-{month + 1}</span>
             <button onClick={goNextMonth}>{">"}</button>
         </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>อาทิตย์</th>
-                <th>จันทร์</th>
-                <th>อังคาร</th>
-                <th>พุธ</th>
-                <th>พฤหัส</th>
-                <th>ศุกร์</th>
-                <th>เสาร์</th>
-            </tr>
-        </thead>
-    </table>
-
-
-
-        <tbody>
-    {weeks.map((week, weekIndex) => (
-        <tr key={weekIndex}>
-            {week.map((cell, cellIndex) => {
-                if (!cell) {
-                    return <td key={`empty-${weekIndex}-${cellIndex}`}></td>
-                }
-
-                const ordersToday = calendarMap[cell.dateKey] || []
-
-                return (
-                    <td
-                        key={cell.dateKey}
-                        onClick={() => setSelectedDate(cell.dateKey)}
-                        style={{ cursor: "pointer", border: "1px solid #ccc", padding: "8px" }}
-                    >
-                        <div>{cell.day}</div>
-                        {ordersToday.length > 0 && <>●</>}
-                    </td>
-                )
-            })}
+<table>
+    <thead>
+        <tr>
+            <th>อาทิตย์</th>
+            <th>จันทร์</th>
+            <th>อังคาร</th>
+            <th>พุธ</th>
+            <th>พฤหัส</th>
+            <th>ศุกร์</th>
+            <th>เสาร์</th>
         </tr>
-    ))}
-</tbody>
+    </thead>
+    <tbody>
+        {weeks.map((week, weekIndex) => (
+            <tr key={weekIndex}>
+                {week.map((cell, cellIndex) => {
+                    if (!cell) {
+                        return <td key={`empty-${weekIndex}-${cellIndex}`}></td>
+                    }
+                    const ordersToday = calendarMap[cell.dateKey] || []
+                    return (
+                        <td
+                            key={cell.dateKey}
+                            onClick={() => setSelectedDate(cell.dateKey)}
+                            className={`day ${selectedDate === cell.dateKey ? "selected" : ""}`}
+                        >
+                            <div className="day-number">{cell.day}</div>
+                            {ordersToday.length > 0 && <span className="dot" />}
+                        </td>
+                    )
+                })}
+            </tr>
+        ))}
+    </tbody>
+</table>
+
+
     </div>
 )
 }
