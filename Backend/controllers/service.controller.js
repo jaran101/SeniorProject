@@ -154,24 +154,28 @@ export const deleteService = async (req, res, next) => {
 };
 export const searchServices = async (req, res, next) => {
   try {
-    const { q, Category } = req.query;
+    const { q, Category, Province, District } = req.query;
     const where = {};
     if (q) {
       where.OR = [
-        {
-          Title: {
-            contains: q
-          }
-        },
-        {
-          Description: {
-            contains: q
-          }
-        }
+        { Title: { contains: q } },
+        { Description: { contains: q } }
       ];
     }
     if (Category) {
       where.Category = Category;
+    }
+    if (Province || District) {
+      where.User = {
+        ServiceAreas: {
+          some: {
+            AND: [
+              Province ? { Province } : {},
+              District ? { District } : {}
+            ]
+          }
+        }
+      };
     }
     const services = await prisma.services.findMany({
       where,
@@ -184,49 +188,13 @@ export const searchServices = async (req, res, next) => {
               select: {
                 First_Name: true,
                 Last_Name: true,
-                Avatar: true
+                Avatar: true,
+                Phone: true
               }
-            }
+            },
+            ServiceAreas: true 
           }
         }
-      },
-      orderBy: {
-        Created_At: "desc"
-      }
-    });
-    res.json({ result: services });
-  } catch (err) {
-    next(err);
-  }
-};
-export const FilterService = async (req, res, next) => {
-  try {
-    const { Category, Province, District } = req.query;
-    const where = {};
-    if (Category) {
-      where.Services = {
-        some: {
-          Category
-        }
-      };
-    }
-    if (Province || District) {
-      where.ServicesAreas = {
-        some: {
-          OR: [
-            ...(Province ? [{ Province }] : []),
-            ...(District ? [{ District }] : [])
-          ]
-        }
-      };
-    }
-    const services = await prisma.users.findMany({
-      where,
-      select: {
-        Users_Id: true,
-        Email: true,
-        Profile: true,
-        Services: true
       },
       orderBy: {
         Created_At: "desc"

@@ -1,4 +1,3 @@
-import { tuple } from "yup";
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
 import bcrypt from "bcrypt";
@@ -6,25 +5,21 @@ import fs from "fs";
 
 export const createProfile = async (req, res, next) => {
   try {
-    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date, Address, } = req.body;
+    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date } = req.body;
     if (!Users_Id) {
-      createError(400, "Users_Id is required");
+      throw createError(400, "Users_Id is required");
     }
     const user = await prisma.users.findUnique({
-      where: {
-        Users_Id: Number(Users_Id)
-      }
+      where: { Users_Id: Number(Users_Id) }
     });
     if (!user) {
-      createError(404, "User not found");
+      throw createError(404, "User not found");
     }
     const profileExists = await prisma.profiles.findUnique({
-      where: {
-        Users_Id: Number(Users_Id)
-      }
+      where: { Users_Id: Number(Users_Id) }
     });
     if (profileExists) {
-      createError(400, "Profile already exists");
+      throw createError(400, "Profile already exists");
     }
     const profile = await prisma.profiles.create({
       data: {
@@ -34,10 +29,8 @@ export const createProfile = async (req, res, next) => {
         Phone,
         Gender,
         Birth_Date: Birth_Date ? new Date(Birth_Date) : null,
-        Address
       }
     });
-
     res.json({ result: profile });
   } catch (err) {
     next(err);
@@ -83,7 +76,7 @@ export const getProfileById = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date, Address } = req.body;
+    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date} = req.body;
     let Avatar
     const profile = await prisma.profiles.findUnique({
       where: {
@@ -112,7 +105,6 @@ export const updateProfile = async (req, res, next) => {
         Phone,
         Gender,
         Birth_Date: Birth_Date ? new Date(Birth_Date) : null,
-        Address,
         Avatar
       }
     });

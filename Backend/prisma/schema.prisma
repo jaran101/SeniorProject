@@ -53,20 +53,21 @@ enum ChatType {
 }
 
 model users {
-  Users_Id   Int      @id @default(autoincrement())
-  Email      String   @unique
-  Password   String
-  Role       Role
-  Status     Status   @default(ACTIVE)
+  Users_Id Int @id @default(autoincrement())
+  Email    String @unique
+  Password String
+  Role   Role
+  Status Status @default(ACTIVE)
   Created_At DateTime @default(now())
   Updated_At DateTime @updatedAt
-
-  Profile  profiles?
+  Profile profiles?
   Services services[]
-  CustomerOrders  orders[] @relation("CustomerOrders")
+  CustomerOrders orders[] @relation("CustomerOrders")
   TechnicianOrders orders[] @relation("TechnicianOrders")
-  ServicesAreas service_areas[]
+  Addresses addresses[]
+  ServiceAreas service_areas[]
 }
+
 model service_areas {
   Area_Id Int @id @default(autoincrement())
   Users_Id Int
@@ -83,13 +84,27 @@ model profiles {
   Last_Name       String?
   Phone           String?
   Avatar          String?
-  Address         String?
   Gender          Gender?
   Birth_Date      DateTime?
   Created_At      DateTime @default(now())
   Updated_At      DateTime @updatedAt
-
   User users @relation(fields: [Users_Id], references: [Users_Id])
+}
+
+model addresses {
+  Address_Id Int @id @default(autoincrement())
+  Users_Id Int
+  Address String?
+  Province String?
+  District String?
+  Subdistrict String?
+  Postal_Code String?
+  Latitude Float
+  Longitude Float
+  Is_Default Boolean @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+  User users @relation(fields: [Users_Id],references: [Users_Id])
 }
 
 model services {
