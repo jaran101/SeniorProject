@@ -163,6 +163,33 @@ model chats {
   Work_Date_End  DateTime?
   Image          String?
   Created_At     DateTime  @default(now())
-
   Service services @relation(fields: [Service_Id], references: [Service_Id])
+}
+
+model provinces {
+  Province_Id Int @id @default(autoincrement())
+  Name String @unique
+  Districts districts[]
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+}
+
+model districts {
+  District_Id Int @id @default(autoincrement())
+  Province_Id Int
+  Name String
+  Province provinces @relation(fields: [Province_Id],references: [Province_Id])
+  Subdistricts subdistricts[]
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+}
+
+model subdistricts {
+  Subdistrict_Id Int @id @default(autoincrement())
+  District_Id Int
+  Name String
+  Postal_Code String?
+  District districts @relation(fields: [District_Id],references: [District_Id])
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
 }

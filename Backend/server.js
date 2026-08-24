@@ -8,6 +8,7 @@ import orderRoute from "./routes/order.route.js"
 import reviewRoute from "./routes/review.route.js"
 import chatRoute from "./routes/chat.route.js"
 import addressRoute from "./routes/address.routes.js"
+import locationRoutes from "./routes/location.routes.js"
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { chatSocket }from "./socket/chat.socket.js";
@@ -32,6 +33,7 @@ app.use("/api",orderRoute)
 app.use("/api",reviewRoute)
 app.use("/api",chatRoute)
 app.use("/api",addressRoute)
+app.use("/api",locationRoutes)
 app.use((err,req,res,next)=>{
   res.status(err.code||500).json({message:err.message||"server error"})
 })
