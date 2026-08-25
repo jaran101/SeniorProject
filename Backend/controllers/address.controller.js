@@ -5,8 +5,6 @@ export const createAddress = async (req, res, next) => {
   try {
     const { Users_Id, Address, Province, District, Subdistrict, Postal_Code,
       Latitude, Longitude, Is_Default } = req.body;
-    let latitude;
-    let longitude;
     const user = await prisma.users.findUnique({
       where: {
         Users_Id: Number(Users_Id),
@@ -14,38 +12,6 @@ export const createAddress = async (req, res, next) => {
     });
     if (!user) {
       createError(404, "User not found");
-    }
-    if (!Latitude || !Longitude) {
-      const query = [
-        Address,
-        Subdistrict,
-        District,
-        Province,
-        Postal_Code,
-        "Thailand"
-      ].filter(item => Boolean(item)).join(", ");
-      if (!query) {
-        createError(400, "Address information is required");
-      }
-      const response = await axios.get(
-        "https://nominatim.openstreetmap.org/search",
-        {
-          params: {
-            q: query,
-            format: "json",
-            limit: 1,
-          },
-          headers: {
-            "User-Agent":
-              "MyServiceMarketplace/1.0 (jaranchai.to@rmuti.ac.th)"
-          }
-        }
-      );
-      if (!response.data || response.data.length === 0) {
-        createError(400, "Unable to find coordinates for the specified address");
-      }
-      latitude = response.data[0].lat;
-      longitude = response.data[0].lon;
     }
     if (Is_Default === true) {
       await prisma.addresses.updateMany({
@@ -66,8 +32,8 @@ export const createAddress = async (req, res, next) => {
         District: District || null,
         Subdistrict: Subdistrict || null,
         Postal_Code: Postal_Code || null,
-        Latitude: Number(latitude),
-        Longitude: Number(longitude),
+        Latitude: Number(Latitude),
+        Longitude: Number(Longitude),
         Is_Default: Is_Default === true
       }
     });
@@ -118,8 +84,6 @@ export const updateAddress = async (req, res, next) => {
     const { id } = req.params;
     const { Users_Id, Address, Province, District, Subdistrict, Postal_Code,
       Latitude, Longitude, Is_Default } = req.body;
-    let latitude;
-    let longitude;
     const address = await prisma.addresses.findUnique({
       where: {
         Address_Id: Number(id)
@@ -130,36 +94,6 @@ export const updateAddress = async (req, res, next) => {
     }
     if (address.Users_Id !== Number(Users_Id)) {
       createError(403, "Access Denied");
-    }
-    if (!Latitude && !Longitude &&
-      (Address || Province || District || Subdistrict || Postal_Code)) {
-      const query = [
-        Address || address.Address,
-        Subdistrict || address.Subdistrict,
-        District || address.District,
-        Province || address.Province,
-        Postal_Code || address.Postal_Code,
-        "Thailand",
-      ].filter(item => Boolean(item)).join(", ");
-      const response = await axios.get(
-        "https://nominatim.openstreetmap.org/search",
-        {
-          params: {
-            q: query,
-            format: "json",
-            limit: 1,
-          },
-          headers: {
-            "User-Agent":
-              "MyServiceMarketplace/1.0 (jaranchai.to@rmuti.ac.th)",
-          },
-        }
-      );
-      if (!response.data || response.data.length === 0) {
-        createError(400, "Unable to find coordinates for the specified address");
-      }
-      latitude = response.data[0].lat;
-      longitude = response.data[0].lon;
     }
     if (Is_Default === true) {
       await prisma.addresses.updateMany({
@@ -185,8 +119,8 @@ export const updateAddress = async (req, res, next) => {
         District: District || address.District,
         Subdistrict: Subdistrict || address.Subdistrict,
         Postal_Code: Postal_Code || address.Postal_Code,
-        Latitude: Number(latitude),
-        Longitude: Number(longitude),
+        Latitude: Number(Latitude),
+        Longitude: Number(Longitude),
         Is_Default: Is_Default || address.Is_Default
       }
     });
