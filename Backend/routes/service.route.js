@@ -1,7 +1,7 @@
 import express from "express";
 import {createService,getAllServices,getServiceById,updateService,deleteService,
-searchServices,getMyServices,createServiceArea,deleteServiceArea
-} from "../controllers/service.controller.js";
+searchServices,getMyServices,createServiceArea,deleteServiceArea,
+updateServiceArea,getMyServiceArea} from "../controllers/service.controller.js";
 import { verifytoken } from "../middleware/verifytoken.js";
 import upload from "../middleware/upload.js";
 import { validate, createServiceSchema } from "../utils/validate.js";
@@ -15,5 +15,6 @@ route.patch("/updateservice",verifytoken,upload,updateService);
 route.delete("/removeservice/:id",verifytoken,deleteService);
 route.post("/newservicearea",createServiceArea)
 route.delete("/removeservicearea/:id",deleteServiceArea)
-
+route.get("/readmyservicearea/:Users_Id", getMyServiceArea);
+route.put("/updateservicearea", updateServiceArea);
 export default route;

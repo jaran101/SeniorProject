@@ -261,3 +261,49 @@ export const deleteServiceArea = async (req, res, next) => {
     next(err);
   }
 };
+export const updateServiceArea = async (req, res, next) => {
+  try {
+    const { Area_Id, Users_Id, Province } = req.body;
+    const serviceArea = await prisma.service_areas.findUnique({
+      where: {
+        Area_Id: Number(Area_Id)
+      }
+    });
+    if (!serviceArea) {
+      createError(404, "Service area not found");
+    }
+    if (serviceArea.Users_Id !== Number(Users_Id)) {
+      createError(403, "Access Denied");
+    }
+    if (!Province) {
+      createError(400, "Province is required");
+    }
+    const result = await prisma.service_areas.update({
+      where: {
+        Area_Id: Number(Area_Id),
+      },
+      data: {
+        Province: Province
+      }
+    });
+    res.json({message: "Update Service Area Success",result});
+  } catch (err) {
+    next(err);
+  }
+};
+export const getMyServiceArea = async (req, res, next) => {
+  try {
+    const { Users_Id } = req.params;
+    const serviceAreas = await prisma.service_areas.findMany({
+      where: {
+        Users_Id: Number(Users_Id)
+      },
+      orderBy: {
+        Created_At: "desc"
+      }
+    });
+    res.json({result: serviceAreas});
+  } catch (err) {
+    next(err);
+  }
+};

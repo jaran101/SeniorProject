@@ -1,14 +1,13 @@
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
-import axios from "axios";
 export const createAddress = async (req, res, next) => {
   try {
     const { Users_Id, Address, Province, District, Subdistrict, Postal_Code,
       Latitude, Longitude, Is_Default } = req.body;
     const user = await prisma.users.findUnique({
       where: {
-        Users_Id: Number(Users_Id),
-      },
+        Users_Id: Number(Users_Id)
+      }
     });
     if (!user) {
       createError(404, "User not found");
@@ -28,7 +27,7 @@ export const createAddress = async (req, res, next) => {
       data: {
         Users_Id: Number(Users_Id),
         Address: Address || null,
-        Province: Province || null,
+        Province: Province,
         District: District || null,
         Subdistrict: Subdistrict || null,
         Postal_Code: Postal_Code || null,
@@ -37,7 +36,7 @@ export const createAddress = async (req, res, next) => {
         Is_Default: Is_Default === true
       }
     });
-    res.status(201).json({ message: "Address created successfully", result: address });
+    res.json({ message: "Address created successfully", result: address });
   } catch (err) {
     next(err);
   }
@@ -69,7 +68,7 @@ export const getAddressById = async (req, res, next) => {
     const address = await prisma.addresses.findUnique({
       where: {
         Address_Id: Number(id)
-      },
+      }
     });
     if (!address) {
       createError(404, "Address not found");
