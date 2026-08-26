@@ -220,7 +220,7 @@ export const getMyServices = async (req, res, next) => {
 };
 export const createServiceArea = async (req, res, next) => {
   try {
-    const {Users_Id,Province,District} = req.body;
+    const {Users_Id,Province} = req.body;
     const user = await prisma.users.findUnique({
       where: {
         Users_Id: Number(Users_Id)
@@ -232,8 +232,7 @@ export const createServiceArea = async (req, res, next) => {
     const area = await prisma.service_areas.create({
       data: {
         Users_Id: Number(Users_Id),
-        Province,
-        District
+        Province
       }
     });
     res.json({message: "Create Service Area Success",result: area});
