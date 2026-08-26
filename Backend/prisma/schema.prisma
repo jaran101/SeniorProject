@@ -138,6 +138,31 @@ model orders {
   TechUser users @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id])
   Service services @relation(fields: [Service_Id], references: [Service_Id])
   Review  reviews?
+  BOQ boqs?
+}
+
+model boqs {
+  BOQ_Id       Int      @id @default(autoincrement())
+  Order_Id     Int      @unique
+  Total_Amount Float    @default(0)
+  Created_At   DateTime @default(now())
+  Updated_At   DateTime @updatedAt
+  Order orders @relation(fields: [Order_Id], references: [Order_Id])
+  Items boq_items[]
+}
+
+model boq_items {
+  BOQ_Item_Id  Int      @id @default(autoincrement())
+  BOQ_Id       Int
+  Name         String
+  Description  String?
+  Quantity     Float
+  Unit         String
+  Unit_Price   Float
+  Total_Price  Float
+  Created_At   DateTime @default(now())
+  Updated_At   DateTime @updatedAt
+  BOQ boqs @relation(fields: [BOQ_Id], references: [BOQ_Id])
 }
 
 model reviews {
