@@ -72,7 +72,6 @@ model service_areas {
   Area_Id Int @id @default(autoincrement())
   Users_Id Int
   Province String
-  District String?
   Created_At DateTime @default(now())
   User users @relation(fields: [Users_Id], references: [Users_Id])
 }

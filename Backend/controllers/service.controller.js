@@ -154,7 +154,7 @@ export const deleteService = async (req, res, next) => {
 };
 export const searchServices = async (req, res, next) => {
   try {
-    const { q, Category, Province, District } = req.query;
+    const { q, Category, Province} = req.query;
     const where = {};
     if (q) {
       where.OR = [
@@ -165,14 +165,11 @@ export const searchServices = async (req, res, next) => {
     if (Category) {
       where.Category = Category;
     }
-    if (Province || District) {
+    if (Province ) {
       where.User = {
         ServiceAreas: {
           some: {
-            AND: [
-              Province ? { Province } : {},
-              District ? { District } : {}
-            ]
+            Province: Province
           }
         }
       };
