@@ -83,6 +83,29 @@ export const getOrderByIdTech = async (req, res, next) => {
     next(err);
   }
 };
+export const getOrderByIdService= async (req, res, next) => {
+  try {
+    const { Service_Id } = req.params;
+    const service = await prisma.services.findMany({
+      where: {
+        Service_Id:Number(Service_Id)
+      }
+    });
+    if (!service) {
+      createError(404, "Service not found");
+    }
+    const order =await prisma.orders.findMany({
+      where:{
+        Service:{
+            Service_Id:Number(Service_Id)
+        }
+      }
+    })
+    res.json({ result: order });
+  } catch (err) {
+    next(err);
+  }
+};
 export const startOrder = async (req, res, next) => {
   try {
     const { id } = req.params;

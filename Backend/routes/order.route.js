@@ -1,7 +1,8 @@
 import express from "express";
 import { verifytoken } from "../middleware/verifytoken.js";
 import {createOrder,getAllOrders,getOrderByIdOder,startOrder,
-  finishOrder,confirmOrder,rejectOrder,getMyOder,getOrderByIdTech} from "../controllers/order.controller.js";
+  finishOrder,confirmOrder,rejectOrder,getMyOder,getOrderByIdTech,
+getOrderByIdService} from "../controllers/order.controller.js";
 
 const route = express.Router();
 route.post("/createorder",verifytoken,createOrder);
@@ -13,4 +14,5 @@ route.patch("/finishorders/:id",verifytoken,finishOrder);
 route.patch("/confirmorders/:id",verifytoken,confirmOrder);
 route.patch("/rejectorders/:id",verifytoken,rejectOrder);
 route.get("/readorderbyuserid/:id",getMyOder)
+route.get("/reaorderbyidservice/:Service_Id",getOrderByIdService)
 export default route;
