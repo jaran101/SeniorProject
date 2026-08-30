@@ -1,0 +1,24 @@
+.DeleteLocation{
+    background-color: crimson;
+    color: whitesmoke;
+    border:none;
+    outline:none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.DeleteLocation:hover{
+    background-color: #ff4d4d;
+}
+.UpdateLocation{
+    background-color: gold;
+    color: black;
+    border:none;
+    outline:none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.UpdateLocation:hover{
+    background-color: #ffd11a;
+}

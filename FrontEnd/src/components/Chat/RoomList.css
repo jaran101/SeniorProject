@@ -7,11 +7,41 @@
   text-overflow: ellipsis;      
 }
 
-.room-item{
+/* .room-item{
     cursor: pointer;
     background-color: #e0cece98;
     padding-left: 10px;
-}
+    display: flex;
+    align-items: center;
+} */
 .room-item:hover {
   background-color: #b3b3b3;
+}
+
+
+.Room-Chat{
+  margin: 5px;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.Room-Chat:hover{
+  background-color: #e0e0e0c2;
+}
+
+.Room-Chat-Avatar{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 1px solid rgb(158, 149, 149);
+  background-color: rgba(255, 255, 255, 0.774);
+}
+
+.Room-Chat-Info{
+  display: flex;
+  flex-direction: column;
 }

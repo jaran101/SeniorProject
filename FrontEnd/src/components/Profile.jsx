@@ -4,8 +4,7 @@ import axios from "axios";
 
 import Data from "./data";
 import Newprofile from "./newprofile";
-import SearchMyservice from "./searchmyservice";
-import OrderCalendar from "./OrderCalendar";
+import SearchMyservice from "./service/searchmyservice";
 import Tau from "./techUser/tau";
 import "./Profile.css";
 
@@ -17,7 +16,7 @@ export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
   const [pendingPage, setPendingPage] = useState(null);
-
+  const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
 
 // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
@@ -42,8 +41,9 @@ export default function Profile() {
         });
         setProfile(response.data.result);
 
-        const responseArea = await axios.get(`http://localhost:3000/api/readprofile/${id}`)
-
+        const responseAddresses = await axios.get(`http://localhost:3000/api/readmyaddresses/${id}`);
+        setAddresses(responseAddresses.data.result);
+      
 
 
       } catch (error) {
@@ -126,7 +126,7 @@ return (
       <div  
       className={animate ? "page-animation active" : "page-animation"}
       onTransitionEnd={handleTransitionEnd}>
-        {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} />}
+        {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} addresses={addresses} setAddresses={setAddresses} />}
         {page === "searchmyservice" && <SearchMyservice />}
         {page === "tau" && <Tau />}
         

@@ -1,23 +1,23 @@
-.CustomerMap {
+.OrderMap {
     display: flex;
     margin-top: -3px;
     height: 200px;
     gap: 1px;
+    flex-direction: column;
 
 }
 
-.map-container {
-    height: 200px;
-    width: 100%;
+.mapOrder-container {
+    height: 100%;
+    width: 700px;
 }
 
 
 .inputMapContainer{
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 310px;
     height: auto;
-    margin-left:10px;
     gap: 2px;
     /* background-color: yellow;    */
     
@@ -90,10 +90,10 @@
     flex-direction: row;
 }
 
-.MapCon{
-    position: 'relative';
-    height: 500px;
-    width: 500px;
+.MapOrderCon{
+    /* position: 'relative'; */
+    height: 200px;
+    width: 700px;
 }
 
 .ButtonSaveAddress{

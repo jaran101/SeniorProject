@@ -4,7 +4,6 @@
     import axios from 'axios';
     import './CustomerMap.css';
 
-
     function RecenterMap({ position,zoom  }) {
         const map = useMap();
 
@@ -24,7 +23,6 @@
                 onSelect([lat, lng]);
             }
         });
-
         return null; 
     }
 
@@ -32,22 +30,19 @@
     function ZoomTracker({ onZoomChange }) {
         const map = useMapEvents({
             zoomend: () => {
-
                 const currentZoom = map.getZoom();
                 onZoomChange(currentZoom);
             }
         });
-
         return null;
     }
 
 
-    export default function CustomerMap({myId}) {
+    export default function UpdateAddress({myId, address}) {
         const [position, setPosition] = useState([13.7563, 100.5018]);
         const [zoom, setZoom] = useState(13);
 
-        const [address, setAddress] = useState("");
-
+        const [addressText, setAddressText] = useState("");
         const [province, setProvince] = useState([]);
         const [selectedProvince, setSelectedProvince] = useState("");
 
@@ -61,6 +56,7 @@
 
         const [provinceId, setProvinceId] = useState("");
         const [districtId, setDistrictId] = useState("");
+
         const [subdistrictId, setSubdistrictId] = useState("");
     /*-----------------------------------------------*/
     const handleGetLocation = () => {
@@ -68,12 +64,9 @@
                 alert("Geolocation is not supported by this browser.");
                 return;
             }
-
-
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const { latitude, longitude } = pos.coords;
-
                     setPosition([latitude, longitude]);
                 },
                 (error) => {
@@ -83,6 +76,31 @@
 
             );
         };
+
+
+useEffect(() => {
+    if (!address || province.length === 0) return;
+
+    setAddressText(address.Address || "");
+    setSelectedProvince(address.Province || "");
+    setSelectedDistrict(address.District || "");
+    setSelectedSubdistrict(address.Subdistrict || "");
+    setZipcode(address.Postal_Code || "");
+
+    setPosition([
+        address.Latitude ?? 13.7563,
+        address.Longitude ?? 100.5018
+    ]);
+
+    // หา Province ID จากชื่อจังหวัด
+    const foundProvince = province.find(
+        (item) => item.Name === address.Province
+    );
+
+    if (foundProvince) {
+        setProvinceId(foundProvince.Province_Id);
+    }
+}, [address, province]);
 
 
 useEffect(() => {
@@ -97,29 +115,45 @@ useEffect(() => {
     }
     fetchProvince()
 }, []);
-
-
+//-----------------------------------------------------------
 useEffect(() => {
-    if (!selectedProvince) return;
+    if (!provinceId) {
+        setDistrict([]);
+        return;
+    }
 
     const fetchDistricts = async () => {
         try {
             const response = await axios.get(
                 `http://localhost:3000/api/readdistricts/${provinceId}`
             );
-            setDistrict(response.data.result);
+
+            const districts = response.data.result;
+
+            setDistrict(districts);
+
+            // ถ้ามี address เดิม ให้หา District ID
+            if (address?.District) {
+                const foundDistrict = districts.find(
+                    (item) => item.Name === address.District
+                );
+
+                if (foundDistrict) {
+                    setDistrictId(foundDistrict.District_Id);
+                }
+            }
+
         } catch (error) {
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message);
         }
     };
-    fetchDistricts();
-}, [selectedProvince]);
 
+    fetchDistricts();
+}, [provinceId, address]);
+//------------------------------------------------------------------------------------
 useEffect(() => {
-    if (!selectedDistrict) {
+    if (!districtId) {
         setSubdistrict([]);
-        setSelectedSubdistrict("");
-        setZipcode("");
         return;
     }
 
@@ -128,19 +162,37 @@ useEffect(() => {
             const response = await axios.get(
                 `http://localhost:3000/api/readsubdistricts/${districtId}`
             );
-            setSubdistrict(response.data.result);
-            setSelectedSubdistrict("");
-            setZipcode("");
+
+            const subdistricts = response.data.result;
+
+            setSubdistrict(subdistricts);
+
+            // ถ้ามี address เดิม ให้หา Subdistrict ID
+            if (address?.Subdistrict) {
+                const foundSubdistrict = subdistricts.find(
+                    (item) => item.Name === address.Subdistrict
+                );
+
+                if (foundSubdistrict) {
+                    setSubdistrictId(
+                        foundSubdistrict.Subdistrict_Id
+                    );
+                    setZipcode(
+                        foundSubdistrict.Postal_Code ?? ""
+                    );
+                }
+            }
 
         } catch (error) {
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message);
         }
     };
 
     fetchSubdistricts();
-}, [selectedDistrict]);
+}, [districtId, address]);
 
 
+//---------------------------------------------------------------------------
 useEffect(() => {
     if (!selectedSubdistrict) {
         setZipcode("");
@@ -156,25 +208,33 @@ useEffect(() => {
     }
 }, [selectedSubdistrict, subdistrict]);
 
-
-const handleSetLocation = async() => {
-    try{
-        const response = await axios.post("http://localhost:3000/api/newaddress", {
-            Users_Id: myId,
-            Address: address,
-            Province: selectedProvince,
-            District: selectedDistrict,
-            Subdistrict: selectedSubdistrict,
-            Postal_Code: zipcode,
-            Latitude: position[0],
-            Longitude: position[1],
-            Is_Default: true
-        });
+//------------------------------------------------------------------------------------
+const handleUpdateLocation = async () => {
+    try {
+        const response = await axios.put(
+            `http://localhost:3000/api/updateaddress/${address.Address_Id}`,
+            {
+                Users_Id: myId,
+                Address: addressText,
+                Province: selectedProvince,
+                District: selectedDistrict,
+                Subdistrict: selectedSubdistrict,
+                Postal_Code: zipcode,
+                Latitude: position[0],
+                Longitude: position[1],
+                Is_Default: address.Is_Default,
+            }
+        );
+        alert("แก้ไขที่อยู่สำเร็จ");
         console.log(response.data.message);
-    } catch(error) {
-        console.log(error.response.data.message);
+    } catch (error) {
+        console.error(error);
+        alert("เกิดข้อผิดพลาด: " + (error.response?.data?.msg || "กรุณาลองใหม่"));
     }
-}
+};
+
+
+
 
 
 
@@ -244,7 +304,7 @@ const handleSetLocation = async() => {
                 </select>
                     <input className='inputMap-zipcode' type= "text" placeholder="รหัสไปณี" value={zipcode} onChange={(e) => setZipcode(e.target.value)} />
                 </div> 
-                    <input className='inputMap' type= "text" placeholder="ที่อยู่ บ้านเลขที่ ซอย ถนน" value={address} onChange={(e) => setAddress(e.target.value)} />
+                    <input className='inputMap' type= "text" placeholder="ที่อยู่ บ้านเลขที่ ซอย ถนน" value={addressText} onChange={(e) => setAddressText(e.target.value)} />
                 <div className='latilong-container'>
              
                 </div>
@@ -252,7 +312,7 @@ const handleSetLocation = async() => {
 
                         <div className='button-container-left'>
                         <button className="ButtonLocation" onClick={handleGetLocation}>แสดงตำแหน่ง</button>
-                        <button className="ButtonSaveAddress" onClick={handleSetLocation}>บันทึกที่อยู่</button>
+                        <button className="ButtonSaveAddress" onClick={handleUpdateLocation}>บันทึกที่อยู่</button>
                         </div>
                     </div>
                 </div>

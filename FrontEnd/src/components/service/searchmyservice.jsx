@@ -2,6 +2,8 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import ServiceCreate from "./servicecreate"
 import ServiceOption from "./serviceoption"
+import Readmyservicearea from "../area/readmyservicearea"
+
 export default function SearchMyservice() {
   const token = localStorage.getItem("token")
   const userId = JSON.parse(localStorage.getItem("user")).payload.id  
@@ -10,7 +12,7 @@ export default function SearchMyservice() {
   const [showCreate, setShowCreate] = useState(false)   //  showหน้าสร้างงาน
   const [showEdit, setShowEdit] = useState(false)       //  showหน้าแก้ไขงาน
   const [serviceId, setServiceId] = useState(0)
-
+  const [ShowArea,setShowArea]=useState(false)
   // -----------------------------------------------------
   // ดึงงานของฉัน
   // -----------------------------------------------------
@@ -73,6 +75,7 @@ const handleEditService =()=>{
 <div>
       <p>งานของฉัน{data.length} </p>
       <button onClick={handleCreateService}>สร้างงาน</button>
+      <button onClick={()=>setShowArea(!ShowArea)}>พื้นที่ให้บริการ</button>
 </div>
         <div className="allservice">
             {data.map((service)=>
@@ -117,10 +120,14 @@ const handleEditService =()=>{
 {showEdit &&(
   <div className="oo">
     <ServiceOption onClose={()=> setShowEdit(false)} serviceId={serviceId} />
-
   </div>
 )}
 
+{ShowArea &&(
+  <div className="oo">
+    <Readmyservicearea onClose={()=> setShowArea(false)} userId={userId} />
+  </div>
+)}
 
 </div>  
 )

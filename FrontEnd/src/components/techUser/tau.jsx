@@ -2,12 +2,12 @@ import { useState ,useEffect } from "react";
 import axios from "axios"
 import Tech from "./tech";
 import User from "./user";
-import Map from "../map/CustomerMap.jsx";
+import OrderMap from "../map/OrderMap.jsx";
 import OrderCalendar from "../OrderCalendar.jsx"
 import "./tau.css";
 export default function Tau() {
   const [page, setPage] = useState("tech");
-
+  const [locations, setLocations] = useState(null)
 
   const [techorder, setTechorder] = useState([])
   const [userorder, setUserorder] = useState([])
@@ -60,9 +60,35 @@ useEffect(() => {
 
   }, [id])
 
+
+const handleViewPosition = async (usersId) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/readmyaddresses/${usersId}`)
+    const addresses = response.data.result
+    const defaultAddress = addresses.find(a => a.Is_Default) || addresses[0]
+
+    if (!defaultAddress) {
+      console.error("ลูกค้าคนนี้ยังไม่มีที่อยู่บันทึกไว้")
+      alert("ลูกค้าคนนี้ยังไม่มีที่อยู่บันทึกไว้")
+      return
+    }
+
+    setLocations([defaultAddress.Latitude, defaultAddress.Longitude])
+  } catch (err) {
+    console.error(err.response?.data?.message || err.message)
+  }
+};
+
+
+
+
+
+
   return (
     <div className="tau-wrap">
       <OrderCalendar/>
+<div>
+{/* ---------------------------------------------------------------------------------------------------------- */}
       <div className="tau-card">
         <div className="tau-tab-row">
           <button
@@ -80,10 +106,13 @@ useEffect(() => {
         </div>
 
         <div key={page} className="tau-panel">
-          {page === "tech" && <Tech techorder={techorder} />}
+          {page === "tech" && <Tech techorder={techorder} onViewPosition={handleViewPosition} />}
           {page === "user" && <User userorder={userorder} />}
         </div>
+        
       </div>
+{/* ---------------------------------------------------------------------------------------------------------- */}
+<div className="order-map-wrap"> <OrderMap selectedPosition={locations} /> </div></div>
     </div>
   );
 }
