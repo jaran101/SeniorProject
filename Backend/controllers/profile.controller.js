@@ -57,7 +57,7 @@ export const upProfile = async (req, res, next) => {
   }
 };
 
-export const getProfileById = async (req, res, next) => {
+export const getMyProfile = async (req, res, next) => {
   try {
     const { id } = req.params;
     const profile = await prisma.profiles.findUnique({
@@ -73,7 +73,28 @@ export const getProfileById = async (req, res, next) => {
     next(err);
   }
 };
-
+export const getProfileById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const profile = await prisma.profiles.findUnique({
+      where: {
+        Users_Id: Number(id)
+      },
+      select:{
+        First_Name:true,
+        Last_Name:true,
+        Avatar:true,
+        Phone:true
+      }
+    });
+    if (!profile) {
+      createError(400, "Profile not found");
+    }
+    res.json({ result: profile });
+  } catch (err) {
+    next(err);
+  }
+};
 export const updateProfile = async (req, res, next) => {
   try {
     const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date} = req.body;
