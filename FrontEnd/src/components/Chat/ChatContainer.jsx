@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import useSocket from "../hooks/useSocket";
 import RoomList from "./RoomList";
 import ChatRoom from "./ChatRoom";
@@ -24,9 +24,12 @@ export default function ChatContainer() {
   const [messages, setMessages] = useState([]); 
   const [roomsList, setRoomsList] = useState([]);
   const currentUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
-   const [showOfferModal, setShowOfferModal] = useState(false);
-  const isTechnician = activeRoom && currentUserId === activeRoom.Receiver_Id;
-function updateRoomLastMessage(newMessage) {
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [serviceOwnerId, setServiceOwnerId] = useState(null);
+
+  const hasSentInitialMessage = useRef(false);
+  const [order,setOrder]=useState(null)
+  function updateRoomLastMessage(newMessage) {
   setRoomsList(prev =>
     prev.map(room =>
       room.Room_Id === newMessage.Room_Id
@@ -36,16 +39,15 @@ function updateRoomLastMessage(newMessage) {
   );
 }
 
-  
-useEffect(() => {
 
+  useEffect(() => {
+    if (!activeRoom || !socket || hasSentInitialMessage.current) return;
 
-if (!activeRoom || !socket) return;
-
-  socket.emit("join_room", activeRoom.Room_Id);
-  console.log("Joined room:", activeRoom.Room_Id);
-
-
+    if (activeRoom.message) {
+      hasSentInitialMessage.current = true;
+      sendMessage(activeRoom.message);
+      setActiveRoom(prev => ({ ...prev, message: undefined }));
+    }
   }, [activeRoom, socket]);
 
  useEffect(() => {
@@ -74,7 +76,7 @@ if (!activeRoom || !socket) return;
 
 useEffect(() => {
   if (!activeRoom) return;
-
+ let ignore = false;
 const fetchHistory= async() => {
     try {
     
@@ -82,14 +84,18 @@ const fetchHistory= async() => {
         ,{headers:{authorization:localStorage.getItem("token")}}
       )
       console.log("History response:", response.data); 
-
-      setMessages(response.data.result)
+      if (!ignore) {
+        setMessages(response.data.result)
+    }
     } catch (err) {
       console.error("Load history failed:", err);
     }
   }
 
   fetchHistory();
+  return () => {
+    ignore = true
+  };
 }, [activeRoom]);
 
 useEffect(() => {
@@ -112,13 +118,15 @@ useEffect(() => {
 
       const roomsWithNames = rooms.map((room,index) => {
         const profile = profileResponses[index].data.result
-        return {...room, otherUserName: `${profile.First_Name} ${profile.Last_Name}`
+        return {...room, 
+          otherUserName: `${profile.First_Name} ${profile.Last_Name}`,
+          otherUserAvatar: profile.Avatar
 }
       })
       setRoomsList(roomsWithNames) 
       
     } catch (err) {
-      console.error("Load rooms failed:", err.response.data.message);
+      console.error("Load rooms failed:", err.response?.data?.message || err.message);
     }
   };
   fetchRooms();
@@ -126,9 +134,23 @@ useEffect(() => {
 
 const sendMessage = async (text, file) => {
   if (!activeRoom || !socket) return;
+        const otherUserId = getOtherUserId(activeRoom, currentUserId); 
+
+   const optimisticMessage = {
+        Chat_Id: crypto.randomUUID(),
+        Room_Id: activeRoom.Room_Id,
+        Sender_Id: currentUserId,
+        Receiver_Id: otherUserId,
+        Message: text,
+        Type: "MESSAGE",
+        Image: null,
+        Created_At: new Date().toISOString(), 
+};  
+    setMessages(prev => [...prev, optimisticMessage]);
 
   try {
-        const otherUserId = getOtherUserId(activeRoom, currentUserId); 
+     
+
 
     const formData = new FormData();
   
@@ -148,10 +170,15 @@ const sendMessage = async (text, file) => {
         headers: { authorization: localStorage.getItem("token") }
       }
     );
-    console.log(response.data);
+      setMessages(prev => {
+    const filtered = prev.filter(m => m.Chat_Id !== optimisticMessage.Chat_Id);
+    return [...filtered, response.data.result];
+  });
+
     socket.emit("send_message", response.data.result);
     updateRoomLastMessage(response.data.result);
   } catch (error) {
+    setMessages(prev => prev.filter(m => m.Chat_Id !== optimisticMessage.Chat_Id));
     console.log(error.response?.data?.message);
   }
 };
@@ -205,12 +232,13 @@ const acceptOffer = async (offerMessage) => {
       },
       { headers: { authorization: localStorage.getItem("token") } }
     );
-    console.log(response.data);
-    
+    console.log(response.data.result);
+    setOrder(response.data.result)
 
     const updateOffer ={
       ...offerMessage,
-      Type:"PRICE_ACCEPT"
+      Type:"PRICE_ACCEPT",
+      Order_Id:response.data.result.Order_Id
     }
     socket.emit("send_message",updateOffer);
     updateRoomLastMessage(updateOffer);
@@ -239,19 +267,52 @@ const rejectOffer = async (offerMessage) => {
   }
 };
 
+useEffect(() => {
+  if (!activeRoom) return;
+  let ignore = false;
+  const fetchServiceOwner = async () => {
+    try {
+     const response = await axios.get(`http://localhost:3000/api/readservice/${activeRoom.Service_Id}`);
+     if (!ignore) {
+       setServiceOwnerId(response.data.result.Users_Id);
+     }
+    } catch (err) {
+      console.error(err.response?.data?.message || err.message);
+    }
+  };
+
+  fetchServiceOwner();
+  return () => {ignore = true}
+}, [activeRoom?.Service_Id ]);
+
+const isTechnician = serviceOwnerId !== null && currentUserId === serviceOwnerId
+
 //------------------------
 //Function receive_message
 //------------------------
+
+useEffect(() => {
+  if (!socket || !activeRoom) return;  // เช็คก่อนว่าทั้งคู่พร้อมใช้งานจริง
+
+  // TODO: เรียก socket.emit(...) ตรงนี้
+  // ต้องส่ง event ชื่อ "join_room" ไปพร้อมกับค่า Room_Id ของ activeRoom
+  socket.emit("join_room",activeRoom.Room_Id)
+
+}, [socket, activeRoom?.Room_Id]);
+
+
+
 
 
 
   return (
     <div className="chat-container">
   
-  <RoomList rooms={roomsList} 
-    onSelectRoom={setActiveRoom} 
-    disabled={showOfferModal}
-    />
+  <RoomList 
+  rooms={roomsList} 
+  onSelectRoom={setActiveRoom} 
+  disabled={showOfferModal}
+  />
   
   <ChatRoom 
   room={activeRoom} 
@@ -263,8 +324,12 @@ const rejectOffer = async (offerMessage) => {
   onAcceptOffer={acceptOffer}
   onRejectOffer={rejectOffer}
   showOfferModal={showOfferModal}        
-        setShowOfferModal={setShowOfferModal}  
-  />           
+  setShowOfferModal={setShowOfferModal}  
+  Service_Id={activeRoom?.Service_Id} 
+  order={order}     
+  otherUserId={activeRoom ? getOtherUserId(activeRoom, currentUserId) : null}
+
+/>           
   
   </div>
   );

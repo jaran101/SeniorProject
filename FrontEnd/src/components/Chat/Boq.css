@@ -1,0 +1,21 @@
+/* .boq-container{
+    margin: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    overflow-y: auto;
+    } */
+
+
+    .boq-total{
+        margin-left: 1000px;
+        width: max-content;
+    }
+
+.boq_input{
+  width: 100px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

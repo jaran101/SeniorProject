@@ -2,14 +2,12 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./tech.css"
-import Map from "../map/CustomerMap.jsx"
 
-export default function Tech({ techorder }) {
+export default function Tech({ techorder,onViewPosition }) {
     const [servicelist, setServicelist] = useState({})
     const [profilelist, setProfilelist] = useState({})
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
-
     function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("th-TH", { 
     day: "2-digit", month: "2-digit", year: "numeric" 
@@ -46,6 +44,9 @@ export default function Tech({ techorder }) {
         fetchservice()
     }, [techorder])
 
+
+
+
     return (
         <div>
             <table>
@@ -70,7 +71,7 @@ export default function Tech({ techorder }) {
                             <td>{formatDate(order.Work_Date)}</td>
                             <td>{formatDate(order.Work_Date_End)}</td>
                             <td>
-                                <button onClick={() => navigate("/map")}>
+                                <button onClick={() => onViewPosition(order.Users_Id)} >
                                     ตำแหน่ง
                                 </button>
                             </td>

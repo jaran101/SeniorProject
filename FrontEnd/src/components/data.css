@@ -3,7 +3,7 @@
   height: auto;
   margin: auto;
   margin-top: 10px;
-  padding: 20px;
+  padding: 15px;
   background: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -12,8 +12,21 @@
   justify-content: space-between;
 }
 
+
+.data{
+  
+  transition: all 0.4s ease;
+}
+
+.data.active {
+  margin-right: 10px;
+  padding: 10px;
+  border: 2px solid rgba(160, 160, 160, 0.774);
+  border-radius: 5px;
+}
+
 .bdata{
-  background-color:#cec5c5 ;
+  background-color:#8b8787 ;
   border: none;
   border-radius: 6px;
   font-family: 'Kanit', sans-serif;

@@ -4,10 +4,9 @@ import Editprofile from "./editprofile";
 import { memo } from "react";
   
 
-export default memo(function Data({ profile , onProfileUpdated }) {
+export default memo(function Data({ profile , onProfileUpdated ,addresses,setAddresses}) {
   // --- State สำหรับควบคุมการแสดงฟอร์มแก้ไขข้อมูล ---
   const [show, setShow] = useState(false);
-
   // --- ดึงข้อมูลผู้ใช้จาก localStorage เพื่อใช้แสดง ID ของผู้ใช้ ---
  const [myId] = useState(() => {
   const user = localStorage.getItem("user") ?? null;
@@ -44,17 +43,19 @@ export default memo(function Data({ profile , onProfileUpdated }) {
 
   return (
     <div>
-<div
-    className="data-container" style={{ width: show === true ? "1200px" : "400px" }}
->       <div className="data">
-         <p>Id: {myId}</p>
-        <p>
-          ชื่อ: {profile.First_Name} {profile.Last_Name}
-        </p>
-        <p>เบอร์โทรศัพท์: {profile.Phone}</p>
+      <div
+        className="data-container" style={{ width: show === true ? "1200px" : "750px" }}>         
+        <div className={`data ${show ? "active" : ""}`}>
+          <p>Id: {myId}</p>
+          <p>
+            ชื่อ: {profile.First_Name} {profile.Last_Name}
+          </p>
+          <p>เบอร์โทรศัพท์: {profile.Phone}</p>
         <p>เพศ: {formatGender(profile.Gender)}</p>
         <p>วันเกิด: {profile.Birth_Date? profile.Birth_Date.slice(0, 10):"-"}</p>
-        <p>ที่อยู่: {profile.Address}</p>
+        <p>ที่อยู่:
+          {addresses.map(address => address.Is_Default === true ? "บ้านเลขที่ :"+address.Address + " ต." + address.Subdistrict + " อ." + address.District + " จ." + address.Province + " รหัสไปรษณีย์ " + address.Postal_Code : "")}
+        </p>
        </div>
 
         <div>
@@ -64,9 +65,12 @@ export default memo(function Data({ profile , onProfileUpdated }) {
           {show && (<Editprofile
               profile={profile}
               myId={myId}
+              addresses={addresses}
+                setAddresses={setAddresses}
               onProfileUpdated={(updated) => {
-            onProfileUpdated?.(updated);
+               onProfileUpdated?.(updated);
                 setShow(false); 
+               
             }}
             />)}
         </div>

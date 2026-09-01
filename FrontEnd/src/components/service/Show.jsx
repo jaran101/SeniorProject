@@ -22,7 +22,6 @@ export default function Show({ category, searchText }) {
 // โหลดบริการตามหมวดหมู่เมื่อ prop data เปลี่ยน
 //------------------------------------------------------------------------------------------------------------
  useEffect(() => {
-    // TODO 1: ถ้าไม่มีทั้ง category และ searchText ให้ return ออกไปเลย
 
     if (!category && !searchText) {
       setServices([]);
@@ -33,12 +32,10 @@ export default function Show({ category, searchText }) {
         let response;
         
         if (category) {
-          // TODO 2: ยิง API ค้นหาตาม category (โค้ดเดิม)
           const categoryCode = categoryMap[category] || "-";
           console.log(categoryCode)
           response = await axios.get(`http://localhost:3000/api/searchservices?Category=${categoryCode}`);
         } else if (searchText) {
-          // TODO 3: ยิง API ค้นหาตามคำค้นหา
           response = await axios.get(`http://localhost:3000/api/searchservices?q=${searchText}`);
         }
 
@@ -51,18 +48,14 @@ export default function Show({ category, searchText }) {
     fetchData();
   }, [category, searchText]);
 
-  // ถ้าไม่มีหมวดหมู่ที่เลือกให้ไม่แสดงอะไร
   if (!category && !searchText) return null;
 
-  // TODO 5: สร้าง headerText — ถ้ามี category ให้เป็น `ประเภทงาน : ${category}`
-  //         ถ้ามี searchText ให้เป็น `ผลการค้นหา : ${searchText}`
   const headerText = category ? `ประเภทงาน : ${category}` : `ผลการค้นหา : ${searchText}`;
 //------------------------------------------------------------------------------------------------------------  
 //UI
 //------------------------------------------------------------------------------------------------------------
   return (
     <div className="show-card">
-      {/* ส่วนหัวของหมวดหมู่และสถิติจำนวนรายการ */}
       <div className="dd">
         <span className="show-category">{headerText}</span>
         {services.length === 0 && (

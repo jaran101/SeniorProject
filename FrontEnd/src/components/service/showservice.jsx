@@ -2,17 +2,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect,useState } from "react";
 import "./ShowService.css";
-import { generateRoomId } from "../utils/generateRoomId"; // ปรับ path ตามจริง
+import { generateRoomId } from "../../utils/generateRoomId"; // ปรับ path ตามจริง
 
 
-export default function ShowService({ service ,data }) {
+export default function ShowService({ service}) {
 //------------------------------------------------------------------------------------------------------------
 //state
 //------------------------------------------------------------------------------------------------------------
-    const [user, setUser] = useState(null);  
     const navigate = useNavigate();
     const [receiverData, setReceiverData] = useState(null);
- const userId = JSON.parse(localStorage.getItem("user"))?.payload?.id
+    const [area, setArea] = useState([]);
+    const userId = JSON.parse(localStorage.getItem("user"))?.payload?.id
     const receiverId = service?.Users_Id;
 
 //------------------------------------------------------------------------------------------------------------
@@ -37,6 +37,23 @@ export default function ShowService({ service ,data }) {
     },[receiverId]);
 
 
+    useEffect(()=>{
+
+      const fetchmyservicearea = async () => {
+        try{
+          const response = await axios.get(`http://localhost:3000/api/readmyservicearea/${receiverId}`, {
+            headers: { authorization: localStorage.getItem("token") },
+          })
+          console.log(response.data.result)
+          setArea(response.data.result)
+        }catch(error){
+          console.log(error.response.data.message)
+        }
+      }
+      if (receiverId) fetchmyservicearea()
+    },[receiverId])
+
+
 //-----------------------------------------------------------------------------------------------------------------------------
 //สร้าง room
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -51,9 +68,9 @@ function handleChatClick() {
       Sender_Id: userId,
       Receiver_Id: receiverId,
       Tech_Id: receiverId,  
-    Users_Id: userId,     
+      Users_Id: userId,     
       otherUserName: `${receiverData?.First_Name ?? service?.First_Name} ${receiverData?.Last_Name ?? service?.Last_Name}`,
-
+      message: "สนใจงานบริการนี้ครับ"
     }
   })
 }
@@ -73,6 +90,23 @@ function handleChatClick() {
       <p><strong>รายละเอียด:</strong> {service.Description}</p>
       <p><strong>ราคา:</strong> {service.Price?.toLocaleString()} บาท</p>
       <p><strong>ประเภทงาน:</strong> {service.Category}</p>
+        <p>พื้นที่ให้บริการ</p>
+      <div className="area">
+        {area.length > 0 ? (
+          area.map((item) => (
+            <div
+              key={item.Area_Id}
+            >
+              <p className="province">{item.Province}</p>
+            </div>
+          ))
+        ) : (
+          <p>ยังไม่มีพื้นที่ให้บริการ</p>
+        )}
+      </div>
+      
+      
+      
       <div className="user">
                 <div className="imageUser">
                   <img className="imguser" src={`http://localhost:3000/uploads/${receiverData?.Avatar ?? 
@@ -82,7 +116,7 @@ function handleChatClick() {
           ผู้รับงาน: {receiverData?.First_Name ?? service.First_Name}{" "}
           {receiverData?.Last_Name ?? service.Last_Name}
         </p>
-      <button onClick={handleChatClick}>แชทกับผู้รับงาน</button>
+      <button className="buttonMessage" onClick={handleChatClick}>ติดต่อผู้รับงาน</button>
 </div>
    
 </div>

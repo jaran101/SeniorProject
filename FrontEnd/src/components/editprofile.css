@@ -1,18 +1,24 @@
 .buttonEdit {
-  background-color: #C7A57A;
+  background-color: #8f8888;
   border: none;
   border-radius: 10px;
   height: 52px;
-  width: 90%;          /* เปลี่ยนจาก 408px → 100% */
+  width: 70%;          /* เปลี่ยนจาก 408px → 100% */
   font-family: 'Kanit', sans-serif;
-  color: white;
+  color: rgb(240, 238, 238);
   font-weight: 400;
   font-size: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0px 7px 5px rgba(0, 0, 0, 0.253);
+  margin-top: 10px;
 }
 
-
+.buttonEdit:hover{
+  background-color: #fab459;
+  transform: scale(1.02);  
+  color: black;
+}
 
 .Edit{
   width: 900px;
@@ -24,29 +30,12 @@
 
 /* .Editdata{
   background-color: aqua;
+  height: 600px;
 } */
 
 input[type="file"] {
     color: transparent;   /* ทำให้ข้อความ "ไม่มีไฟล์ที่เลือก" โปร่งใส มองไม่เห็น */
 }
-
-input[type="file"]::file-selector-button {
-    color: initial;       /* คืนสีให้ปุ่มเห็นปกติ */
-    padding: 8px 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f5f5f5;
-    font-family: "Kanit", sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-input[type="file"]::file-selector-button:hover {
-    background: #C7A57A;
-    color: #f5f5f5;
-  }
-
-
 
 .rowEdit {
   margin-top: 12px;
@@ -54,11 +43,17 @@ input[type="file"]::file-selector-button:hover {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   width: 100%;
+  height: 40px;
   margin-bottom: 12px;
-  /* background-color: #ff9408; */
+  /* background-color: aqua; */
+  }
+
+.rowEdit1{
+margin-top: 70px;
 }
 
-.avatar-preview{
+
+  .avatar-preview{
   max-width: 70%;
   margin-top: 8px;
   margin-bottom: 8px;
@@ -112,6 +107,20 @@ input[type="file"]::file-selector-button:hover {
   transition: all 0.3s ease;
 }
 
+.input_profile-tell {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 150px;          /* เปลี่ยนจาก 408px → 100% */
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding: 8px 12px;
+  background: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+
 .input_profile:focus {
   border-color: #ff9408;
   box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
@@ -147,3 +156,40 @@ input[type="file"]::file-selector-button:hover {
   box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
 }
 
+.upload-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f5f5f5;
+    font-family: "Kanit", sans-serif;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.upload-btn:hover {
+       background: #C7A57A;
+    color: #f5f5f5;
+}
+
+.buttonAddAddress{
+    margin-top: 20px;
+    background-color: #888682;
+    border: none;
+    border-radius: 10px;
+    width: 150px;
+    height: 40px;
+    font-family: 'Kanit', sans-serif;
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.buttonAddAddress:hover{
+    background-color: #ff9408;
+    transform: scale(1.02);
+    color: black;
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Show from "./Show";
+import Show from "./service/Show";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -41,7 +41,7 @@ export default function Home() {
       <input
         type="text"
         className="i3"
-        placeholder="ค้นหาช่าง..."
+        placeholder="ค้นหาบริการ..."
         value={text}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleSearch}

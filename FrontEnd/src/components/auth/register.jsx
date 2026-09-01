@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Newprofile from "./newprofile";
+import Newprofile from "../newprofile";
 import { object, string, ref } from "yup";
 
 
@@ -80,8 +80,8 @@ export default function Register() {
         }
       }
     } catch (error) {
-      console.log("error:", error);
-      setMessage("เกิดข้อผิดพลาดในการลงทะเบียน");
+      console.log("error:", error.response.data.message);
+      setMessage(error.response.data.msg);
     } finally {
       setLoading(false);
     }
