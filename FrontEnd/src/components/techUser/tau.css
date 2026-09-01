@@ -1,70 +1,262 @@
+/* ================================
+   Main Layout
+================================ */
+
 .tau-wrap {
-  display: flex;
-  align-items: flex-start;
-  background-color: #FFECCD; 
-  margin-top: 10px;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+
+  gap: 24px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #FFECCD;
 }
+
+
+/* ================================
+   Calendar
+================================ */
+
+.tau-calendar {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e0cdb8;
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  height: fit-content;
+
+  position: sticky;
+  top: 20px;
+}
+
+
+/* ================================
+   Right Content
+================================ */
+
+.tau-content {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* ================================
+   Card
+================================ */
 
 .tau-card {
-  background: #fff;
-  border: 0.5px solid #e0cdb8; 
-  border-radius: 16px;         
-  max-width: 700px;
-  max-height: 150px;
-  overflow: hidden;
-  margin-left: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); 
+  width: 100%;
 
+  background: #ffffff;
+
+  border: 1px solid #e0cdb8;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  box-sizing: border-box;
 }
+
+
+/* ================================
+   Tabs
+================================ */
 
 .tau-tab-row {
+  width: 100%;
+
   display: flex;
-  border-bottom: 0.5px solid #e0cdb8;
+
+  border-bottom: 1px solid #e0cdb8;
+
+  background: #fffaf5;
 }
+
 
 .tau-tab {
   flex: 1;
-  padding: 14px;
-  font-family: 'Kanit', sans-serif; 
+  padding: 14px 20px;
+  font-family: 'Kanit', sans-serif;
   font-size: 15px;
   font-weight: 300;
-  background: none;
+  color: #888;
+  background: transparent;
   border: none;
   cursor: pointer;
-  color: #888;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  position: relative;
 }
 
+
 .tau-tab:hover:not(.active) {
-  background: #fdf0e0; 
+  background: #fdf0e0;
   color: #a67c5b;
 }
 
+
 .tau-tab.active {
   color: #2f2828;
-  background: #fdf0e0; 
+  background: #fdf0e0;
   font-weight: 400;
 }
 
+
+/* เส้นใต้ Tab ที่ Active */
+
+.tau-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 60%;
+  height: 3px;
+  background: #a67c5b;
+  border-radius: 3px 3px 0 0;
+}
+
+
+/* ================================
+   Panel
+================================ */
+
 .tau-panel {
-  padding: 2rem;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
   animation: fadeSlide 0.25s ease;
-  margin-top: -30px;
-  max-height: 150px;
+  max-height: 550px;
   overflow-y: auto;
 }
 
+
+/* Scrollbar */
+
+.tau-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tau-panel::-webkit-scrollbar-track {
+  background: #fdf0e0;
+}
+
+.tau-panel::-webkit-scrollbar-thumb {
+  background: #d3b69a;
+
+  border-radius: 10px;
+}
+
+.tau-panel::-webkit-scrollbar-thumb:hover {
+  background: #b99575;
+}
+
+
+/* ================================
+   Map
+================================ */
+
+.order-map-wrap {
+  width: 100%;
+  min-height: 350px;
+  background: #ffffff;
+  border: 1px solid #e0cdb8;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+
+/* ================================
+   Animation
+================================ */
+
 @keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
 }
 
-.CaOr{
-display: flex;
+
+/* ================================
+   Responsive
+================================ */
+
+@media (max-width: 1000px) {
+
+  .tau-wrap {
+    grid-template-columns: 1fr;
+
+    padding: 16px;
+  }
+
+  .tau-calendar {
+    position: static;
+  }
+
 }
 
-.order-map-wrap{
-    margin-left: 20px;
-    margin-top: 10px;
+
+@media (max-width: 600px) {
+
+  .tau-wrap {
+    padding: 10px;
+
+    gap: 14px;
+  }
+
+  .tau-calendar {
+    padding: 12px;
+
+    border-radius: 14px;
+  }
+
+  .tau-card {
+    border-radius: 14px;
+  }
+
+  .tau-panel {
+    padding: 12px;
+
+    max-height: none;
+  }
+
+  .tau-tab {
+    padding: 12px 10px;
+
+    font-size: 14px;
+  }
 
 }

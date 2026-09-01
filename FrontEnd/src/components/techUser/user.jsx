@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom"
 import "./tech.css"
 import Map from "../map/CustomerMap.jsx"
 
-export default function User({ userorder }) {
+export default function User({ userorder, handleconfirmorders, handlerejectorders }) {
     const [servicelist, setServicelist] = useState({})
     const [profilelist, setProfilelist] = useState({})
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
+
 
     function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("th-TH", { 
@@ -51,13 +52,14 @@ export default function User({ userorder }) {
             <table>
                 <thead>
                     <tr>
-                        <th>order</th>
+                       <th>order</th>
                         <th>service</th>
                         <th>status</th>
-                        <th>Tech</th>
-                        <th>เริ่มงาน</th>
-                        <th>เสร็จงาน</th>
-                        <th>ตำแหน่ง</th>
+                        <th>customer</th>
+                        <th>กำหนดการเริ่มงาน</th>
+                        <th>กำหนดสิ้นสุดงาน</th>
+                        <th>รายละเอียด</th>
+                        <th>ดำเนินการ</th>
 
                     </tr>
                 </thead>
@@ -70,10 +72,26 @@ export default function User({ userorder }) {
                             <td>{profilelist[order.Tech_Id]?.First_Name}</td>
                             <td>{formatDate(order.Work_Date)}</td>
                             <td>{formatDate(order.Work_Date_End)}</td>
+                           <td>
+                            <button onClick={() => navigate('/DetailOrder', { state: { order } })}>
+                                รายละเอียด
+                            </button>
+                            </td>
                             <td>
-                                <button onClick={() => navigate("../map/map")}>
-                                    ดูแผนที่
-                                </button>   
+                             {order.Status === "WAITING_CONFIRM" && (
+                                <select
+                                    defaultValue=""
+                                    onChange={(e) => {
+                                    const value = e.target.value
+                                    if (value === "COMPLETED") handleconfirmorders(order.Order_Id)
+                                    else if (value === "CANCELLED") handlerejectorders(order.Order_Id)
+                                    }}
+                                >
+                                    <option value="" disabled>เลือกการดำเนินการ</option>
+                                    <option value="COMPLETED" >ยืนยัน</option>
+                                    <option value="CANCELLED" >ยกเลิก</option>
+                                </select>
+                                )}
                             </td>
                         </tr>
                     ))}

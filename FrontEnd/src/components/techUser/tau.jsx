@@ -8,14 +8,11 @@ import "./tau.css";
 export default function Tau() {
   const [page, setPage] = useState("tech");
   const [locations, setLocations] = useState(null)
-
   const [techorder, setTechorder] = useState([])
   const [userorder, setUserorder] = useState([])
-
+  const token = localStorage.getItem("token")
   const [id,setId] = useState()
 
-
-  
 useEffect(() => {
   const token = localStorage.getItem("token")
   const localid = JSON.parse(localStorage.getItem("user"))?.payload?.id;
@@ -61,58 +58,128 @@ useEffect(() => {
   }, [id])
 
 
-const handleViewPosition = async (usersId) => {
+const handleStartOrder = async (orderId) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/readmyaddresses/${usersId}`)
-    const addresses = response.data.result
-    const defaultAddress = addresses.find(a => a.Is_Default) || addresses[0]
-
-    if (!defaultAddress) {
-      console.error("ลูกค้าคนนี้ยังไม่มีที่อยู่บันทึกไว้")
-      alert("ลูกค้าคนนี้ยังไม่มีที่อยู่บันทึกไว้")
-      return
-    }
-
-    setLocations([defaultAddress.Latitude, defaultAddress.Longitude])
+    await axios.patch(
+      `http://localhost:3000/api/startorders/${orderId}`,
+      {Status: "IN_PROGRESS"},
+      { headers: { authorization: token } }
+    )
+    setTechorder(prev =>
+      prev.map(t => t.Order_Id === orderId ? { ...t, Status: "IN_PROGRESS" } : t)
+    )
+    alert("เริ่มดำเนินการแล้ว")
   } catch (err) {
-    console.error(err.response?.data?.message || err.message)
+    console.log(err.response?.data?.message)
   }
-};
+}
+
+
+const handleFinishOrder = async (orderId) => {
+  try {
+    await axios.patch(
+      `http://localhost:3000/api/finishorders/${orderId}`,
+      {Status: "WAITING_CONFIRM"},
+      { headers: { authorization: token } }
+    )
+    setTechorder(prev =>
+      prev.map(t => t.Order_Id === orderId ? { ...t, Status: "WAITING_CONFIRM" } : t)
+    )
+    alert("เสร็จสิ้นงานแล้ว")
+  } catch (err) {
+    console.log(err.response?.data?.message)
+  }
+}
+
+const handleconfirmorders = async (orderId) => {
+  try {
+    await axios.patch(
+      `http://localhost:3000/api/confirmorders/${orderId}`,
+      {Status: "COMPLETED"},
+      { headers: { authorization: token } }
+    )
+    setUserorder(prev =>
+      prev.map(t => t.Order_Id === orderId ? { ...t, Status: "COMPLETED" } : t)
+    )
+    alert("เสร็จสิ้นงานแล้ว")
+  } catch (err) {
+    console.log(err.response?.data?.message)
+  }
+}
+
+const handlerejectorders = async (orderId) => {
+  try {
+    await axios.patch(
+      `http://localhost:3000/api/rejectorders/${orderId}`,
+      {Status: "CANCELLED"},
+      { headers: { authorization: token } }
+    )
+    setUserorder(prev =>
+      prev.map(t => t.Order_Id === orderId ? { ...t, Status: "CANCELLED" } : t)
+    )
+    alert("ยกเลิกงานแล้ว")
+  } catch (err) {
+    console.log(err.response?.data?.message)
+  }
+}
 
 
 
+return (
+  <div className="tau-wrap">
 
+    <div className="tau-calendar">
+      <OrderCalendar />
+    </div>
 
+    <div className="tau-content">
 
-  return (
-    <div className="tau-wrap">
-      <OrderCalendar/>
-<div>
-{/* ---------------------------------------------------------------------------------------------------------- */}
       <div className="tau-card">
+
         <div className="tau-tab-row">
+
           <button
             className={`tau-tab ${page === "tech" ? "active" : ""}`}
             onClick={() => setPage("tech")}
           >
             ช่าง
           </button>
+
           <button
             className={`tau-tab ${page === "user" ? "active" : ""}`}
             onClick={() => setPage("user")}
           >
             ผู้ใช้
           </button>
+
         </div>
 
         <div key={page} className="tau-panel">
-          {page === "tech" && <Tech techorder={techorder} onViewPosition={handleViewPosition} />}
-          {page === "user" && <User userorder={userorder} />}
+
+          {page === "tech" && (
+            <Tech
+              techorder={techorder}
+              onStartOrder={handleStartOrder}
+              onFinishOrder={handleFinishOrder}
+            />
+          )}
+
+          {page === "user" && (
+            <User userorder={userorder}
+            handleconfirmorders={handleconfirmorders}
+            handlerejectorders={handlerejectorders}
+            />
+          )}
+
         </div>
-        
+
       </div>
-{/* ---------------------------------------------------------------------------------------------------------- */}
-<div className="order-map-wrap"> <OrderMap selectedPosition={locations} /> </div></div>
+
+   
+
     </div>
-  );
+
+  </div>
+);
+
 }

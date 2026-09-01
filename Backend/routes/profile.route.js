@@ -9,7 +9,7 @@ const route = express.Router();
 route.post("/newprofile", verifytoken, createProfile);
 route.post("/uploadprofile", verifytoken, multer, upProfile);
 route.patch("/updateprofile", verifytoken, multer, updateProfile);
-route.get("/readprofile/:id",verifytoken ,getProfileById);
+route.get("/readprofile/:id",verifytoken,getProfileById);
 route.get("/listuser", getAllUser);
 route.get("/readuser/:user_id", getUserById);
 route.get("/readuserbyemail/:email", getUserByEmail);

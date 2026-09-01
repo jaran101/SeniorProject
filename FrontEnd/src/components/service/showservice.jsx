@@ -14,7 +14,7 @@ export default function ShowService({ service}) {
     const [area, setArea] = useState([]);
     const userId = JSON.parse(localStorage.getItem("user"))?.payload?.id
     const receiverId = service?.Users_Id;
-
+    const token = localStorage.getItem("token")
 //------------------------------------------------------------------------------------------------------------
 //โหลดข้อมูลผู้ใช้ที่เป็นเจ้าของบริการ
 //------------------------------------------------------------------------------------------------------------      
@@ -116,7 +116,7 @@ function handleChatClick() {
           ผู้รับงาน: {receiverData?.First_Name ?? service.First_Name}{" "}
           {receiverData?.Last_Name ?? service.Last_Name}
         </p>
-      <button className="buttonMessage" onClick={handleChatClick}>ติดต่อผู้รับงาน</button>
+      {token && <button className="buttonMessage" onClick={handleChatClick}>ติดต่อผู้รับงาน</button>}
 </div>
    
 </div>

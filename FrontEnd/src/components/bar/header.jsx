@@ -68,16 +68,16 @@ export default function Header() {
               )}
             </>
           )}
-          {user && !isChatPage && (
+          {token && !isChatPage && (
             <li className="p1">
               <a href="/chat">Chat</a>
             </li>
           )}
 
           
-          <li className="buttonLogout">
+          {token && <li className="buttonLogout">
             <Logout />
-          </li>
+          </li>}
         </div>
       </div>
     </div>
