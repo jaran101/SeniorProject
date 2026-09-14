@@ -5,6 +5,7 @@ export default function Home() {
   const [text, setText] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [categories] = useState([
+    "งานทั้งหมด",
     "ไฟฟ้า",
     "ประปา",
     "ปรับอากาศ",
@@ -66,17 +67,17 @@ export default function Home() {
       </div>
 
       <div className="show">
-        {(selectedItem||searchText) && (
-          <>
-            <button className="buttonRed" onClick={() => {
-              setSelectedItem(null);
-              setSearchText(null);
-            }}>
-              X
-            </button>
-            <Show category={selectedItem} searchText={searchText} />
-          </>
-        )}
+        <div className="show">
+  {(selectedItem || searchText) && (
+    <button className="buttonRed" onClick={() => {
+      setSelectedItem(null);
+      setSearchText(null);
+    }}>
+      X
+    </button>
+  )}
+  <Show category={selectedItem} searchText={searchText} />
+</div>
       </div>
     </>
   );

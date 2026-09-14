@@ -259,7 +259,7 @@ const handleSetLocation = async() => {
                 
 
 
-            <div className='MapCon'>
+            <div className="MapCustomerContainer">
                 
                 <MapContainer 
                     center={position} 

@@ -11,7 +11,7 @@ import Register from "./components/auth/register";
 import Lar from "./components/auth/lar";
 import Newprofile from "./components/newprofile";
 import Editprofile from "./components/editprofile";
-
+import DetailOrder from "./components/techUser/DetailOrder.jsx";
 import ServiceCreate from "./components/service/servicecreate.jsx";
 import ListService from "./components/service/listservice.jsx";
 import SearchMyservice from "./components/service/searchmyservice.jsx";
@@ -71,13 +71,8 @@ export default function App() {
         <Route path="/chat" element={<Layout><ChatContainer /></Layout>} />
         <Route path="/map" element={<Layout><Map /></Layout>} />
         <Route path="/newservicearea" element={<Layout><NewServiceArea /><br /></Layout>} />
-<Route 
-  path="/BOQPreview" 
-  element={
-    <Layout>
-      <BOQPreview />
-    </Layout>
-  } 
-/>     </Routes>
+        <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>}/>
+        <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
+      </Routes>
     )   
 }

@@ -2,8 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./tech.css"
-
-export default function Tech({ techorder,onViewPosition }) {
+export default function Tech({ techorder,onStartOrder,onFinishOrder }) {
     const [servicelist, setServicelist] = useState({})
     const [profilelist, setProfilelist] = useState({})
     const token = localStorage.getItem("token")
@@ -56,9 +55,10 @@ export default function Tech({ techorder,onViewPosition }) {
                         <th>service</th>
                         <th>status</th>
                         <th>customer</th>
-                        <th>เริ่มงาน</th>
-                        <th>เสร็จงาน</th>
-                        <th>ตำแหน่ง</th>
+                        <th>กำหนดการเริ่มงาน</th>
+                        <th>กำหนดสิ้นสุดงาน</th>
+                        <th>รายละเอียด</th>
+                        <th>ดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,9 +71,17 @@ export default function Tech({ techorder,onViewPosition }) {
                             <td>{formatDate(order.Work_Date)}</td>
                             <td>{formatDate(order.Work_Date_End)}</td>
                             <td>
-                                <button onClick={() => onViewPosition(order.Users_Id)} >
-                                    ตำแหน่ง
+                                <button onClick={() => navigate( '/DetailOrder',{state:{order:order}})} >
+                                    รายละเอียด
                                 </button>
+                            </td>
+                            <td>{order.Status ==="ACCEPTED" && (
+                                <button onClick={() => onStartOrder(order.Order_Id)}>เริ่มงาน</button>
+                            )}
+                            {order.Status ==="IN_PROGRESS" && (
+                                <button onClick={() => onFinishOrder(order.Order_Id)}>เสร็จสิ้นงาน</button>
+                            )}
+                            
                             </td>
                         </tr>
                     ))}

@@ -1,0 +1,619 @@
+.detail-order-page {
+  width: 100%;
+  /* min-height: 100%; */
+  padding: 30px 40px;
+  box-sizing: border-box;
+  background-color: #f7f5f3;
+  font-family: "Kanit", sans-serif;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.detail-order-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  max-width: 1200px;
+
+  margin: 0 auto 25px;
+
+}
+
+
+.detail-order-header h1 {
+
+  margin: 0;
+
+  font-size: 28px;
+
+  font-weight: 500;
+
+  color: #302722;
+
+}
+
+
+.header-subtitle {
+
+  margin: 4px 0 0;
+
+  font-size: 14px;
+
+  color: #8a7c74;
+
+}
+
+
+.order-id {
+
+  padding: 8px 16px;
+
+  border-radius: 8px;
+
+  background-color: #e8ded7;
+
+  color: #604738;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+}
+
+
+/* ========================================
+   MAIN CONTAINER
+======================================== */
+
+.detail-order-container {
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(350px, 0.7fr);
+
+  gap: 20px;
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+}
+
+
+/* ========================================
+   CARD
+======================================== */
+
+.order-card,
+.customer-card,
+.map-card {
+
+  background-color: #ffffff;
+
+  border: 1px solid #e4ddd8;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 3px 12px rgba(60, 45, 35, 0.06);
+
+}
+
+
+/* ========================================
+   CARD HEADER
+======================================== */
+
+.card-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 18px 22px;
+
+  border-bottom: 1px solid #eee8e4;
+
+  background-color: #fcfaf9;
+
+}
+
+
+.card-header h2 {
+
+  margin: 0;
+
+  font-size: 18px;
+
+  font-weight: 500;
+
+  color: #3b2d25;
+
+}
+
+
+/* ========================================
+   CARD BODY
+======================================== */
+
+.card-body {
+
+  padding: 22px;
+
+}
+
+
+.customer-body {
+
+  padding: 22px;
+
+}
+
+
+/* ========================================
+   INFORMATION
+======================================== */
+
+.info-item {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  padding: 13px 0;
+
+  border-bottom: 1px solid #f0ece9;
+
+}
+
+
+.info-label {
+
+  width: 140px;
+
+  min-width: 140px;
+
+  font-size: 14px;
+
+  color: #8a7c74;
+
+}
+
+
+.info-value {
+
+  flex: 1;
+
+  font-size: 15px;
+
+  color: #302722;
+
+}
+
+
+.order-number {
+
+  font-weight: 500;
+
+  color: #694b39;
+
+}
+
+
+/* ========================================
+   DESCRIPTION
+======================================== */
+
+.description-item {
+
+  padding: 16px 0;
+
+  border-bottom: 1px solid #f0ece9;
+
+}
+
+
+.description-item .info-label {
+
+  display: block;
+
+  margin-bottom: 8px;
+
+}
+
+
+.description {
+
+  padding: 13px;
+
+  min-height: 80px;
+
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  background-color: #f8f5f3;
+
+  color: #4a403b;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+}
+
+
+/* ========================================
+   DATE
+======================================== */
+
+.date-grid {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+}
+
+
+.date-box {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background-color: #f8f5f3;
+
+}
+
+
+.date-box .info-label {
+
+  width: auto;
+
+  min-width: 0;
+
+}
+
+
+.date-box strong {
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  color: #49372d;
+
+}
+
+
+/* ========================================
+   CUSTOMER PROFILE
+======================================== */
+
+.customer-profile {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #eee8e4;
+
+}
+
+
+.image-customer,
+.avatar-placeholder {
+
+  width: 75px;
+
+  height: 75px;
+
+  min-width: 75px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 2px solid #e3d9d2;
+
+  background-color: #f4efec;
+
+}
+
+
+.avatar-placeholder {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 25px;
+
+  color: #8b776a;
+
+}
+
+
+.customer-info h3 {
+
+  margin: 0 0 5px;
+
+  font-size: 17px;
+
+  font-weight: 500;
+
+  color: #302722;
+
+}
+
+
+.customer-info p {
+
+  margin: 0;
+
+  font-size: 14px;
+
+  color: #756961;
+
+}
+
+
+/* ========================================
+   ADDRESS
+======================================== */
+
+.address-section {
+
+  margin-top: 22px;
+
+}
+
+
+.address-section h3 {
+
+  margin: 0 0 12px;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  color: #3c3029;
+
+}
+
+
+.address-box {
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background-color: #f8f5f3;
+
+  border: 1px solid #eee7e2;
+
+}
+
+
+.address-box p {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin: 7px 0;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: #574a43;
+
+}
+
+
+.address-box strong {
+
+  width: 60px;
+
+  min-width: 60px;
+
+  color: #76665c;
+
+}
+
+
+.address-box span {
+
+  flex: 1;
+
+}
+
+
+/* ========================================
+   NO ADDRESS
+======================================== */
+
+.no-address {
+
+  padding: 15px;
+
+  margin: 0;
+
+  text-align: center;
+
+  border-radius: 8px;
+
+  background-color: #f8f5f3;
+
+  color: #999;
+
+}
+
+
+/* ========================================
+   MAP CARD
+======================================== */
+
+.map-card {
+
+  max-width: 1200px;
+
+  margin: 20px auto 0;
+
+}
+
+
+/* ========================================
+   MAP HEADER
+======================================== */
+
+.map-subtitle {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #8a7c74;
+}
+
+
+/* ========================================
+   MAP
+======================================== */
+
+.MapCon {
+  width: 100%;
+  height: 400px;
+    position: relative;
+  z-index: 0;
+}
+
+
+.map-container {
+  width: 100%;
+  height: 100%;
+
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 900px) {
+  .detail-order-page {
+    padding: 25px 20px;
+  }
+
+  .detail-order-container {
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .detail-order-page {
+    padding: 20px 12px;
+
+  }
+
+
+  .detail-order-header {
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+  }
+
+
+  .detail-order-header h1 {
+
+    font-size: 23px;
+
+  }
+
+
+  .order-id {
+
+    padding: 6px 10px;
+
+    font-size: 13px;
+
+  }
+
+
+  .info-item {
+
+    display: block;
+
+  }
+
+
+  .info-label {
+
+    display: block;
+
+    width: auto;
+
+    min-width: 0;
+
+    margin-bottom: 5px;
+
+  }
+
+
+  .date-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+
+}
+.map-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f8f5f3;
+  color: #999;
+  font-size: 14px;
+}
