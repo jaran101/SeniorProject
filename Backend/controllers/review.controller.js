@@ -136,7 +136,9 @@ export const getReviewsByService = async (req,res,next) => {
     const reviews = await prisma.reviews.findMany({
       where: {
         Order: {
-          Service_Id: Number(serviceId)
+          Service:{
+            Service_Id: Number(serviceId)
+          }
         }
       },
       include: {
