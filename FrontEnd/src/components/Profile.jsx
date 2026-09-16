@@ -36,7 +36,7 @@ export default function Profile() {
 
  const loadProfile = async (id) => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/readprofile/${id}`, {
+        const response = await axios.get(`http://localhost:3000/api/readmyprofile/${id}`, {
           headers: { authorization: localStorage.getItem("token") },
         });
         setProfile(response.data.result);

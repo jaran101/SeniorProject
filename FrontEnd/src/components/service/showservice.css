@@ -1,87 +1,355 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-    height: inherit;    
+/* =========================
+   ShowService - Responsive Layout
+   ========================= */
+
+.service-page {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 40px 24px 60px;
+  background: #f7f3ee;
+  font-family: "Kanit", sans-serif;
+  color: #3f342c;
+  height: fit-content;
 }
 
-
-.button3 {
-    background-color: rgb(240, 163, 112);
-    border-radius: 10px;
-    border: none;
-    color: black;
-    padding: 5px;
-    font-family: 'Kanit', sans-serif;
-    font-size: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    transition: all 200ms ease;
+.service-card {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #eadfd4;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(76, 55, 38, 0.10);
 }
 
-.button3:hover {
-    background-color: rgb(255, 197, 120);
-    color: black;
-    transform: scale(1.02);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+/* รูปบริการ */
+.service-image-wrap {
+  width: 100%;
+  background: #eee4da;
 }
 
-.imgservice{
-  width: 95%;
-  height: 300px;
+.imgservice {
+  display: block;
+  width: 100%;
+  height: 420px;
   object-fit: cover;
-  margin-top: 10px;
+}
+
+/* เนื้อหาหลัก */
+.service-content {
+  padding: 30px 36px 34px;
+}
+
+.service-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #eee4dc;
+}
+
+.service-label {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: #a67c5b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.service-title {
+  margin: 0;
+  color: #352b25;
+  font-size: clamp(25px, 3vw, 34px);
+  line-height: 1.25;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.service-price {
+  flex: 0 0 auto;
+  min-width: 170px;
+  padding: 13px 18px;
+  background: #fff4e8;
+  border: 1px solid #f0dcc7;
+  border-radius: 14px;
+  text-align: right;
+}
+
+.service-price span {
+  display: block;
+  color: #8c7868;
+  font-size: 13px;
+}
+
+.service-price strong {
+  display: block;
+  margin-top: 2px;
+  color: #c96f24;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+/* รายละเอียด */
+.service-info {
+  padding: 26px 0;
+}
+
+.info-block h2,
+.area-section h2 {
+  margin: 0 0 10px;
+  color: #4b3b30;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.info-block p {
+  margin: 0;
+  color: #6b5d52;
+  font-size: 16px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: #faf7f4;
+  border-radius: 12px;
+  color: #57483d;
+  font-size: 15px;
+}
+
+.info-title {
+  color: #8b796a;
+}
+
+.category-badge {
+  max-width: 55%;
+  padding: 5px 11px;
   border-radius: 20px;
+  background: #ead7c4;
+  color: #6c4d36;
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
-.imguser {
-    width: auto;
-    height: 50px;
-    border-radius: 50px;
-}
-
-.user{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-.imageUser{
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    background-color: #fff;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-}
-
-.techName{
-    font-size: 18px;
-    font-family: 'Kanit', sans-serif;
-    margin-left: 10px;
+/* พื้นที่ให้บริการ */
+.area-section {
+  margin-top: 26px;
+  margin-bottom: 10px;
 }
 
 .area {
-    margin-top: -20px;
-    display: flex;
-    gap: 10px;
-    
-}
-.province{
-    font-size: 16px;
-    font-family: 'Kanit', sans-serif;  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 10px;
 }
 
-.buttonMessage{
-    background-color: rgb(240, 163, 112);
-    border-radius: 5px;
-    border: none;
-    color: black;
-    padding: 5px;
-    font-family: 'Kanit', sans-serif;
-    font-size: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    transition: all 200ms ease;
-    margin-left: 10px;
+.province {
+  margin: 0;
+  padding: 7px 13px;
+  border: 1px solid #e3d0bd;
+  border-radius: 20px;
+  background: #fffaf5;
+  color: #6c5543;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.empty-area {
+  margin: 0;
+  color: #999086;
+  font-size: 14px;
+}
+
+/* ผู้รับงาน + ปุ่ม */
+.provider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 22px;
+  border-top: 1px solid #eee4dc;
+}
+
+.provider-profile {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.imageUser {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #ead8c7;
+  border-radius: 50%;
+  background: #fff8f1;
+}
+
+.imguser {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  color: #a67c5b;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.provider-detail {
+  display: flex;
+  flex-direction: column;
+  margin-left: 13px;
+  min-width: 0;
+}
+
+.provider-label {
+  color: #96877b;
+  font-size: 13px;
+}
+
+.techName {
+  margin: 1px 0 0;
+  color: #3f342c;
+  font-size: 18px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.buttonMessage {
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 20px;
+  background: #e37f22;
+  color: #ffffff;
+  font-family: "Kanit", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(174, 98, 30, 0.20);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.buttonMessage:hover {
+  background: #cf6f19;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(174, 98, 30, 0.25);
+}
+
+.buttonMessage:active {
+  transform: translateY(0);
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 768px) {
+  .service-page {
+    padding: 20px 14px 40px;
+  }
+
+  .service-card {
+    border-radius: 18px;
+  }
+
+  .imgservice {
+    height: 280px;
+  }
+
+  .service-content {
+    padding: 24px 20px 26px;
+  }
+
+  .service-heading {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .service-price {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+  }
+
+  .provider {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .buttonMessage {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-page {
+    padding: 10px 8px 30px;
+  }
+
+  .imgservice {
+    height: 220px;
+  }
+
+  .service-content {
+    padding: 20px 16px 22px;
+  }
+
+  .service-title {
+    font-size: 24px;
+  }
+
+  .service-price strong {
+    font-size: 20px;
+  }
+
+  .info-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .category-badge {
+    max-width: 100%;
+  }
+}
+    
+
+.review{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 10px;
+  padding: 10px;
+  background-color: #cccccc54;
+  border-radius: 10px;
+  
 }

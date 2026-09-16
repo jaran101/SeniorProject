@@ -70,7 +70,7 @@ export default function DetailOrder() {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/readprofile/${order.User.Users_Id}`,
+          `http://localhost:3000/api/readmyprofile/${order.User.Users_Id}`,
           {
             headers: {
               authorization: token,

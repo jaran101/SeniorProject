@@ -319,7 +319,7 @@ const handleUpdateLocation = async () => {
                 
 
 
-            <div className='MapCon'>
+            <div className='MapCustomerContainer'>
                 
                 <MapContainer 
                     center={position} 

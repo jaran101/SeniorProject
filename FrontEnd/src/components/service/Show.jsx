@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ShowService from "./showservice";
 
-// แปลงชื่อหมวดหมู่ที่แสดงใน UI เป็นรหัสหมวดหมู่ที่ API ใช้
 const categoryMap = {
   ไฟฟ้า: "ELECTRICAL",
   ประปา: "PLUMBING",
