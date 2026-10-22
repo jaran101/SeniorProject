@@ -136,5 +136,40 @@
   color: #111;
 }
 
+.province-active{
+  border-radius: 8px;
+  border: 1px solid #ff9800;
+  padding: 5px;
+  font-size: 16px;
+  background-color: #ff9800;
+  color: rgb(255, 255, 255);
+  
 
+}
+.province-buttons {
+  display: flex;
+  flex-wrap: wrap;       /* บรรทัดใหม่เมื่อเต็มจอ */
+  gap: 8px;
+  padding: 10px 15px;
+}
 
+.province-buttons button {
+  border: 1px solid #ddd;
+  background: #eee;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.province-buttons button:hover {
+  background: #ffb65cca;
+  transition: all 0.3s;
+  color: rgb(255, 255, 255);
+}
+
+.province-buttons button.active {
+  background: #ff9800;
+  color: #fff;
+  border-color: #ff9800;
+}

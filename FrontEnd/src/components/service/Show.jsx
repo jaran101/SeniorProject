@@ -31,6 +31,7 @@ useEffect(()=>{
     let response;
     const categoryCode = category ? categoryMap[category] : null;
 
+
     if (categoryCode) {
       response = await axios.get(`http://localhost:3000/api/searchservices?Category=${categoryCode}`);
       
@@ -47,6 +48,7 @@ useEffect(()=>{
 };
 fetchData()
 },[category, searchText])
+
 
 useEffect(() => {
   if (!allServices) return;
@@ -71,6 +73,9 @@ useEffect(() => {
 }, [allServices, selectedProvince]);
 
 
+useEffect(() => {
+  setSelectedProvince(null);
+}, [category]);
 
 
 const headerText = category
@@ -106,13 +111,19 @@ const headerText = category
             provinces.map((p) => (
               <button
                 key={p}
-                className={selectedProvince === p ? "active" : ""}
+                className={selectedProvince === p ? "province-active" : ""}
                 onClick={() => setSelectedProvince(prev => prev === p ? "" : p)}
               >
                 {p}
+                {console.log('category',category)}
+                {console.log('selectedProvince',selectedProvince)}
               </button>
             ))
+            
           )}
+{provinces.length > 0 && (
+          <button onClick={() => setSelectedProvince(null)}>แสดงพื้นที่ให้บริการทั้งหมด</button>
+        )}
         </div>
 
 

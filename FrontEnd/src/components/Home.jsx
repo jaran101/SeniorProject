@@ -72,6 +72,8 @@ export default function Home() {
     <button className="buttonRed" onClick={() => {
       setSelectedItem(null);
       setSearchText(null);
+      setText("");
+      
     }}>
       X
     </button>

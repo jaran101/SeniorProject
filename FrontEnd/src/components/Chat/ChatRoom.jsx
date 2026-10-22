@@ -4,33 +4,27 @@ import PriceOfferModal from "./PriceOfferModal";
 import Boq from "./Boq.jsx"
 import "./ChatRoom.css"
 import useMatchedOrder from "./useMatchedOrder";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import BOQDocument from "./BOQDocument.jsx";
-import BOQPreview from "./BOQPreview.jsx";
-
 import axios from "axios";
 export default function ChatRoom({ room, messages, onSendMessage, currentUserId, isTechnician, 
   onSendOffer,onAcceptOffer, onRejectOffer, showOfferModal, setShowOfferModal, otherUserId }) {
+//state-useState------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null); 
   const messagesEndRef = useRef(null);
+  const lastMessage = messages[messages.length - 1];
+  const canOfferAgain = lastMessage?.Type === "PRICE_ACCEPT";
   const [showBOQ,setShowBOQ] = useState(false);
-  const [viewingBoq, setViewingBoq] = useState(null);
   const Tech_Id = room ? (isTechnician ? currentUserId : otherUserId) : null;
   const User_Id = room ? (isTechnician ? otherUserId : currentUserId) : null;
-    const navigate = useNavigate();
-
-  // -------------------------
-  // Hook
-  // -------------------------
-
+  const navigate = useNavigate();
+  // useMatchedOrder----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   const {orderId,loading,error} = useMatchedOrder(
     Tech_Id,
     room?.Service_Id,
     User_Id,
-    null
+    "ACCEPTED" //targetStatus
   );
 
 useEffect(() => {
@@ -39,11 +33,7 @@ useEffect(() => {
   }
 }, [error]);
 
-
-
-//-------------------------
-//useEffect Preview
-//-------------------------
+//useEffect Preview----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 console.log({ Tech_Id, User_Id, Service_Id: room?.Service_Id, orderId, isTechnician });
     useEffect(() => {
       if(!file){
@@ -143,14 +133,13 @@ function mapItemsForPdf(items) {
   return (
     <div className="chat-room" >
       <div className="chat-header">
-<p className="HeaderName">{room.otherUserName}</p>
-      
+        <p className="HeaderName">{room.otherUserName}</p>
       </div>
       
-      <div className="chat-messages">
-        {messages.map((msg) =>{
-        const isMine = msg.Sender_Id === currentUserId;
-        return(
+  <div className="chat-messages">
+    {messages.map((msg) =>{
+    const isMine = msg.Sender_Id === currentUserId;
+      return(
 <div key={msg.Chat_Id} className={`message ${isMine ? "mine" : "theirs"}`}>
   <div className="message-bubble-wrapper">
     {msg.Type === "IMAGE" && (
@@ -201,74 +190,34 @@ function mapItemsForPdf(items) {
   )
 })}
 
- 
-                   <div ref={messagesEndRef} />
+    <div ref={messagesEndRef} />
       </div>
 
 
 
         {showOfferModal && (
-                <div className="chat-offer-modal">
+          <div className="chat-offer-modal">
                   
-        <PriceOfferModal
-        onSubmit={onSendOffer}
-        onCancel={() => setShowOfferModal(false)}
-        Service_Id={room.Service_Id} 
-        />
-              </div>
-
+          <PriceOfferModal
+            onSubmit={onSendOffer}
+            onCancel={() => setShowOfferModal(false)}
+            Service_Id={room.Service_Id} 
+          />
+        </div>
       )}
 
     { showBOQ && (
-                <div className="chat-Boq-modal">
+      <div className="chat-Boq-modal">
         <Boq
-        onCancel={() => setShowBOQ(false)}
-        showBOQ={showBOQ}
-        setShowBOQ={setShowBOQ}
-        orderId={orderId}
-        onSendMessage={onSendMessage}
+          onCancel={() => setShowBOQ(false)}
+          showBOQ={showBOQ}
+          setShowBOQ={setShowBOQ}
+          orderId={orderId}
+          onSendMessage={onSendMessage}
         />
-        </div>
+      </div>
     )}
 
-
- {/* {viewingBoq && (
-//   <div className="chat-View-Boq-modal">
-//     <button onClick={() => setViewingBoq(null)}>ปิด</button>
-//     <p>รายการใบเสนอราคา</p>
-//     <table>
-//       <thead>
-//         <tr>
-//           <th>ชื่อ</th>
-//           <th>จำนวน</th>
-//           <th>หน่วย</th>
-//           <th>ราคาต่อหน่วย</th>
-//           <th>ราคารวม</th>
-//           <th>รายละเอียด</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//     {viewingBoq?.Items?.map((item) => (   
-//       <tr key={item.BOQ_Item_Id}> 
-//       <td>{item.Name}</td> 
-//       <td>{item.Quantity}</td> 
-//       <td>{item.Unit}</td> 
-//       <td>{item.Unit_Price}</td> 
-//       <td>{item.Total_Price}</td>
-//       <td>{item.Description}</td>
-//       </tr>
-//     ))}
-//       </tbody>
-//     </table>
-//     <p>ยอดรวมทั้งหมด: {viewingBoq?.Total_Amount}</p>
-//     <p>หมายเลขอ้างอิง: {viewingBoq?.Order_Id}</p> 
-//     <PDFDownloadLink document={<BOQDocument items={mapItemsForPdf(viewingBoq.Items)} />} fileName="BOQ.pdf">
-//   {({ loading }) => (loading ? "Generating PDF..." : "Download BOQ")}
-// </PDFDownloadLink>
-//     <BOQPreview items={mapItemsForPdf(viewingBoq.Items)} />
-    
-//   </div>
-)} */}
 
 
 <div className= "chat-input">
@@ -294,16 +243,16 @@ function mapItemsForPdf(items) {
       <button onClick={handleSend} disabled={showOfferModal}>
         ส่ง
       </button>
-            {isTechnician && 
-              <button onClick={
-                () => setShowOfferModal(true)}
-                disabled={showOfferModal}
-                >เสนอราคา</button>}
+      {isTechnician && canOfferAgain &&
+      <button onClick={() => setShowOfferModal(true)} disabled={showOfferModal}>
+        เสนอราคา
+      </button>}
 
-                {isTechnician && 
-                  <button onClick={() => setShowBOQ(!showBOQ)} disabled={showOfferModal || loading || !orderId}>
-        {showBOQ ?"ปิดรายการ" : "สร้างรายการ"}</button>
-                }
+      {isTechnician && <button 
+      onClick={() => setShowBOQ(!showBOQ)} disabled={showOfferModal || loading || !orderId}>
+      {showBOQ ?"ปิดรายการ" : "สร้างรายการ"}
+      </button>
+      }
     </div>
   </div>
   );

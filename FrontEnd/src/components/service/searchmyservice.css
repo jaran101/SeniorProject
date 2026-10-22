@@ -1,78 +1,529 @@
-.allservice{
+
+/* ==============================
+   หน้ารายการบริการ
+============================== */
+
+.myServicePage {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 32px;
+  box-sizing: border-box;
+  color: #40352e;
+  font-family: "Sarabun", sans-serif;
+  background-color: #ffffff;
+  margin: 20px auto;
+  border-radius: 20px;
+  padding: 20px 20px 20px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+}
+
+/* ==============================
+   Header
+============================== */
+
+.serviceHeader {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  flex-direction: row;
-  justify-content: center;
-  
+  margin-bottom: 24px;
 }
 
-
-.service{
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-flex-direction: column;
-background-color: rgb(219, 210, 206);
-width: 250px;
-height: auto;
-padding: 5px;
-transition: all 0.3s ease;
-}
-.service:hover{
-  transform: scale(1.05);
-  background-color: rgb(209, 215, 221);
+.serviceHeaderInfo h2 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #5c4030;
 }
 
-.imageLL{
-  height: 180px;
-  width: auto;
-  border-radius: 5px;
+.serviceHeaderInfo p {
+  margin: 0;
+  color: #88776b;
+  font-size: 14px;
 }
 
-.detail{
-margin: 0;
-}
-
-.serviceTitle{
-  font-size: 16px;
-  font-family: sans-serif;
-
-}
-
-.ButtonTT{
+.serviceHeaderActions {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.createButton,
+.areaButton {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
-  background-color: azure;
-  padding: 5px;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.Update{
-  background-color: rgb(255, 146, 20);
-  border:none;
-  border-radius: 4px;
-  font-size: 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.createButton {
+  color: #fff;
+  background-color: #c77735;
+  border: 1px solid #c77735;
+  box-shadow: 0 3px 8px rgba(130, 75, 35, 0.15);
 }
 
-.Cancel{ 
-  background-color: rgb(233, 60, 60);
-  font-size: 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  border: none;
-  border-radius: 4px;
+.createButton:hover {
+  background-color: #a95f28;
+  transform: translateY(-1px);
 }
 
-.oo{
-  position: fixed;
-  top: 0;
-  left: 0;
+.areaButton {
+  color: #79563f;
+  background-color: #fffaf5;
+  border: 1px solid #d9c1ae;
+}
+
+.areaButton:hover {
+  background-color: #f4e8dc;
+}
+
+/* ==============================
+   จำนวนบริการ
+============================== */
+
+.serviceCount {
+  margin-bottom: 18px;
+  color: #827166;
+  font-size: 14px;
+}
+
+.serviceCount span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+  margin: 0 4px;
+  padding: 0 7px;
+  box-sizing: border-box;
+  color: #9c5d2e;
+  background-color: #f8e7d6;
+  border-radius: 7px;
+  font-weight: 700;
+}
+
+/* ==============================
+   Grid การ์ดบริการ
+============================== */
+
+.allservice {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 245px), 1fr)
+  );
+  gap: 24px;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* ==============================
+   การ์ดบริการ
+============================== */
+
+.service {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid #eee4dc;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(65, 43, 27, 0.07);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.service:hover {
+  transform: translateY(-4px);
+  border-color: #dfc1a8;
+  box-shadow: 0 10px 24px rgba(65, 43, 27, 0.12);
+}
+
+/* ==============================
+   รูปภาพ
+============================== */
+
+.serviceImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background-color: #f2e9e1;
+}
+
+.imageLL {
+  display: block;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.267);
-  z-index: 999;
-  overflow-y: auto;
+  object-fit: cover;
+  transition: transform 0.35s ease;
 }
 
+.service:hover .imageLL {
+  transform: scale(1.04);
+}
+
+.serviceImagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #a18b7b;
+  font-size: 14px;
+  background: linear-gradient(135deg, #f5ede5, #e9d9c9);
+}
+
+.serviceCategory {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  padding: 6px 10px;
+  color: #79502e;
+  background-color: rgba(255, 250, 245, 0.95);
+  border: 1px solid rgba(217, 193, 174, 0.6);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==============================
+   รายละเอียดบริการ
+============================== */
+
+.serviceContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.serviceId {
+  margin: 0 0 8px;
+  color: #a18d7e;
+  font-size: 12px;
+}
+
+.serviceTitle {
+  display: -webkit-box;
+  min-height: 48px;
+  margin: 0 0 14px;
+  overflow: hidden;
+  color: #49372b;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.servicePrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 15px;
+  padding: 12px;
+  background-color: #fff7ef;
+  border-radius: 8px;
+}
+
+.servicePrice span {
+  color: #8a7565;
+  font-size: 13px;
+}
+
+.servicePrice strong {
+  color: #bd692d;
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.serviceDescription {
+  margin-top: 0;
+}
+
+.detailLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: #6e5949;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.serviceDescription p {
+  display: -webkit-box;
+  min-height: 42px;
+  margin: 0;
+  overflow: hidden;
+  color: #817267;
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* ==============================
+   ปุ่มจัดการ
+============================== */
+
+.ButtonTT {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding: 0 16px 16px;
+}
+
+.Update,
+.Cancel {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.Update {
+  color: #ffffff;
+  background-color: #e6a56c;
+}
+
+.Update:hover {
+  background-color: #b96b28;
+}
+
+.Cancel {
+  color: #c63e38;
+  background-color: #fff0ee;
+  border: 1px solid #f2d1cd;
+}
+
+.Cancel:hover {
+  color: #fff;
+  background-color: #d94a43;
+}
+
+.Update:active,
+.Cancel:active,
+.createButton:active,
+.areaButton:active {
+  transform: scale(0.98);
+}
+
+.Update:focus-visible,
+.Cancel:focus-visible,
+.createButton:focus-visible,
+.areaButton:focus-visible {
+  outline: 3px solid #d7a578;
+  outline-offset: 3px;
+}
+
+/* ==============================
+   ไม่มีบริการ
+============================== */
+
+.emptyServices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 32px 20px;
+  text-align: center;
+  background-color: #fffaf6;
+  border: 1px dashed #ddc7b5;
+  border-radius: 14px;
+}
+
+.emptyServiceIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+  color: #a76634;
+  background-color: #f5e6d8;
+  border-radius: 50%;
+  font-size: 30px;
+}
+
+.emptyServices h3 {
+  margin: 0 0 8px;
+  color: #5c4030;
+  font-size: 20px;
+}
+
+.emptyServices p {
+  max-width: 420px;
+  margin: 0 0 20px;
+  color: #88776b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ==============================
+   Modal
+============================== */
+
+.oo {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: rgba(35, 25, 19, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+/* ==============================
+   Responsive
+============================== */
+
+@media (min-width: 1200px) {
+  .allservice {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .allservice {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .myServicePage {
+    padding: 20px 16px;
+  }
+
+  .serviceHeader {
+    align-items: stretch;
+  }
+
+  .serviceHeaderInfo h2 {
+    font-size: 24px;
+  }
+
+  .serviceHeaderActions {
+    width: 100%;
+  }
+
+  .serviceHeaderActions button {
+    flex: 1;
+  }
+
+  .allservice {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .serviceImageWrapper {
+    height: 155px;
+  }
+
+  .serviceContent {
+    padding: 12px;
+  }
+
+  .serviceTitle {
+    font-size: 16px;
+    min-height: 46px;
+  }
+
+  .servicePrice {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .servicePrice strong {
+    font-size: 16px;
+  }
+
+  .ButtonTT {
+    gap: 7px;
+    padding: 0 10px 12px;
+  }
+
+  .Update,
+  .Cancel {
+    padding: 9px 6px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .allservice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .serviceImageWrapper {
+    height: 210px;
+  }
+
+  .serviceContent {
+    padding: 16px;
+  }
+
+  .ButtonTT {
+    padding: 0 16px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service,
+  .imageLL,
+  .Update,
+  .Cancel,
+  .createButton,
+  .areaButton {
+    transition: none;
+  }
+
+  .service:hover,
+  .service:hover .imageLL {
+    transform: none;
+  }
+}

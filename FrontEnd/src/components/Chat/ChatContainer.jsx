@@ -5,18 +5,16 @@ import ChatRoom from "./ChatRoom";
 import { useLocation } from "react-router-dom";
 import "./ChatContainer.css"
 import axios from "axios"; 
-
+//getOtherUserId----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function getOtherUserId(room, currentUserId) {
-
   if(room.Sender_Id === currentUserId){
     return room.Receiver_Id
   }
 else{
     return room.Sender_Id
   }
-  
 }
-
+//chatContainer----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 export default function ChatContainer() {
   const socket = useSocket();
   const location = useLocation();
@@ -29,6 +27,7 @@ export default function ChatContainer() {
 
   const hasSentInitialMessage = useRef(false);
   const [order,setOrder]=useState(null)
+  //Update last message----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   function updateRoomLastMessage(newMessage) {
   setRoomsList(prev =>
     prev.map(room =>
@@ -39,7 +38,7 @@ export default function ChatContainer() {
   );
 }
 
-
+//ส่งข้อความครั้งแรก----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   useEffect(() => {
     if (!activeRoom || !socket || hasSentInitialMessage.current) return;
 
@@ -50,6 +49,7 @@ export default function ChatContainer() {
     }
   }, [activeRoom, socket]);
 
+//รับข้อความ-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  useEffect(() => {
   if(!socket){
     return;
@@ -72,8 +72,7 @@ export default function ChatContainer() {
   };
 }, [socket]);
 
-
-
+//ดึงประวัติข้อความ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 useEffect(() => {
   if (!activeRoom) return;
  let ignore = false;
@@ -98,6 +97,7 @@ const fetchHistory= async() => {
   };
 }, [activeRoom]);
 
+//ดึงห้องสนทนาทั้งหมดของเรา--ใช้ข้อมูลคู่สนทนาด้วย-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 useEffect(() => {
   const fetchRooms = async () => {
     try {
@@ -131,7 +131,7 @@ useEffect(() => {
   };
   fetchRooms();
 }, []); 
-
+//ส่งข้อความ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const sendMessage = async (text, file) => {
   if (!activeRoom || !socket) return;
         const otherUserId = getOtherUserId(activeRoom, currentUserId); 
@@ -149,8 +149,6 @@ const sendMessage = async (text, file) => {
     setMessages(prev => [...prev, optimisticMessage]);
 
   try {
-     
-
 
     const formData = new FormData();
   
@@ -163,12 +161,9 @@ const sendMessage = async (text, file) => {
     if(file){
       formData.append("file", file);
     }
-    const response = await axios.post(
-      "http://localhost:3000/api/newmessage",
-      formData,
-      {
-        headers: { authorization: localStorage.getItem("token") }
-      }
+
+    const response = await axios.post("http://localhost:3000/api/newmessage",formData,
+      {headers: { authorization: localStorage.getItem("token") }}
     );
       setMessages(prev => {
     const filtered = prev.filter(m => m.Chat_Id !== optimisticMessage.Chat_Id);
@@ -180,9 +175,10 @@ const sendMessage = async (text, file) => {
   } catch (error) {
     setMessages(prev => prev.filter(m => m.Chat_Id !== optimisticMessage.Chat_Id));
     console.log(error.response?.data?.message);
+    alert("ส่งข้อความไม่สำเร็จ กรุณาลองใหม่");
   }
 };
-
+//ส่งข้อเสนอ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const sendOffer = async (offerData) => {
   if (!activeRoom || !socket) return;
 
@@ -204,9 +200,7 @@ const sendOffer = async (offerData) => {
         headers: { authorization: localStorage.getItem("token") }
       }
     );
-    console.log(response.data);
     socket.emit("send_message", response.data.result);
-   
     updateRoomLastMessage(response.data.result);
   } catch (error) {
     console.log(error.response?.data?.message);
@@ -215,8 +209,7 @@ const sendOffer = async (offerData) => {
   console.log("Response data:", error.response?.data);
   }
 };
-
-
+//ตอบรับข้อเสนอ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const acceptOffer = async (offerMessage) => {
   try {
     const response = await axios.post(
@@ -232,9 +225,8 @@ const acceptOffer = async (offerMessage) => {
       },
       { headers: { authorization: localStorage.getItem("token") } }
     );
-    console.log(response.data.result);
+    // console.log(response.data.result);
     setOrder(response.data.result)
-
     const updateOffer ={
       ...offerMessage,
       Type:"PRICE_ACCEPT",
@@ -247,7 +239,7 @@ const acceptOffer = async (offerMessage) => {
     console.log(error.response?.data?.message);
   }
 };
-
+//ปฏิเสธข้อเสนอ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const rejectOffer = async (offerMessage) => {
   try {
     await axios.patch(
@@ -266,7 +258,7 @@ const rejectOffer = async (offerMessage) => {
     console.log(error.response?.data?.message);
   }
 };
-
+//ดึงข้อมูลช่าง----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 useEffect(() => {
   if (!activeRoom) return;
   let ignore = false;
@@ -287,24 +279,15 @@ useEffect(() => {
 
 const isTechnician = serviceOwnerId !== null && currentUserId === serviceOwnerId
 
-//------------------------
-//Function receive_message
-//------------------------
 
+//Function join_room----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 useEffect(() => {
-  if (!socket || !activeRoom) return;  // เช็คก่อนว่าทั้งคู่พร้อมใช้งานจริง
+  if (!socket || !activeRoom) return;  
 
-  // TODO: เรียก socket.emit(...) ตรงนี้
-  // ต้องส่ง event ชื่อ "join_room" ไปพร้อมกับค่า Room_Id ของ activeRoom
-  socket.emit("join_room",activeRoom.Room_Id)
+  socket.emit("join_room",activeRoom.Room_Id)}, 
+  [socket, activeRoom?.Room_Id]);
 
-}, [socket, activeRoom?.Room_Id]);
-
-
-
-
-
-
+//SubComponent----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   return (
     <div className="chat-container">
   

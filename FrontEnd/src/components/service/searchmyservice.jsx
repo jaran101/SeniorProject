@@ -1,134 +1,250 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
-import ServiceCreate from "./servicecreate"
-import ServiceOption from "./serviceoption"
-import Readmyservicearea from "../area/readmyservicearea"
+
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import ServiceCreate from "./servicecreate";
+import ServiceOption from "./serviceoption";
+import Readmyservicearea from "../area/readmyservicearea";
+import "./SearchMyservice.css";
 
 export default function SearchMyservice() {
-  const token = localStorage.getItem("token")
-  const userId = JSON.parse(localStorage.getItem("user")).payload.id  
+  const token = localStorage.getItem("token");
 
-  const [data, setData] = useState([])
-  const [showCreate, setShowCreate] = useState(false)   //  showหน้าสร้างงาน
-  const [showEdit, setShowEdit] = useState(false)       //  showหน้าแก้ไขงาน
-  const [serviceId, setServiceId] = useState(0)
-  const [ShowArea,setShowArea]=useState(false)
-  // -----------------------------------------------------
-  // ดึงงานของฉัน
-  // -----------------------------------------------------
-  const fetchMyServices = async () => {  
+  const [userId] = useState(() => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/searchmyservice/${userId}`, {
-        headers: { authorization: token }
-      })
-      setData(response.data.result)
-      console.log(response.data.result)
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      return user?.payload?.id ?? null;
+    } catch {
+      return null;
+    }
+  });
 
-      console.log("UserId=",userId)
-    } catch (err) { console.log(err) }
-  }
+  const [data, setData] = useState([]);
+  const [showCreate, setShowCreate] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [serviceId, setServiceId] = useState(null);
+  const [showArea, setShowArea] = useState(false);
+
+  // ดึงรายการบริการของฉัน
+  const fetchMyServices = useCallback(async () => {
+    if (!userId || !token) return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/searchmyservice/${userId}`,
+        {
+          headers: { authorization: token },
+        }
+      );
+
+      setData(response.data.result ?? []);
+    } catch (err) {
+      console.error("ไม่สามารถดึงรายการบริการได้:", err);
+    }
+  }, [userId, token]);
 
   useEffect(() => {
-    fetchMyServices()
-  }, [userId])
+    fetchMyServices();
+  }, [fetchMyServices]);
 
-  // -----------------------------------------------------
-  // ลบงาน
-  // -----------------------------------------------------
-  const handleRemove = async (Service_Id) => {
-  console.log("serviceId =", Service_Id);
-  console.log(userId)
+  // ยกเลิกบริการ
+  const handleRemove = async (id) => {
+    const confirmed = window.confirm(
+      "คุณต้องการยกเลิกบริการนี้ใช่หรือไม่?"
+    );
+
+    if (!confirmed) return;
+
     try {
-      await axios.delete(`http://localhost:3000/api/removeservice/${Service_Id}`, {
-        headers: { authorization: token },
-        data: { Service_Id: Number(Service_Id),Users_Id:userId
-            
-      }  
-      })
-      alert("ลบงานสำเร็จ")
-      setData(prev => prev.filter(item => item.Service_Id !== Service_Id))
-      
+      await axios.delete(
+        `http://localhost:3000/api/removeservice/${id}`,
+        {
+          headers: { authorization: token },
+          data: {
+            Service_Id: Number(id),
+            Users_Id: userId,
+          },
+        }
+      );
+
+      setData((prev) =>
+        prev.filter(
+          (item) => String(item.Service_Id) !== String(id)
+        )
+      );
+
+      alert("ยกเลิกบริการสำเร็จ");
     } catch (err) {
-      console.log(err)
-      alert("เกิดข้อผิดพลาด: " + err.response?.data?.msg)
+      console.error(err);
+      alert(
+        "เกิดข้อผิดพลาด: " +
+          (err.response?.data?.msg || "กรุณาลองใหม่อีกครั้ง")
+      );
     }
-  }
-// -----------------------------------------------------
-//เปิดหน้าสร้างงาน
-// -----------------------------------------------------
-const handleCreateService =()=>{
-  setShowCreate(true)
+  };
 
-}
-// -----------------------------------------------------
-//สร้างงาน
-// -----------------------------------------------------
-const handleEditService =()=>{
-  console.log(serviceId)
-  setShowEdit(true)
-}
-  // -----------------------------------------------------
-  // UI
-  // -----------------------------------------------------
+  // เปิดหน้าแก้ไขบริการ
+  const handleEdit = (id) => {
+    setServiceId(id);
+    setShowEdit(true);
+  };
+
   return (
-<div>
-<div>
-      <p>งานของฉัน{data.length} </p>
-      <button onClick={handleCreateService}>สร้างงาน</button>
-      <button onClick={()=>setShowArea(!ShowArea)}>พื้นที่ให้บริการ</button>
-</div>
-        <div className="allservice">
-            {data.map((service)=>
-            <div className="service" key={service.Service_Id}>
-                {service.Image&&(
-                    <img src={`http://localhost:3000/uploads/${service.Image}`} 
-                        className="imageLL" 
-                        alt={service.Title} />)}
-                   <div className="datail">
-                    <p>{service.Users_Id}</p>
-                     <p className="serviceTitle">บริการ{service.Title}</p>
-                    <p>ค่าบริการ:{service.Price} บาท</p>
-                    <p>รายละเอียด:{service.Description}</p>
-                    <p>ประเภทงาน{service.Category}</p>
-                   </div>
-                      <div className="ButtonTT">
-                        <button className="Update"  onClick={
-                          ()=>{setServiceId(service.Service_Id)
-                          handleEditService()}
-                          }>แก้ไข</button>
-                        <button className="Cancel" onClick={()=>{
-                          console.log("service =", service)
-                          console.log("Service_Id =", service.Service_Id)
-                          handleRemove(service.Service_Id)}}>ยกเลิก</button>
-                      </div>
-            </div>
-            )}
+    <div className="myServicePage">
+      {/* ส่วนหัว */}
+      <div className="serviceHeader">
+        <div className="serviceHeaderInfo">
+          <h2>งานของฉัน</h2>
+          <p>จัดการบริการและรายละเอียดงานของคุณ</p>
         </div>
-{/*--------------------------------------------------------------------------------*/}
-{console.log(showCreate)}
-<div >
-  {showCreate &&(
-<div className="oo">
-  <ServiceCreate onClose={() => setShowCreate(false)}
-    onCreated={fetchMyServices}
-    />
-  </div>
 
-)}
-</div>
-{/*--------------------------------------------------------------------------------*/}
-{showEdit &&(
-  <div className="oo">
-    <ServiceOption onClose={()=> setShowEdit(false)} serviceId={serviceId} />
-  </div>
-)}
+        <div className="serviceHeaderActions">
+          <button
+            type="button"
+            className="areaButton"
+            onClick={() => setShowArea(true)}
+          >
+            พื้นที่ให้บริการ
+          </button>
 
-{ShowArea &&(
-  <div className="oo">
-    <Readmyservicearea onClose={()=> setShowArea(false)} userId={userId} />
-  </div>
-)}
+          <button
+            type="button"
+            className="createButton"
+            onClick={() => setShowCreate(true)}
+          >
+            <span aria-hidden="true">+</span> สร้างบริการ
+          </button>
+        </div>
+      </div>
 
-</div>  
-)
+      {/* จำนวนบริการ */}
+      <div className="serviceCount">
+        รายการบริการทั้งหมด{" "}
+        <span>{data.length}</span> รายการ
+      </div>
+
+      {/* รายการการ์ด */}
+      {data.length > 0 ? (
+        <div className="allservice">
+          {data.map((service) => (
+            <article
+              className="service"
+              key={service.Service_Id}
+            >
+              <div className="serviceImageWrapper">
+                {service.Image ? (
+                  <img
+                    src={`http://localhost:3000/uploads/${service.Image}`}
+                    className="imageLL"
+                    alt={service.Title || "รูปบริการ"}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="serviceImagePlaceholder">
+                    ไม่มีรูปภาพบริการ
+                  </div>
+                )}
+
+                <span className="serviceCategory">
+                  {service.Category || "บริการทั่วไป"}
+                </span>
+              </div>
+
+              <div className="serviceContent">
+                <p className="serviceId">
+                  รหัสบริการ #{service.Service_Id}
+                </p>
+
+                <h3 className="serviceTitle">
+                  {service.Title || "ไม่ระบุชื่อบริการ"}
+                </h3>
+
+                <div className="servicePrice">
+                  <span>ค่าบริการ</span>
+                  <strong>
+                    {Number(service.Price || 0).toLocaleString("th-TH")}
+                    {" "}บาท
+                  </strong>
+                </div>
+
+                <div className="serviceDescription">
+                  <span className="detailLabel">
+                    รายละเอียดบริการ
+                  </span>
+                  <p>
+                    {service.Description || "ไม่มีรายละเอียด"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="ButtonTT">
+                <button
+                  type="button"
+                  className="Update"
+                  onClick={() => handleEdit(service.Service_Id)}
+                >
+                  แก้ไข
+                </button>
+
+                <button
+                  type="button"
+                  className="Cancel"
+                  onClick={() => handleRemove(service.Service_Id)}
+                >
+                  ยกเลิก
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="emptyServices">
+          <div className="emptyServiceIcon">+</div>
+          <h3>ยังไม่มีบริการของคุณ</h3>
+          <p>
+            เริ่มต้นสร้างบริการเพื่อให้ลูกค้าสามารถค้นหาและติดต่อคุณได้
+          </p>
+          <button
+            type="button"
+            className="createButton"
+            onClick={() => setShowCreate(true)}
+          >
+            สร้างบริการแรกของคุณ
+          </button>
+        </div>
+      )}
+
+      {/* Modal สร้างบริการ */}
+      {showCreate && (
+        <div className="oo">
+          <ServiceCreate
+            onClose={() => setShowCreate(false)}
+            onCreated={() => {
+              fetchMyServices();
+              setShowCreate(false);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Modal แก้ไขบริการ */}
+      {showEdit && (
+        <div className="oo">
+          <ServiceOption
+            onClose={() => setShowEdit(false)}
+            serviceId={serviceId}
+          />
+        </div>
+      )}
+
+      {/* Modal พื้นที่ให้บริการ */}
+      {showArea && (
+        <div className="oo">
+          <Readmyservicearea
+            onClose={() => setShowArea(false)}
+            userId={userId}
+          />
+        </div>
+      )}
+    </div>
+  );
 }
