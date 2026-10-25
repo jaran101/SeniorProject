@@ -1,46 +1,288 @@
-.data-container{
-     width: 650px;
-  height: auto;
-  margin: auto;
-  margin-top: 10px;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+.data-page {
+  width: 100%;
+  max-width: 1050px;
+  margin: 30px auto;
+  padding: 0 24px 40px;
+  box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
+  color: #44372d;
+  animation: dataFadeIn 0.3s ease;
+}
+
+/* ส่วนหัวหน้า */
+.data-page-heading {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-
-.data{
-  
-  transition: all 0.4s ease;
+.data-eyebrow {
+  margin: 0 0 5px;
+  color: #a67c5b;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 
-.data.active {
-  margin-right: 10px;
-  padding: 10px;
-  border: 2px solid rgba(160, 160, 160, 0.774);
-  border-radius: 5px;
+.data-page-heading h1 {
+  margin: 0;
+  color: #5d4331;
+  font-size: 30px;
+  font-weight: 600;
 }
 
-.bdata{
-  background-color:#8b8787 ;
+.data-page-description {
+  margin: 8px 0 0;
+  color: #8b8178;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ปุ่มแก้ไข */
+.bdata {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 11px 20px;
   border: none;
-  border-radius: 6px;
-  font-family: 'Kanit', sans-serif;
-  color: #ffff;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 2px 10px;
+  border-radius: 9px;
+  background: #a67c5b;
+  color: #fff;
+  font-family: "Kanit", sans-serif;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: 0px 7px 5px rgba(0, 0, 0, 0.35);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .bdata:hover {
-  background-color: #f70d0d;
-  color: white;
-  transform: scale(1.1);
+  background: #8b6244;
+  transform: translateY(-1px);
+}
+
+.bdata:focus-visible,
+.back-data-button:focus-visible {
+  outline: 3px solid #e3c9a8;
+  outline-offset: 3px;
+}
+
+/* การ์ดข้อมูล */
+.data-card {
+  width: 100%;
+  padding: 28px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #eee2d5;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(93, 67, 49, 0.07);
+}
+
+.data-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #f0e8df;
+}
+
+.data-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #f5e8d8;
+  color: #8b6244;
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.data-card-heading h2 {
+  margin: 0;
+  color: #5d4331;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.data-card-heading p {
+  margin: 5px 0 0;
+  color: #95877b;
+  font-size: 13px;
+}
+
+/* ช่องแสดงข้อมูล */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 22px;
+}
+
+.data-item {
+  min-width: 0;
+  padding: 17px 18px;
+  border: 1px solid #f0e8df;
+  border-radius: 11px;
+  background: #fffdfb;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.data-item:hover {
+  border-color: #d9bea4;
+}
+
+.data-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #96877a;
+  font-size: 13px;
+}
+
+.data-item p {
+  margin: 0;
+  color: #42372f;
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.data-address-item {
+  grid-column: 1 / -1;
+}
+
+.default-address-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #f5e8d8;
+  color: #805a3d;
+  font-size: 12px;
+}
+
+/* ท้ายการ์ด */
+.data-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 17px;
+  border-top: 1px solid #f0e8df;
+  color: #8b8178;
+  font-size: 12px;
+}
+
+.data-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #72a67a;
+}
+
+/* หน้าไม่มีข้อมูล */
+.data-empty {
+  text-align: center;
+}
+
+.data-empty h2 {
+  margin-top: 0;
+  color: #5d4331;
+}
+
+.data-empty > p {
+  color: #8b8178;
+}
+
+/* ปุ่มกลับจากหน้าแก้ไข */
+.back-data-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  border: 1px solid #e4d2bf;
+  border-radius: 8px;
+  background: #fffaf4;
+  color: #76563d;
+  font-family: "Kanit", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.back-data-button:hover {
+  background: #f3e5d5;
+}
+
+@keyframes dataFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tablet */
+@media (max-width: 700px) {
+  .data-page {
+    margin-top: 20px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .data-page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .data-page-heading h1 {
+    font-size: 25px;
+  }
+
+  .data-card {
+    padding: 20px;
+  }
+
+  .data-grid {
+    gap: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .data-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .data-address-item {
+    grid-column: auto;
+  }
+
+  .data-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .data-card-heading h2 {
+    font-size: 17px;
+  }
+
+  .data-item {
+    padding: 14px;
+  }
+
+  .bdata {
+    width: 100%;
+  }
 }

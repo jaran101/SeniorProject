@@ -3,7 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./ShowService.css";
 import { generateRoomId } from "../../utils/generateRoomId";
-
+import ViewProfile  from "../viewProfile";
+import Profile from "../Profile";
 export default function ShowService({ service }) {
   const navigate = useNavigate();
   const [receiverData, setReceiverData] = useState(null);
@@ -84,16 +85,13 @@ useEffect(() => {
 const fetchReview = async()=>{
   try{
       const response = await axios.get(`http://localhost:3000/api/readreviewbyservice/${service?.Service_Id}`)
-      console.log(response.data.result);
       setReview(response.data.result);
   }catch(err){
     console.log("Error to fetch review:", err);
   }
-
-
 }  
 fetchReview();
-}, []);
+}, [service?.Service_Id]);
 
 
   const firstName = receiverData?.First_Name ?? service?.First_Name ?? "";
@@ -175,14 +173,23 @@ function formatTime(date) {
             </div>
           </div>
 
-          <div className="provider">
+          <div className="provider" >
             <div className="provider-profile">
-              <div className="imageUser">
+              <div className="imageUser" onClick={() => {
+                  if (service?.Users_Id != userId) {
+                    navigate(`/viewProfile/${service?.Users_Id}`, {
+                      state: { Users_Id: service?.Users_Id }
+                    });
+                  } else {
+                    navigate("/Profile");
+                  }
+                } }> 
                 {avatar ? (
                   <img
                     className="imguser"
                     src={`http://localhost:3000/uploads/${avatar}`}
                     alt={`${firstName} ${lastName}`}
+                    
                   />
                 ) : (
                   <span className="avatar-placeholder">

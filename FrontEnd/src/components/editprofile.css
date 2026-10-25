@@ -1,195 +1,495 @@
-.buttonEdit {
-  background-color: #8f8888;
-  border: none;
-  border-radius: 10px;
-  height: 52px;
-  width: 70%;          /* เปลี่ยนจาก 408px → 100% */
-  font-family: 'Kanit', sans-serif;
-  color: rgb(240, 238, 238);
-  font-weight: 400;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0px 7px 5px rgba(0, 0, 0, 0.253);
-  margin-top: 10px;
+
+/* =========================
+   Main layout
+========================= */
+
+.Edit {
+  width: 100%;
+  height: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+  color: #39332e;
+  font-family: "Kanit", sans-serif;
 }
 
-.buttonEdit:hover{
-  background-color: #fab459;
-  transform: scale(1.02);  
-  color: black;
+.edit-heading {
+  margin-bottom: 20px;
 }
 
-.Edit{
-  width: 900px;
+.edit-heading h2 {
+  margin: 0 0 6px;
+  font-size: 25px;
+  font-weight: 500;
+  color: #604833;
 }
 
-.EditContainer{
-  display: flex;
+.edit-heading p,
+.edit-section-title p {
+  margin: 0;
+  color: #82776d;
+  font-size: 14px;
 }
 
-/* .Editdata{
-  background-color: aqua;
-  height: 600px;
-} */
-
-input[type="file"] {
-    color: transparent;   /* ทำให้ข้อความ "ไม่มีไฟล์ที่เลือก" โปร่งใส มองไม่เห็น */
+.Line,
+.hr1 {
+  height: 1px;
+  border: 0;
+  background: #e8ded3;
+  margin: 20px 0;
 }
+
+/* =========================
+   Profile container
+========================= */
+
+.EditContainer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 32px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #eee5dc;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(80, 58, 38, 0.06);
+}
+
+.Editdata {
+  width: 100%;
+  min-width: 0;
+}
+
+.edit-section-title {
+  margin-bottom: 22px;
+}
+
+.edit-section-title h3,
+.avatar-section h3 {
+  margin: 0 0 6px;
+  color: #604833;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+/* =========================
+   Form fields
+========================= */
 
 .rowEdit {
-  margin-top: 12px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
   width: 100%;
-  height: 40px;
-  margin-bottom: 12px;
-  /* background-color: aqua; */
-  }
-
-.rowEdit1{
-margin-top: 70px;
+  margin: 0 0 20px;
 }
 
+.form-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 
-  .avatar-preview{
-  max-width: 70%;
-  margin-top: 8px;
+.form-field label {
   margin-bottom: 8px;
-  border-radius: 8px;
+  color: #4d443c;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input_profile {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  border: 1px solid #d9d0c7;
+  border-radius: 9px;
+  background: #fff;
+  color: #39332e;
+  font-family: "Kanit", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input_profile::placeholder {
+  color: #aaa19a;
+}
+
+.input_profile:hover,
+.rowEdit2 select:hover {
+  border-color: #b99b7d;
+}
+
+.input_profile:focus,
+.rowEdit2 select:focus {
+  border-color: #c28b53;
+  box-shadow: 0 0 0 3px rgba(194, 139, 83, 0.15);
+  outline: none;
+}
+
+/* =========================
+   Birthday
+========================= */
+
+.birthday-field {
+  margin-bottom: 24px;
+}
+
+.rowEdit2 {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr 0.8fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.rowEdit2 select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 6px;
+  box-sizing: border-box;
+  border: 1px solid #d9d0c7;
+  border-radius: 9px;
+  background: #fff;
+  color: #39332e;
+  font-family: "Kanit", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* =========================
+   Error messages
+========================= */
+
+.err-msg {
+  margin: 6px 0 0;
+  color: #d93025;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================
+   Save button
+========================= */
+
+.buttonEdit {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 4px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #a67c5b;
+  color: #fff;
+  font-family: "Kanit", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(100, 73, 49, 0.12);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.buttonEdit:hover:not(:disabled) {
+  background: #e37f22;
+  transform: translateY(-1px);
+}
+
+.buttonEdit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Avatar section
+========================= */
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  padding: 18px 14px;
+  box-sizing: border-box;
+  border: 1px solid #eee3d7;
+  border-radius: 13px;
+  background: #fdfaf6;
+  text-align: center;
+}
+
+.avatar-section h3 {
+  font-size: 18px;
+}
+
+.avatar-description {
+  margin: 0 0 16px;
+  color: #82776d;
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 .avatar-preview-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  width: 200px;
+  justify-content: center;
+  width: 170px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 2px solid #e5d6c5;
+  border-radius: 50%;
+  background: #f3ece4;
+  box-sizing: border-box;
 }
 
-
-.input_option{
-    width: 80%;
-    border-radius: 5px;
-    border: 2px solid #ccc;
-    padding: 5px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
-    transition: all 0.3s ease;
-
+.avatar-preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.input_option:focus{
-        border-color: #ff9408;
-        box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
-        outline: none;
-    }
-
-.input_option:hover{
-    transform: scale(1.02);
-    transition: 5ms all;
+.avatar-placeholder {
+  padding: 12px;
+  color: #9b8a79;
+  font-size: 13px;
 }
 
-.input_profile {
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  width: 88%;          /* เปลี่ยนจาก 408px → 100% */
-  font-family: 'Kanit', sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  padding: 8px 12px;
-  background: #fff;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.input_profile-tell {
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  width: 150px;          /* เปลี่ยนจาก 408px → 100% */
-  font-family: 'Kanit', sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  padding: 8px 12px;
-  background: #fff;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-
-.input_profile:focus {
-  border-color: #ff9408;
-  box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
-}
-
-
-.input_option_Province option {
-  color: #333;
-  background-color: #ffffff;
-  font-family: 'Kanit', sans-serif;
-  font-size: 15px;
-  padding: 8px;
-}
-
-.input_profile_District{
-  
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  width: 80%;          /* เปลี่ยนจาก 408px → 100% */
-  font-family: 'Kanit', sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  padding: 2px 9px;
-  background: #fff;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.input_profile_District:focus {
-  border-color: #ff9408;
-  box-shadow: 0 0 0 3px rgba(199, 165, 122, 0.2);
+.avatar-input {
+  display: none;
 }
 
 .upload-btn {
-    display: inline-block;
-    padding: 8px 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f5f5f5;
-    font-family: "Kanit", sans-serif;
-    cursor: pointer;
-    transition: background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border: 1px solid #c9ac8d;
+  border-radius: 9px;
+  background: #fff;
+  color: #795a3d;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
 .upload-btn:hover {
-       background: #C7A57A;
-    color: #f5f5f5;
+  background: #e3c9a8;
+  color: #493523;
 }
 
-.buttonAddAddress{
-    margin-top: 20px;
-    background-color: #888682;
-    border: none;
-    border-radius: 10px;
+.avatar-filename {
+  max-width: 100%;
+  margin: 10px 0 0;
+  overflow-wrap: anywhere;
+  color: #82776d;
+  font-size: 11px;
+}
+
+/* =========================
+   Address section
+========================= */
+
+.address-section {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-top: 28px;
+  padding: 30px;
+  border-radius: 13px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.address-section .edit-section-title {
+  margin-bottom: 18px;
+}
+
+/* Wrapper รอบ ReadMyAddresses
+   ใช้ชื่อใหม่ ไม่ซ้ำกับเซลล์ในตาราง */
+.address-table-container {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-top: 18px;
+  box-sizing: border-box;
+}
+
+.address-table-container .addresses-section {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.address-table-container .addresses-table-wrapper {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.address-table-container .addresses-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
+
+.buttonAddAddress {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  min-height: 42px;
+  margin-top: 18px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #a67c5b;
+  color: #fff;
+  font-family: "Kanit", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.buttonAddAddress:hover {
+  background: #e37f22;
+  transform: translateY(-1px);
+}
+
+.customer-map-container {
+  width: 100%;
+  min-width: 0;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.customer-map-container > * {
+  max-width: 100%;
+}
+
+.hr1 {
+  margin: 28px 0 0;
+}
+
+/* =========================
+   Other existing components
+========================= */
+
+.input_option,
+.input_profile_District {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px solid #d9d0c7;
+  border-radius: 8px;
+  background: #fff;
+  font-family: "Kanit", sans-serif;
+  font-size: 14px;
+}
+
+.input_option:focus,
+.input_profile_District:focus {
+  border-color: #c28b53;
+  box-shadow: 0 0 0 3px rgba(194, 139, 83, 0.15);
+  outline: none;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 768px) {
+  .Edit {
+    padding: 16px;
+  }
+
+  .EditContainer {
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 20px;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .avatar-section {
+    width: 100%;
+  }
+
+  .avatar-preview-container {
     width: 150px;
-    height: 40px;
-    font-family: 'Kanit', sans-serif;
-    color: white;
-    font-weight: 400;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .address-section {
+    padding: 0;
+  }
 }
 
-.buttonAddAddress:hover{
-    background-color: #ff9408;
-    transform: scale(1.02);
-    color: black;
+@media (max-width: 600px) {
+  .EditContainer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .avatar-section {
+    grid-row: auto;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .Edit {
+    padding: 10px;
+  }
+
+  .edit-heading h2 {
+    font-size: 21px;
+  }
+
+  .EditContainer {
+    gap: 24px;
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  .rowEdit {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .rowEdit2 {
+    grid-template-columns: 1fr 1.25fr 0.8fr;
+    gap: 5px;
+  }
+
+  .rowEdit2 select {
+    padding: 8px 3px;
+    font-size: 12px;
+  }
+
+  .address-section {
+    padding: 0;
+  }
+
+  .buttonEdit,
+  .buttonAddAddress {
+    width: 100%;
+  }
 }

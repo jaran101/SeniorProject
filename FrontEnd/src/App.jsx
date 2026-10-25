@@ -23,7 +23,7 @@ import NewServiceArea from "./components/area/newservicearea.jsx";
 import BOQPreview from "./components/Chat/BOQPreview.jsx";
 //--------------------------------
 import ChatContainer from "./components/Chat/ChatContainer";
-
+import ViewProfile from "./components/viewProfile";
 //--------------------------------
 import "./components/service/servicecreate.css";
 import "./components/bar/header.css";
@@ -73,6 +73,7 @@ export default function App() {
         <Route path="/newservicearea" element={<Layout><NewServiceArea /><br /></Layout>} />
         <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>}/>
         <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
+        <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
       </Routes>
     )   
 }

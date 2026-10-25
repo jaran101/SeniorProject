@@ -211,6 +211,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
+}
+
+.imguser:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(174, 98, 30, 0.20);
+  
 }
 
 .avatar-placeholder {

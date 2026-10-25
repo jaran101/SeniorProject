@@ -1,24 +1,249 @@
-.DeleteLocation{
-    background-color: crimson;
-    color: whitesmoke;
-    border:none;
-    outline:none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+
+/* =========================
+   Address section
+========================= */
+
+.addresses-section {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
+  color: #42372f;
 }
-.DeleteLocation:hover{
-    background-color: #ff4d4d;
+
+.addresses-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  box-sizing: border-box;
 }
-.UpdateLocation{
-    background-color: gold;
-    color: black;
-    border:none;
-    outline:none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+
+.addresses-header h2 {
+  margin: 0;
+  color: #6f4e37;
+  font-size: 22px;
+  font-weight: 600;
 }
-.UpdateLocation:hover{
-    background-color: #ffd11a;
+
+.addresses-header p {
+  margin: 5px 0 0;
+  color: #8b8178;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.addresses-count {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f3e5d5;
+  color: #76563d;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* =========================
+   Table wrapper
+========================= */
+
+.addresses-table-wrapper {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid #ead9c6;
+  border-radius: 10px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.addresses-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-family: "Kanit", sans-serif;
+  font-size: 13px;
+}
+
+.addresses-table thead {
+  background: #f3e5d5;
+}
+
+.addresses-table th {
+  padding: 13px 12px;
+  color: #6f4e37;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: center;
+  border-bottom: 1px solid #e5d3bf;
+}
+
+.addresses-table td {
+  padding: 12px;
+  color: #42372f;
+  text-align: center;
+  border-bottom: 1px solid #f0e8df;
+  vertical-align: middle;
+}
+
+.addresses-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.addresses-table tbody tr:hover {
+  background: #fffaf4;
+}
+
+/* ที่อยู่ในเซลล์ตารางเท่านั้น */
+.addresses-table td.address-list {
+  min-width: 150px;
+  max-width: 260px;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+  text-align: left;
+}
+
+/* =========================
+   Default address
+========================= */
+
+.default-address-cell {
+  text-align: center;
+}
+
+.default-address-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #76563d;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.default-address-label input {
+  accent-color: #a67c5b;
+  cursor: pointer;
+}
+
+/* =========================
+   Action buttons
+========================= */
+
+.UpdateLocation,
+.DeleteLocation {
+  min-width: 54px;
+  padding: 7px 11px;
+  border: none;
+  border-radius: 6px;
+  font-family: "Kanit", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.UpdateLocation {
+  background: #f3d69b;
+  color: #5e4725;
+}
+
+.UpdateLocation:hover {
+  background: #e9c16d;
+  transform: translateY(-1px);
+}
+
+.DeleteLocation {
+  background: #fbe5e3;
+  color: #b42318;
+}
+
+.DeleteLocation:hover {
+  background: #f5c4c0;
+  transform: translateY(-1px);
+}
+
+.UpdateLocation:focus-visible,
+.DeleteLocation:focus-visible {
+  outline: 2px solid #a67c5b;
+  outline-offset: 2px;
+}
+
+/* =========================
+   Empty state
+========================= */
+
+.addresses-empty {
+  width: 100%;
+  padding: 28px 16px;
+  border: 1px dashed #d8c4af;
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #8b8178;
+  text-align: center;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   Update address panel
+========================= */
+
+.update-address-panel {
+  width: 100%;
+  min-width: 0;
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #ead9c6;
+  border-radius: 10px;
+  background: #fffaf4;
+  box-sizing: border-box;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 768px) {
+  .addresses-header h2 {
+    font-size: 20px;
+  }
+
+  .addresses-table {
+    font-size: 12px;
+  }
+
+  .addresses-table th,
+  .addresses-table td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .addresses-header h2 {
+    font-size: 19px;
+  }
+
+  .addresses-header p {
+    font-size: 12px;
+  }
+
+  .addresses-table {
+    min-width: 850px;
+    font-size: 12px;
+  }
+
+  .update-address-panel {
+    padding: 12px;
+  }
 }
