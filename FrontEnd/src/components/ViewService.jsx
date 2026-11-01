@@ -2,10 +2,11 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import "./service/SearchMyservice.css";
+import ViewShowService from "./viewShowService";
 
 export default function ViewService({Users_Id}) {
   const token = localStorage.getItem("token");
-
+  const [selectedService, setSelectedService] = useState(null);
   const [userId] = useState(() => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -126,6 +127,7 @@ export default function ViewService({Users_Id}) {
             <article
               className="service"
               key={service.Service_Id}
+              onClick={()=>setSelectedService(service)}
             >
               <div className="serviceImageWrapper">
                 
@@ -200,6 +202,23 @@ export default function ViewService({Users_Id}) {
           />
         </div>
       )}
+
+      
+      {/* Modal สำหรับแสดงรายละเอียดบริการที่เลือก */}
+
+      {selectedService && (
+        <div className="modal-overlay" onClick={() => setSelectedService(null)}>
+          <div className="modal-box" onClick={(event) => event.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedService(null)}>
+              ✕
+            </button>
+            <ViewShowService service={selectedService}  />
+          </div>
+        </div>
+      )}
+
+
+
     </div>
   );
 }
