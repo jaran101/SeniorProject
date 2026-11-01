@@ -2,16 +2,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import Data from "./data";
+import ViewAccout from "./viewAccout";
 import Newprofile from "./newprofile";
-import SearchMyservice from "./service/searchmyservice";
+import ViewService from "./ViewService";
 import Tau from "./techUser/tau";
 import "./Profile.css";
 
 export default function ViewProfile() {
 //Ustate---------------------------------------------------------------------------------
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState("data");
+  const [page, setPage] = useState("viewAccout");
   const [animate, setAnimate] = useState(false);
   const [profile, setProfile] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
@@ -109,10 +109,10 @@ return (
       </div>
 
       <div className="profile-menu">
-        <button onClick={() => changePage("searchmyservice")} className="profile-button">
+        <button onClick={() => changePage("viewService")} className="profile-button">
           งานของฉัน
         </button>
-        <button onClick={() => changePage("data")} className="profile-button">
+        <button onClick={() => changePage("viewAccout")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
         <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ</button>
@@ -121,8 +121,8 @@ return (
       <div  
       className={animate ? "page-animation active" : "page-animation"}
       onTransitionEnd={handleTransitionEnd}>
-        {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} addresses={addresses} setAddresses={setAddresses} />}
-        {page === "searchmyservice" && <SearchMyservice />}
+        {page === "viewAccout" && <ViewAccout profile={profile} onProfileUpdated={setProfile} addresses={addresses} setAddresses={setAddresses} />}
+        {page === "viewService" && <ViewService Users_Id={Users_Id} />}
         {page === "tau" && <Tau />}
         
 
