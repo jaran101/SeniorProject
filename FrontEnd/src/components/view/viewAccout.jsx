@@ -1,8 +1,8 @@
 
 import { useState, useMemo, memo } from "react";
-import Newprofile from "./newprofile";
-import Editprofile from "./editprofile";
-import "./data.css";
+import Newprofile from "../newprofile";
+import Editprofile from "../editprofile";
+import "../data.css";
 
 export default memo(function ViewAccout({
   profile,

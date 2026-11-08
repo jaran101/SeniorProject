@@ -3,8 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./ShowService.css";
 import { generateRoomId } from "../../utils/generateRoomId";
-import ViewProfile  from "../viewProfile";
-import Profile from "../Profile";
+
 export default function ShowService({ service }) {
   const navigate = useNavigate();
   const [receiverData, setReceiverData] = useState(null);

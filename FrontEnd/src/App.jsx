@@ -17,13 +17,13 @@ import ListService from "./components/service/listservice.jsx";
 import SearchMyservice from "./components/service/searchmyservice.jsx";
 import ServiceOption from "./components/service/serviceoption.jsx";
 import ShowService from "./components/service/showservice.jsx";
-
+import QrTest  from "./components/QrTest.jsx";
 import Map from "./components/map/CustomerMap.jsx";
 import NewServiceArea from "./components/area/newservicearea.jsx";
 import BOQPreview from "./components/Chat/BOQPreview.jsx";
 //--------------------------------
 import ChatContainer from "./components/Chat/ChatContainer";
-import ViewProfile from "./components/viewProfile";
+import ViewProfile from "./components/view/viewProfile";
 //--------------------------------
 import "./components/service/servicecreate.css";
 import "./components/bar/header.css";
@@ -74,6 +74,7 @@ export default function App() {
         <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>}/>
         <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
         <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
+        <Route path="/QrTest" element={<Layout><QrTest /></Layout>}/>
       </Routes>
     )   
 }

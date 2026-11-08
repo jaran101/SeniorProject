@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import ViewAccout from "./viewAccout";
-import Newprofile from "./newprofile";
+import Newprofile from "../newprofile";
 import ViewService from "./ViewService";
-import Tau from "./techUser/tau";
-import "./Profile.css";
+import "../Profile.css";
 
 export default function ViewProfile() {
 //Ustate---------------------------------------------------------------------------------
@@ -115,7 +114,6 @@ return (
         <button onClick={() => changePage("viewAccout")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
-        <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ</button>
       </div>
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
       <div  
@@ -123,7 +121,6 @@ return (
       onTransitionEnd={handleTransitionEnd}>
         {page === "viewAccout" && <ViewAccout profile={profile} onProfileUpdated={setProfile} addresses={addresses} setAddresses={setAddresses} />}
         {page === "viewService" && <ViewService Users_Id={Users_Id} />}
-        {page === "tau" && <Tau />}
         
 
       </div>

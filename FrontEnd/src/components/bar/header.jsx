@@ -1,8 +1,7 @@
 import Logout from "../Logout";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import useUser from "../hooks/useUser";
 
 export default function Header() {
   const location = useLocation();
@@ -10,7 +9,7 @@ export default function Header() {
 
   // เก็บข้อมูลผู้ใช้และโปรไฟล์ที่โหลดจาก API
   const [user, setUser] = useState(null);
-
+  const {profileUser,loading} = useUser();
   // ตรวจสถานะหน้าเพื่อแสดงเมนูให้เหมาะสม
   const isProfilePage = location.pathname === "/profile";
   const isChatPage = location.pathname === "/chat";
@@ -36,13 +35,13 @@ export default function Header() {
     <div className="header">
       <div className="header-brand">
         <span className="brand-name">Fix Chang</span>
-        {token?(
-        <span className="brand-user">สวัสดี
-        </span>
-        ):(
-          <span className="brand-user">ยังไม่มีข้อมูล
-          </span>
-        )}
+        {loading ? ( 
+          <span className="brand-user">กำลังโหลด...</span>
+              ) : profileUser ? (
+          <span className="brand-user">: {profileUser.First_Name} {profileUser.Last_Name}</span>
+              ) : (
+          <span className="brand-user">ยังไม่ได้ลงทะเบียนเข้าใช้งาน</span>
+                )}
       </div>
 
 
@@ -61,21 +60,21 @@ export default function Header() {
           )}
           {user && (
             <>
-              {token && !isProfilePage && (
+              {user && !isProfilePage && (
                 <li className="p1">
                   <a href="/profile">Profile</a>
                 </li>
               )}
             </>
           )}
-          {token && !isChatPage && (
+          {user && !isChatPage && (
             <li className="p1">
               <a href="/chat">Chat</a>
             </li>
           )}
 
           
-          {token && <li className="buttonLogout">
+          {user && <li className="buttonLogout">
             <Logout />
           </li>}
         </div>

@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import "./service/SearchMyservice.css";
+import "../service/SearchMyservice.css";
 import ViewShowService from "./viewShowService";
 
 export default function ViewService({Users_Id}) {

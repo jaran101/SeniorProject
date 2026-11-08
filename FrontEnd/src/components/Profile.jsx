@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import useUser from "./hooks/useUser";
 import Data from "./data";
 import Newprofile from "./newprofile";
 import SearchMyservice from "./service/searchmyservice";
@@ -18,8 +18,8 @@ export default function Profile() {
   const [pendingPage, setPendingPage] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
-
-// เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
+  const userProfile = useUser();
+  // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
   const changePage = (newPage) => {
     if (newPage === page|| newPage === pendingPage) return;
       setPendingPage(newPage);
@@ -33,6 +33,9 @@ export default function Profile() {
     setAnimate(true);
   }
 };
+
+
+console.log(userProfile)
 
  const loadProfile = async (id) => {
       try {
@@ -49,12 +52,17 @@ export default function Profile() {
       } catch (error) {
         if (error.response?.status === 404) {
           setHasProfile(false); 
-        } else {
+        } else if(error.response?.status === 401||error.response?.status === 403) {
           console.error("เกิดข้อผิดพลาด:", error);
-        alert("เกิดข้อผิดพลาด: " + error.response?.data?.message);
+        alert("เกิดข้อผิดพลาด: "+ (error.response?.data?.message||error.message));
           localStorage.removeItem("user");
           localStorage.removeItem("token");
           navigate("/");
+        }
+        else{
+          console.error(error?.response?.data?.message||error.message)
+          alert(error.message)
+                    navigate("/");
         }
       }
     };

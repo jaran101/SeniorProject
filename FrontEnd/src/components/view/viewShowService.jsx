@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import "./service/ShowService.css";
-import { generateRoomId } from "../utils/generateRoomId";
+import "../service/ShowService.css";
+import { generateRoomId } from "../../utils/generateRoomId";
 // import ViewProfile  from "../viewProfile";
 // // import Profile from "../Profile";
 

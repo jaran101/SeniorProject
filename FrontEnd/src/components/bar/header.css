@@ -45,7 +45,7 @@ background: none;
 
   opacity: 0;
   transform: translateY(-10px);
-  transition: 0.3s;
+  transition: 0.5s;
   pointer-events: none;
 }
 
