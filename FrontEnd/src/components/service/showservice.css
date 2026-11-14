@@ -7,10 +7,12 @@
   min-height: 100vh;
   box-sizing: border-box;
   padding: 40px 24px 60px;
-  background: #f7f3ee;
+  background: #f7f3ee8a;
   font-family: "Kanit", sans-serif;
   color: #3f342c;
   height: fit-content;
+  scroll-behavior: smooth;
+
 }
 
 .service-card {

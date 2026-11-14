@@ -20,9 +20,9 @@ export default function ReadMyServiceArea({ onClose, userId }) {
             }
         };
 
-        if (userId) {
-            fetchMyArea();
-        }
+            if (userId) {
+                fetchMyArea();
+            }
     }, [userId]);
 
     const removeservicearea = async(Area_Id)=>{

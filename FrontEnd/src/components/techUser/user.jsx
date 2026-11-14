@@ -2,15 +2,13 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./tech.css"
-import Map from "../map/CustomerMap.jsx"
-
 export default function User({ userorder, handleconfirmorders, handlerejectorders }) {
     const [servicelist, setServicelist] = useState({})
     const [profilelist, setProfilelist] = useState({})
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
 
-
+    console.log(userorder)
     function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("th-TH", { 
     day: "2-digit", month: "2-digit", year: "numeric" 
@@ -43,9 +41,11 @@ export default function User({ userorder, handleconfirmorders, handlerejectorder
 
             setServicelist(serviceMap)
             setProfilelist(profileMap)
+            console.log(serviceMap)
         }
         fetchservice()
     }, [userorder])
+
 
     return (
         <div>
@@ -73,7 +73,7 @@ export default function User({ userorder, handleconfirmorders, handlerejectorder
                             <td>{formatDate(order.Work_Date)}</td>
                             <td>{formatDate(order.Work_Date_End)}</td>
                            <td>
-                            <button onClick={() => navigate('/DetailOrder', { state: { order } })}>
+                            <button onClick={() => navigate('/DetailOrderUser', { state: { order:order } })}>
                                 รายละเอียด
                             </button>
                             </td>

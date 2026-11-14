@@ -21,6 +21,7 @@ import QrTest  from "./components/QrTest.jsx";
 import Map from "./components/map/CustomerMap.jsx";
 import NewServiceArea from "./components/area/newservicearea.jsx";
 import BOQPreview from "./components/Chat/BOQPreview.jsx";
+import DetailOrderUser from "./components/techUser/DetailOrderUser.jsx";
 //--------------------------------
 import ChatContainer from "./components/Chat/ChatContainer";
 import ViewProfile from "./components/view/viewProfile";
@@ -73,6 +74,7 @@ export default function App() {
         <Route path="/newservicearea" element={<Layout><NewServiceArea /><br /></Layout>} />
         <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>}/>
         <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
+        <Route path="/DetailOrderUser" element={<Layout><DetailOrderUser /></Layout>}/>
         <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
         <Route path="/QrTest" element={<Layout><QrTest /></Layout>}/>
       </Routes>

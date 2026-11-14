@@ -47,6 +47,7 @@ export default function DetailOrder() {
   const [address, setAddress] = useState([]);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  console.log(order)
   // ========================================
   // Format Date
   // ========================================
@@ -84,6 +85,7 @@ export default function DetailOrder() {
         );
       } catch (err) {
         console.log(err);
+        console.log("Error fetching user:", err.response?.data?.message || err.message);
       }
     };
     fetchUser();
@@ -181,7 +183,7 @@ export default function DetailOrder() {
     }));
   }
 
-
+console.log(user)
   return (
 
     <div className="detail-order-page">
@@ -249,7 +251,7 @@ export default function DetailOrder() {
                 รายละเอียดงาน
               </span>
               <div className="description">
-                {order.Service?.Description || "-"}
+                {order.Service.Description || "-"}
               </div>
             </div>
             {/* Date */}

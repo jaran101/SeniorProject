@@ -18,7 +18,7 @@ export default function Profile() {
   const [pendingPage, setPendingPage] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
-  const userProfile = useUser();
+  const {profileUser,loading} = useUser();
   // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
   const changePage = (newPage) => {
     if (newPage === page|| newPage === pendingPage) return;
@@ -35,7 +35,7 @@ export default function Profile() {
 };
 
 
-console.log(userProfile)
+console.log(profileUser)
 
  const loadProfile = async (id) => {
       try {
@@ -115,7 +115,7 @@ return (
         </div>
         <div className="profile-box">
           <p>
-            ชื่อ:{profile?.First_Name} {profile?.Last_Name}
+            ชื่อ:{profileUser?.First_Name} {profileUser?.Last_Name}
           </p>
           <p>โทร:{profile?.Phone}</p>
         </div>

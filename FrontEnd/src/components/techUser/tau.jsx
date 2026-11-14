@@ -2,12 +2,10 @@ import { useState ,useEffect } from "react";
 import axios from "axios"
 import Tech from "./tech";
 import User from "./user";
-import OrderMap from "../map/OrderMap.jsx";
 import OrderCalendar from "../OrderCalendar.jsx"
 import "./tau.css";
 export default function Tau() {
   const [page, setPage] = useState("tech");
-  const [locations, setLocations] = useState(null)
   const [techorder, setTechorder] = useState([])
   const [userorder, setUserorder] = useState([])
   const token = localStorage.getItem("token")

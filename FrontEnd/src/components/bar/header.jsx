@@ -2,6 +2,7 @@ import Logout from "../Logout";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
+import isTokenExpired from "../../utils/isTokenExpired";
 
 export default function Header() {
   const location = useLocation();
@@ -18,16 +19,22 @@ export default function Header() {
   // Token ที่เก็บไว้ใน browser เพื่อใช้เรียก API
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
+ useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  const storedToken = localStorage.getItem("token");
 
-    const parsedUser = JSON.parse(storedUser);
+  // TODO 1: ถ้ามี storedToken และหมดอายุ ให้ลบ user กับ token ออกจาก localStorage
+  // แล้วออกจาก effect (return) เพื่อไม่ให้ไป setUser ต่อ
+  if (storedToken && isTokenExpired(storedToken)) {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    return;
+  }
 
-    setUser(parsedUser?.payload);
- 
-    
-  }, [navigate, token]);
+
+  if (!storedUser) return;
+  setUser(JSON.parse(storedUser)?.payload);
+}, [navigate, token]);
 
 
 
