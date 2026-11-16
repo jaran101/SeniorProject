@@ -1,0 +1,1033 @@
+================================================================================
+แบบฟอร์มส่งต่อบริบทโปรเจกต์ให้ AI Agent (Project Context Handover Form)
+เวอร์ชันฟอร์ม: 1.0
+วันที่ตรวจสอบ Source Code: 15 พ.ย. 2026
+วิธีใช้: ช่องที่มี [ตรวจสอบจาก Source Code] = ยืนยันจากโค้ดแล้ว ไม่ต้องตอบซ้ำ
+        ช่องที่มี [ต้องยืนยัน] = เจ้าของโปรเจกต์ต้องเติม/แก้
+        ช่อง [กรอกข้อมูล] = เว้นว่างไว้ให้เติม
+================================================================================
+
+--------------------------------------------------------------------------------
+1. ข้อมูลทั่วไปของโปรเจกต์
+--------------------------------------------------------------------------------
+1.1 ชื่อโปรเจกต์
+    - ชื่อที่แสดงบนหน้าจอ (Brand): "Fix Chang"  [ตรวจสอบจาก Source Code]
+      (พบใน FrontEnd/src/components/bar/header.jsx บรรทัด 44)
+    - ชื่อ Repository/Folder: SeniorProject  [ตรวจสอบจาก Source Code]
+    - ชื่อทางการที่ใช้ในรายงาน/เล่มโปรเจกต์: [กรอกข้อมูล]
+    - ชื่อย่อ/ชื่อเรียกภายในทีม: [กรอกข้อมูล]
+
+1.2 จุดประสงค์ของโปรเจกต์
+    - ข้อสรุปจาก Source Code: เป็นแพลตฟอร์ม (Marketplace) ให้ "ผู้ใช้" ค้นหาบริการช่าง
+      ดูรายละเอียดบริการ/รีวิว ติดต่อช่างผ่านแชท รับข้อเสนอราคา สร้าง Order
+      ติดตามงานผ่านปฏิทิน ตรวจรับงาน และให้ช่างออกเอกสาร BOQ (ใบประมาณราคา)
+      พร้อมพิมพ์เป็น PDF  [ตรวจสอบจาก Source Code]
+    - ข้อความทางการที่ต้องการใช้ในเล่ม: [กรอกข้อมูล]
+
+1.3 ระบบนี้แก้ปัญหาอะไร
+    - จาก Source Code: รวมช่างหลายประเภทไว้ที่เดียว + มีระบบเสนอราคา/นัดหมาย/ยืนยันงาน
+      ในตัว ลดการตกลงราคาผ่านช่องทางอื่น  [ตรวจสอบจาก Source Code]
+    - ปัญหาหลักที่อาจารย์/ลูกค้าต้องการให้แก้: [ต้องยืนยัน]
+
+1.4 กลุ่มผู้ใช้งาน
+    - USER (ลูกค้า): ค้นหาบริการ, แชทกับช่าง, ยอมรับข้อเสนอราคา, ยืนยัน/ยกเลิกงาน,
+      จัดการโปรไฟล์/ที่อยู่  [ตรวจสอบจาก Source Code: enum Role]
+    - TECHNICIAN (ช่าง): สร้าง/แก้ไข/ลบบริการของตัวเอง, กำหนดพื้นที่ให้บริการ (จังหวัด),
+      เสนอราคาในแชท, เริ่มงาน/แจ้งงานเสร็จ, สร้าง BOQ  [ตรวจสอบจาก Source Code]
+    - ADMIN: มี enum และ API จัดการผู้ใช้ (listuser/updaterole/updatestatus/amountuser)
+      แต่ยังไม่มีหน้าจอใช้งานจริง  [ตรวจสอบจาก Source Code]
+    - กลุ่มผู้ใช้จริงที่ตั้งใจไว้ (เช่น นักศึกษาในมหาวิทยาลัย / ช่างในจังหวัดใด): [ต้องยืนยัน]
+
+1.5 สถานะปัจจุบันของโปรเจกต์
+    - โค้ดมีทั้ง Frontend + Backend ทำงานคู่กันได้ (มี node_modules ติดตั้งแล้ว)
+      [ตรวจสอบจาก Source Code]
+    - Git: branch ปัจจุบัน = peak, มี branch main/bas และ remote origin
+      (github.com/jaran101/SeniorProject)  [ตรวจสอบจาก Source Code]
+    - Commit ล่าสุด: "feat: update user profile handling, add DetailOrderUser component,
+      and implement token expiration check"  [ตรวจสอบจาก Source Code]
+    - ระยะของโปรเจกต์ (เช่น โครงงาน 1 / โครงงาน 2 / กำลังสอบป้องกัน): [ต้องยืนยัน]
+    - เปอร์เซ็นต์ความคืบหน้าโดยประมาณ: [กรอกข้อมูล]
+    - วันที่ต้องส่ง/สอบ: [กรอกข้อมูล]
+
+--------------------------------------------------------------------------------
+2. Technology Stack
+--------------------------------------------------------------------------------
+2.1 Backend
+    - Programming Language: JavaScript (Node.js, ES Module "type": "module")
+      [ตรวจสอบจาก Source Code: Backend/package.json]
+    - Framework: Express 5.1.0  [ตรวจสอบจาก Source Code]
+    - ORM: Prisma 6.16.2 (@prisma/client + prisma CLI)  [ตรวจสอบจาก Source Code]
+    - Database: MySQL (DATABASE_URL="mysql://root:1234@localhost:3306/project")
+      [ตรวจสอบจาก Source Code: Backend/.env]
+      หมายเหตุ: ไฟล์ .env อยู่ใน .gitignore ของ Backend แต่ยังมีอยู่ในเครื่อง local
+      และมี SECRET="secureproject5433" (ไม่ควร commit)  [ตรวจสอบจาก Source Code]
+    - Authentication: JWT (jsonwebtoken 9.0.2) + bcrypt 6.0.0, อายุ token 5 ชั่วโมง
+      [ตรวจสอบจาก Source Code]
+    - Libraries สำคัญ (ติดตั้งใน package.json):
+        express 5.1.0, @prisma/client 6.16.2, prisma 6.16.2, bcrypt 6.0.0,
+        jsonwebtoken 9.0.2, multer 2.0.2, yup 1.7.1, cors 2.8.5, morgan 1.10.1,
+        express-rate-limit 8.1.0, socket.io 4.8.3, nodemon 3.1.10,
+        helmet 8.1.0 (ติดตั้งแต่ "ไม่ถูกเรียกใช้" ใน server.js),
+        axios 1.19.0 (ติดตั้งแต่ "ไม่พบการใช้งาน" ใน Backend)
+      [ตรวจสอบจาก Source Code]
+    - Script: npm start = nodemon server.js, npm run seed = node prisma/seed.js,
+      npm test = ยังไม่มี test (exit 1)  [ตรวจสอบจาก Source Code]
+
+2.2 Frontend
+    - Framework: React 18.2.0 + Vite 8.0.1 (@vitejs/plugin-react 6.0.1)
+      [ตรวจสอบจาก Source Code]
+    - UI Library: ไม่มี (ใช้ CSS เขียนเองแยกไฟล์ .css ต่อคอมโพเนนต์)
+      ไม่พบ Tailwind/MUI/Antd/Bootstrap  [ตรวจสอบจาก Source Code]
+    - State Management: React useState/useEffect + localStorage เป็นหลัก
+      พบ UserContext (createContext) แต่ "ไม่ถูกใช้งานจริง" (main.jsx ไม่ได้ห่อ UserProvider)
+      [ตรวจสอบจาก Source Code: FrontEnd/src/UserContext.jsx, main.jsx]
+    - HTTP Client: axios 1.16.1 (เรียก http://localhost:3000/api/... แบบ hardcode ทุกไฟล์)
+      [ตรวจสอบจาก Source Code]
+    - Libraries สำคัญ:
+        react-router-dom 6.30.3, axios 1.16.1, yup 1.7.1,
+        socket.io-client 4.8.3, leaflet 1.9.4 + react-leaflet 4.2.1 (OpenStreetMap),
+        @react-pdf/renderer 4.9.0 (สร้าง PDF ของ BOQ),
+        promptpay-qr 0.5.0 + qrcode.react 4.2.0 (ทดลอง QR พร้อมเพย์),
+        framer-motion 12.38.0 (ติดตั้ง; ต้องยืนยันว่ามีการใช้งานจริงหรือไม่)
+      [ตรวจสอบจาก Source Code]
+    - Font: Sarabun (ไฟล์ .ttf ใน src/assets/fonts) ใช้กับ PDF  [ตรวจสอบจาก Source Code]
+    - Dev proxy: '/api' -> http://localhost:3000 (vite.config.js) แต่โค้ดส่วนใหญ่
+      เรียก URL เต็ม http://localhost:3000 ตรง ๆ  [ตรวจสอบจาก Source Code]
+
+2.3 Infrastructure / Other
+    - Deployment: ไม่พบ Dockerfile / docker-compose / CI-CD / config cloud ใด ๆ
+      → ยังรันแบบ local (backend port 3000, frontend Vite dev server)  [ตรวจสอบจาก Source Code]
+    - Docker: ไม่มี  [ตรวจสอบจาก Source Code]
+    - Realtime: Socket.IO 4.8.3 ฝั่ง server + socket.io-client ฝั่ง client,
+      CORS origin "*"  [ตรวจสอบจาก Source Code]
+    - Map: Leaflet + react-leaflet + TileLayer จาก OpenStreetMap
+      (https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)
+      ไม่พบการใช้ Geocoding API / Google Maps  [ตรวจสอบจาก Source Code]
+    - External Services: ไม่พบ Payment Gateway จริง, ไม่พบ Email/SMS, ไม่พบ Cloud Storage
+      (ไฟล์อัปโหลดเก็บในโฟลเดอร์ local Backend/uploads แล้วเสิร์ฟที่ /uploads)
+      [ตรวจสอบจาก Source Code]
+    - ระบบจะ deploy จริงหรือไม่ / ที่ไหน: [ต้องยืนยัน]
+    - มีการใช้ Docker ในอนาคตหรือไม่: [ต้องยืนยัน]
+
+--------------------------------------------------------------------------------
+3. โครงสร้างโปรเจกต์
+--------------------------------------------------------------------------------
+3.1 โครงสร้าง Folder ของ Backend  [ตรวจสอบจาก Source Code ทั้งหมด]
+    Backend/
+    ├─ server.js                  จุดเริ่มต้นระบบ (entry point)
+    ├─ package.json               dependencies + scripts
+    ├─ .env                       SECRET (JWT) + DATABASE_URL (MySQL)
+    ├─ config/
+    │   └─ prisma.js              สร้าง PrismaClient ตัวเดียวแล้ว export ใช้ทั้งโปรเจกต์
+    ├─ routes/                    นิยาม endpoint + ผูก middleware (9 ไฟล์)
+    │   ├─ auth.route.js          /auth, /register, /login
+    │   ├─ profile.route.js       โปรไฟล์ + จัดการผู้ใช้ + role/status
+    │   ├─ service.route.js       บริการ + พื้นที่ให้บริการ
+    │   ├─ order.route.js         Order + เปลี่ยนสถานะงาน
+    │   ├─ review.route.js        รีวิว
+    │   ├─ chat.route.js          แชท + ข้อเสนอราคา
+    │   ├─ address.routes.js      ที่อยู่
+    │   ├─ location.routes.js     จังหวัด/อำเภอ/ตำบล
+    │   └─ boq.routes.js          BOQ
+    ├─ controllers/               business logic (9 ไฟล์ ตาม routes)
+    ├─ middleware/
+    │   ├─ verifytoken.js         ตรวจ JWT จาก header "authorization"
+    │   └─ upload.js              multer diskStorage -> ./uploads, field name = "file"
+    ├─ utils/
+    │   ├─ validate.js            yup schemas + middleware validate()
+    │   ├─ rateLimit.js           loginLimiter 5 ครั้ง / 15 นาที
+    │   └─ createError.js         สร้าง Error พร้อม code แล้ว throw
+    ├─ socket/
+    │   └─ chat.socket.js         event join_room / send_message / receive_message
+    ├─ prisma/
+    │   ├─ schema.prisma          โครงสร้างฐานข้อมูล (12 models, 5 enums)
+    │   ├─ seed.js                seed จังหวัด/อำเภอ/ตำบล จากไฟล์ JSON
+    │   ├─ data/                  provinces.json, districts.json, subdistricts.json
+    │   └─ migrations/            50 migration (2025-09-25 ถึง 2026-08-26)
+    └─ uploads/                   ไฟล์รูปที่อัปโหลด (พบ 14 ไฟล์ตอนตรวจ)
+
+3.2 โครงสร้าง Folder ของ Frontend  [ตรวจสอบจาก Source Code ทั้งหมด]
+    FrontEnd/
+    ├─ index.html                 title = "my-app"
+    ├─ vite.config.js             plugin react + proxy /api
+    ├─ package.json
+    ├─ public/                    favicon.svg, icons.svg, imagesPrompay.png, index.html
+    └─ src/
+        ├─ main.jsx               mount App ใต้ BrowserRouter
+        ├─ App.jsx                ตาราง Route ทั้งหมด (22 path) + Layout (Header/Footer)
+        ├─ UserContext.jsx        (ประกาศไว้แต่ไม่ถูกใช้)
+        ├─ index.css, App.css
+        ├─ assets/fonts/Sarabun/  ฟอนต์สำหรับ PDF
+        ├─ utils/
+        │   ├─ generateRoomId.js  สร้าง Room_Id = `${Service_Id}_${minUserId}_${maxUserId}`
+        │   └─ isTokenExpired.js  decode JWT ฝั่ง client เพื่อเช็ค exp
+        └─ components/
+            ├─ Home.jsx                 หน้าแรก + ช่องค้นหา + ปุ่มหมวดหมู่
+            ├─ Profile.jsx              โปรไฟล์ของฉัน (แท็บ งานของฉัน / ข้อมูลส่วนตัว / กำหนดการ)
+            ├─ data.jsx                 แสดงข้อมูลส่วนตัว
+            ├─ editprofile.jsx          ฟอร์มแก้ไขโปรไฟล์ + จัดการที่อยู่ + เพิ่มที่อยู่บนแผนที่
+            ├─ newprofile.jsx           ฟอร์มสร้างโปรไฟล์ครั้งแรก + อัปโหลดรูป
+            ├─ OrderCalendar.jsx        ปฏิทินงาน (เดือน) ของทั้งช่างและผู้ใช้
+            ├─ QrTest.jsx               หน้าทดลองสร้าง QR พร้อมเพย์ (ไม่ผูกกับ Order)
+            ├─ Logout.jsx               ลบ token/user แล้วกลับหน้าแรก
+            ├─ auth/                    lar.jsx (สลับแท็บ), Login.jsx, register.jsx
+            ├─ bar/                     header.jsx (เมนู + ชื่อผู้ใช้), footer.jsx
+            ├─ service/
+            │   ├─ Show.jsx             list บริการ + กรองหมวด/จังหวัด + modal รายละเอียด
+            │   ├─ showservice.jsx      รายละเอียดบริการ + ปุ่ม "ติดต่อผู้รับงาน"
+            │   ├─ listservice.jsx      เรียก /listservice แบบง่าย (component เสริม)
+            │   ├─ servicecreate.jsx    ฟอร์มสร้างบริการ
+            │   ├─ serviceoption.jsx    ฟอร์มแก้ไขบริการ
+            │   └─ searchmyservice.jsx  หน้าจัดการบริการของฉัน (สร้าง/แก้/ลบ/พื้นที่)
+            ├─ Chat/
+            │   ├─ ChatContainer.jsx    รวม room list + chat room + เรียก API แชท/ข้อเสนอ
+            │   ├─ ChatRoom.jsx         UI แชท, ปุ่มยอมรับ/ปฏิเสธข้อเสนอ, ปุ่มสร้าง BOQ
+            │   ├─ RoomList.jsx         รายการห้องแชท + preview ข้อความล่าสุด
+            │   ├─ PriceOfferModal.jsx  ฟอร์มเสนอราคา (ราคา + วันที่เริ่ม/จบ)
+            │   ├─ Boq.jsx              ฟอร์มสร้าง BOQ (ตารางรายการ)
+            │   ├─ BOQPreview.jsx       แสดง PDF ด้วย PDFViewer
+            │   ├─ BOQDocument.jsx      เทมเพลต PDF ใบ BOQ (ฟอนต์ Sarabun)
+            │   └─ useMatchedOrder.js   หา Order ที่ตรงกับ (Tech_Id, Service_Id, Users_Id, Status)
+            ├─ techUser/
+            │   ├─ tau.jsx              หน้ากำหนดการ + แท็บ ช่าง/ผู้ใช้ + ปุ่มเปลี่ยนสถานะ
+            │   ├─ tech.jsx             ตารางงานฝั่งช่าง (เริ่มงาน/แจ้งเสร็จ)
+            │   ├─ user.jsx             ตารางงานฝั่งผู้ใช้ (ยืนยัน/ยกเลิก)
+            │   ├─ DetailOrder.jsx      รายละเอียดงาน (มุมช่าง) + แผนที่ที่อยู่ลูกค้า
+            │   ├─ DetailOrderUser.jsx  รายละเอียดงาน (มุมผู้ใช้) + แผนที่
+            │   └─ text.jsx             ไฟล์ทดสอบ (hello)
+            ├─ map/
+            │   ├─ CustomerMap.jsx.jsx  เพิ่มที่อยู่ (เลือกจังหวัด/อำเภอ/ตำบล + ปักหมุด + geolocation)
+            │   ├─ readmyaddresses.jsx  ตารางที่อยู่ + ตั้งค่าเริ่มต้น + ลบ
+            │   ├─ updateaddress.jsx    ฟอร์มแก้ไขที่อยู่
+            │   └─ OrderMap.jsx         แผนที่ประกอบ (ไม่ถูก import ที่ไหน)
+            ├─ area/
+            │   ├─ newservicearea.jsx   เพิ่มพื้นที่ให้บริการ (ระดับจังหวัด)
+            │   └─ readmyservicearea.jsx รายการ/ลบพื้นที่ให้บริการ
+            ├─ view/
+            │   ├─ viewProfile.jsx      โปรไฟล์สาธารณะของช่าง (มี comment "ต้องทำต่อ")
+            │   ├─ viewAccout.jsx       แสดงข้อมูลส่วนตัวของช่าง
+            │   ├─ ViewService.jsx      รายการบริการของช่าง
+            │   └─ viewShowService.jsx  รายละเอียดบริการ (มุมดูของผู้อื่น)
+            ├─ admin/admin.jsx          placeholder แสดง <h1>Admin</h1> (ไม่ถูก route)
+            └─ hooks/
+                ├─ useSocket.js         เชื่อม io("http://localhost:3000")
+                └─ useUser.js           โหลดโปรไฟล์จาก token ใน localStorage
+
+3.3 หน้าที่ของ Folder/ไฟล์สำคัญ (สรุป)
+    - routes = ชั้นรับ request + เลือก middleware (verifytoken, upload, validate, rateLimit)
+    - controllers = ชั้น business logic คุยกับ Prisma โดยตรง (ไม่มี service layer)
+    - middleware = auth (verifytoken) และ file upload (multer)
+    - utils = validation (yup), error helper, rate limit
+    - prisma = schema + migration + seed (ข้อมูลจังหวัด/อำเภอ/ตำบล)
+    - socket = realtime แชท (ปัจจุบัน server แค่ broadcast ต่อ ไม่บันทึก DB ในตัว socket)
+    - Frontend components = แบ่งตามโดเมน (auth/service/Chat/techUser/map/area/view/admin)
+
+3.4 จุดเริ่มต้นการทำงานของระบบ
+    - Backend: Backend/server.js
+        ลำดับ: import routes -> createServer(app) -> new Server(io, cors "*") ->
+        chatSocket(io) -> cors/morgan/express.json -> static '/uploads' ->
+        mount ทุก route ที่ '/api' -> error handler -> listen port 3000 (hardcode)
+        [ตรวจสอบจาก Source Code]
+    - Frontend: FrontEnd/src/main.jsx -> BrowserRouter -> App.jsx (Routes)
+        หน้าแรก path "/" = Home  [ตรวจสอบจาก Source Code]
+    - Database: ต้องรัน migration + npm run seed (ข้อมูลที่ตั้งจังหวัด) ก่อนใช้งานจริง
+      [ตรวจสอบจาก Source Code]
+
+--------------------------------------------------------------------------------
+4. Database
+--------------------------------------------------------------------------------
+4.1 ภาพรวม
+    - ORM: Prisma (datasource provider = "mysql")  [ตรวจสอบจาก Source Code]
+    - ชื่อ Database: project (localhost:3306)  [ตรวจสอบจาก Source Code: .env]
+    - Naming: ชื่อ model/field ใช้ Pascal_Snake (เช่น Users_Id, Created_At)
+      ชื่อ model เป็นตัวพิมพ์เล็กพหูพจน์ (users, profiles, services, orders, chats, ...)
+      [ตรวจสอบจาก Source Code]
+    - จำนวน model: 12 / จำนวน enum: 5  [ตรวจสอบจาก Source Code]
+
+4.2 รายชื่อตาราง (Model) และ Field สำคัญ  [ตรวจสอบจาก Source Code: prisma/schema.prisma]
+
+    (1) users
+        Users_Id   Int  PK autoincrement
+        Email      String @unique
+        Password   String (bcrypt hash)
+        Role       Role  (enum)
+        Status     Status @default(ACTIVE)
+        Created_At DateTime @default(now())
+        Updated_At DateTime @updatedAt
+        ความสัมพันธ์: Profile (1:1), Services (1:N), CustomerOrders (1:N, relation
+        "CustomerOrders"), TechnicianOrders (1:N, relation "TechnicianOrders"),
+        Addresses (1:N), ServiceAreas (1:N)
+
+    (2) profiles
+        Profile_Id PK, Users_Id Int @unique (FK -> users), First_Name?, Last_Name?,
+        Phone?, Avatar?, Gender? (enum), Birth_Date?, Created_At, Updated_At
+        ความสัมพันธ์: users 1:1
+        หมายเหตุ: ฟิลด์ Address ถูก "ลบออก" แล้วใน migration 20260823061739
+        (ย้ายไปตาราง addresses) [ตรวจสอบจาก Source Code: migration]
+
+    (3) addresses
+        Address_Id PK, Users_Id FK, Address?, Province?, District?, Subdistrict?,
+        Postal_Code?, Latitude Float (NOT NULL), Longitude Float (NOT NULL),
+        Is_Default Boolean @default(false), Created_At, Updated_At
+
+    (4) service_areas
+        Area_Id PK, Users_Id FK, Province String, Created_At
+        หมายเหตุ: แต่ละแถว = 1 จังหวัดที่ช่างรับงาน (ไม่มี unique constraint)
+        ฟิลด์ District เคยมี แต่ถูก drop ใน migration 20260826131224
+
+    (5) services
+        Service_Id PK, Users_Id FK, Title String, Category ServiceCategory (enum),
+        Description?, Price Float, Image?, Created_At, Updated_At
+        ความสัมพันธ์: users (เจ้าของ/ช่าง), orders 1:N, chats 1:N
+
+    (6) orders
+        Order_Id PK, Users_Id FK (ลูกค้า), Tech_Id FK (ช่าง), Service_Id FK,
+        Final_Price Float?, Work_Date DateTime?, Work_Date_End DateTime?,
+        Status OrderStatus @default(ACCEPTED), Created_At, Updated_At
+        ความสัมพันธ์: User (relation "CustomerOrders"), TechUser (relation
+        "TechnicianOrders"), Service, Review (1:1 optional), BOQ (1:1 optional)
+
+    (7) boqs
+        BOQ_Id PK, Order_Id Int @unique (FK), Total_Amount Float @default(0),
+        Created_At, Updated_At ; Items: boq_items 1:N
+
+    (8) boq_items
+        BOQ_Item_Id PK, BOQ_Id FK, Name, Description?, Quantity Float,
+        Unit String, Unit_Price Float, Total_Price Float, Created_At, Updated_At
+
+    (9) reviews
+        Review_Id PK, Order_Id Int @unique (FK), Rating Int, Comment?, Created_At
+        (ไม่มี Updated_At; ไม่มี FK ตรงไปยัง users/services ต้อง join ผ่าน orders)
+
+    (10) chats
+        Chat_Id PK, Service_Id FK, Room_Id String, Sender_Id Int, Receiver_Id Int,
+        Type ChatType @default(MESSAGE), Message?, Price?, Work_Date?, Work_Date_End?,
+        Image?, Created_At
+        หมายเหตุ: Sender_Id / Receiver_Id เป็น Int ธรรมดา "ไม่มีความสัมพันธ์ (relation)"
+        กับ users ใน Prisma
+
+    (11) provinces
+        Province_Id PK, Name @unique, Created_At, Updated_At ; Districts 1:N
+
+    (12) districts
+        District_Id PK, Province_Id FK, Name, Created_At, Updated_At ; Subdistricts 1:N
+
+    (13) subdistricts
+        Subdistrict_Id PK, District_Id FK, Name, Postal_Code?, Created_At, Updated_At
+
+4.3 ความสัมพันธ์ระหว่างตาราง (สรุป)
+    users 1--1 profiles
+    users 1--N services           (users.Users_Id = services.Users_Id)
+    users 1--N addresses
+    users 1--N service_areas
+    users 1--N orders (เป็นลูกค้า: orders.Users_Id)
+    users 1--N orders (เป็นช่าง: orders.Tech_Id)
+    services 1--N orders
+    services 1--N chats
+    orders 1--1 reviews (ผ่าน Order_Id @unique)
+    orders 1--1 boqs    (ผ่าน Order_Id @unique)
+    boqs   1--N boq_items
+    provinces 1--N districts 1--N subdistricts
+    หมายเหตุ: chats ไม่มี FK ไป users; addresses/service_areas เก็บชื่อจังหวัดเป็น string
+    (ไม่ได้ FK ไป provinces) → ข้อมูลชื่อจังหวัดอาจไม่ตรงกับตาราง provinces
+
+4.4 Enum และสถานะต่าง ๆ  [ตรวจสอบจาก Source Code]
+    Role          : USER | TECHNICIAN | ADMIN
+    Status        : ACTIVE | INACTIVE | BANNED
+    Gender        : MALE | FEMALE | OTHER
+    OrderStatus   : ACCEPTED | IN_PROGRESS | WAITING_CONFIRM | COMPLETED | CANCELLED
+    ServiceCategory: ELECTRICAL | PLUMBING | AIR_CONDITIONER | PAINTING |
+                     CONSTRUCTION | FURNITURE | CLEANING | OTHER
+    ChatType      : MESSAGE | IMAGE | PRICE_OFFER | PRICE_ACCEPT | PRICE_REJECT
+
+    สถานะ Order ที่โค้ดใช้จริง (ดูข้อ 7):
+      ACCEPTED (ค่าเริ่มต้นตอนสร้าง order) -> IN_PROGRESS -> WAITING_CONFIRM -> COMPLETED
+      CANCELLED มีใน enum แต่ backend "ไม่เคยตั้งค่า" (ดูข้อขัดแย้งในข้อ 10)
+
+4.5 ข้อจำกัด/เงื่อนไขของฐานข้อมูล  [ตรวจสอบจาก Source Code]
+    - Unique: users.Email, profiles.Users_Id, boqs.Order_Id, reviews.Order_Id,
+      provinces.Name
+    - 1 Order มีได้ 1 Review และ 1 BOQ เท่านั้น
+    - FK ทั้งหมดเป็น ON DELETE RESTRICT / ON UPDATE CASCADE (ตาม migration.sql)
+      → ลบ user ที่มี service/order อยู่จะลบไม่ได้ (ยังไม่มี soft delete)
+    - Rating เป็น Int แต่ "ไม่มี check 1-5" ทั้ง DB และ validation
+    - Latitude/Longitude ใน addresses เป็น NOT NULL (frontend บังคับให้ปักหมุด)
+    - ข้อมูลจังหวัด/อำเภอ/ตำบล มาจาก seed (prisma/data/*.json) ต้องรัน seed ก่อน
+    - ยังไม่มีตาราง notifications / payments / audit logs / refresh tokens
+    - ชื่อ Database/ผู้ใช้/รหัสผ่าน ตาม .env (root/1234) ใช้เฉพาะเครื่อง dev
+      → production ต้องเปลี่ยน [ต้องยืนยัน]
+
+--------------------------------------------------------------------------------
+5. ระบบและฟีเจอร์ทั้งหมด (ตรวจจาก Source Code)
+--------------------------------------------------------------------------------
+รูปแบบ: ชื่อฟีเจอร์ | หน้าที่ | ผู้ใช้ | Backend | Frontend | สถานะ
+
+5.1 Authentication
+    - หน้าที่: สมัครสมาชิก, เข้าสู่ระบบ, ออก token JWT, logout ฝั่ง client,
+      ตรวจ token หมดอายุ
+    - ผู้ใช้: ทุกคน
+    - Backend: routes/auth.route.js, controllers/auth.controller.js,
+      middleware/verifytoken.js, utils/rateLimit.js, utils/validate.js
+    - Frontend: components/auth/{lar,Login,register}.jsx, Logout.jsx,
+      utils/isTokenExpired.js, hooks/useUser.js
+    - สถานะ: ใช้งานได้ (register/login/logout) แต่ยังไม่มี refresh token,
+      ไม่มี forgot/reset password (ลิงก์ "ลืมรหัสผ่าน?" ชี้ไป /forgot ที่ไม่มี route)
+      [ตรวจสอบจาก Source Code]
+
+5.2 Authorization (สิทธิ์ตาม Role)
+    - หน้าที่: จำกัดสิทธิ์ USER/TECHNICIAN/ADMIN
+    - Backend: "ไม่พบ" middleware ตรวจ Role (verifytoken ตรวจแค่ว่า token ถูกต้อง)
+    - Frontend: ซ่อน/แสดงเมนูตามการมี token และเทียบ userId กับเจ้าของบริการในแชท
+    - สถานะ: ยังไม่สมบูรณ์ — endpoint สำคัญ เช่น updaterole/updatestatus
+      เรียกได้ด้วย token ใดก็ได้  [ตรวจสอบจาก Source Code]
+
+5.3 User Management
+    - หน้าที่: ดูรายชื่อผู้ใช้, ดูผู้ใช้ตาม id/email, นับจำนวนผู้ใช้, เปลี่ยน role/status
+    - ผู้ใช้: ADMIN (ตามเจตนา), ปัจจุบันเปิดให้ token ใดก็เรียกได้
+    - Backend: profile.route.js + profile.controller.js (getAllUser, getUserById,
+      getUserByEmail, amountUser, updateRole, updateStatus, updateEmail, updatePassword)
+    - Frontend: ไม่มีหน้าจอ ADMIN จริง (admin/admin.jsx เป็น placeholder ไม่ถูก route)
+    - สถานะ: Backend พร้อม / Frontend ยังไม่มี
+
+5.4 Technician Management (การสมัครเป็นช่าง/ข้อมูลช่าง)
+    - หน้าที่: แสดงโปรไฟล์ช่าง, บริการของช่าง, พื้นที่ให้บริการ
+    - ผู้ใช้: USER ดู, TECHNICIAN จัดการของตัวเอง
+    - Backend: services + service_areas + profiles
+    - Frontend: view/viewProfile.jsx, viewAccout.jsx, ViewService.jsx,
+      viewShowService.jsx, area/*
+    - สถานะ: ใช้งานได้บางส่วน (viewProfile มี comment "ต้องทำต่อ";
+      ViewService มีบั๊กอ้างตัวแปร setData ที่ไม่มี)  [ตรวจสอบจาก Source Code]
+    - การเปลี่ยน Role USER -> TECHNICIAN ทำผ่าน API updaterole (ไม่มี UI):
+      [ต้องยืนยันว่าเป็นขั้นตอนที่ตั้งใจ]
+
+5.5 Service Management (บริการของช่าง)
+    - หน้าที่: สร้าง/แก้ไข/ลบ/ค้นหาบริการ + กำหนดพื้นที่ให้บริการรายจังหวัด
+    - ผู้ใช้: TECHNICIAN (เจ้าของ), USER (ค้นหา/ดู)
+    - Backend: service.route.js, service.controller.js
+      (createService, getAllServices, getServiceById, updateService, deleteService,
+      searchServices, getMyServices, create/delete/update/getMyServiceArea)
+    - Frontend: service/servicecreate.jsx, serviceoption.jsx, searchmyservice.jsx,
+      Show.jsx, showservice.jsx, listservice.jsx, area/*
+    - สถานะ: ใช้งานได้ (CRUD + ค้นหา + อัปโหลดรูป)
+      ข้อจำกัด: 1 บริการมี 1 รูป, ไม่มี pagination, ไม่มี sort/filter ราคา
+
+5.6 Address / Map
+    - หน้าที่: เพิ่ม/แก้ไข/ลบที่อยู่, ตั้งที่อยู่เริ่มต้น, ปักหมุดพิกัด, ใช้ตำแหน่งปัจจุบัน,
+      เลือกจังหวัด/อำเภอ/ตำบล แล้วเติมรหัสไปรษณีย์อัตโนมัติ, แสดงแผนที่ในหน้ารายละเอียดงาน
+    - ผู้ใช้: USER, TECHNICIAN (ใช้ดูที่อยู่ลูกค้า)
+    - Backend: address.routes.js, address.controller.js, location.routes.js,
+      location.controller.js
+    - Frontend: map/CustomerMap.jsx.jsx, readmyaddresses.jsx, updateaddress.jsx,
+      techUser/DetailOrder.jsx, DetailOrderUser.jsx, OrderMap.jsx (ไม่ถูกใช้)
+    - สถานะ: ใช้งานได้ (OpenStreetMap + พิกัดจาก browser)
+      ข้อจำกัด: ไม่มี geocoding (พิกัดมาจากคลิก/geolocation เท่านั้น)
+
+5.7 Search
+    - หน้าที่: ค้นหาบริการด้วยคำค้น (Title/Description), กรอง Category, กรอง Province
+      (ผ่าน service_areas), กรองฝั่ง client ด้วยปุ่มจังหวัด
+    - Backend: GET /api/searchservices?q=&Category=&Province=
+    - Frontend: Home.jsx + service/Show.jsx
+    - สถานะ: ใช้งานได้ (contains แบบ case-sensitive ตาม default ของ MySQL collation
+      ที่ตั้งเป็น utf8mb4_unicode_ci จึงมักไม่สนตัวพิมพ์)
+
+5.8 Chat
+    - หน้าที่: ห้องแชทคู่ (ผู้ใช้-ช่าง) ต่อ 1 บริการ, ส่งข้อความ/รูป, ดูประวัติ,
+      แสดงรายการห้องล่าสุด, realtime ผ่าน Socket.IO
+    - ผู้ใช้: USER, TECHNICIAN
+    - Backend: chat.route.js, chat.controller.js (createMessage, getMessages,
+      getMyRooms, offerPrice, rejectOfferPrice), socket/chat.socket.js
+    - Frontend: Chat/ChatContainer.jsx, ChatRoom.jsx, RoomList.jsx, hooks/useSocket.js
+    - สถานะ: ใช้งานได้ (ข้อความ + รูป + realtime broadcast)
+      ข้อจำกัด: ไม่มี read/unread, ไม่มี typing indicator, ไม่มี pagination,
+      socket ไม่ตรวจสิทธิ์ห้อง, การ broadcast ส่งข้อมูลจาก client โดยตรง
+
+5.9 Price Offer (ข้อเสนอราคา)
+    - หน้าที่: ช่างเสนอราคา + ช่วงวันที่ทำงานในห้องแชท, ผู้ใช้กดยอมรับ/ปฏิเสธ
+    - Backend: POST /api/offer-price (สร้าง chat Type=PRICE_OFFER),
+      PATCH /api/rejectPrice (เปลี่ยน Type=PRICE_REJECT),
+      POST /api/createorder (เปลี่ยน chat เป็น PRICE_ACCEPT + สร้าง order)
+    - Frontend: PriceOfferModal.jsx, ChatRoom.jsx, ChatContainer.jsx
+    - สถานะ: ใช้งานได้
+      เงื่อนไขในโค้ด: ปุ่ม "เสนอราคา" แสดงเฉพาะฝั่งช่าง และแสดงอีกครั้งเมื่อ
+      ข้อความล่าสุดเป็น PRICE_ACCEPT (ตัวแปร canOfferAgain)
+
+5.10 Order
+    - หน้าที่: สร้างงานจากการยอมรับข้อเสนอ, ดูรายการงาน (ทั้งหมด/ของลูกค้า/ของช่าง/
+      ตามบริการ), เปลี่ยนสถานะงาน, ดูรายละเอียดงาน + แผนที่
+    - Backend: order.route.js, order.controller.js
+    - Frontend: techUser/tau.jsx, tech.jsx, user.jsx, DetailOrder.jsx,
+      DetailOrderUser.jsx, OrderCalendar.jsx
+    - สถานะ: ใช้งานได้ แต่มีปัญหาสถานะ CANCELLED (ดูข้อ 10)
+
+5.11 BOQ (Bill of Quantities / ใบประมาณราคา)
+    - หน้าที่: ช่างสร้างรายการวัสดุ/ค่าแรง (ชื่อ, จำนวน, หน่วย, ราคาต่อหน่วย)
+      ระบบคำนวณยอดรวม, เก็บใน DB, แสดง/ดาวน์โหลดเป็น PDF, แนบในแชทด้วยข้อความ
+      รูปแบบ "BOQ_CREATED:<Order_Id>" เพื่อให้ปลายทางกดดู
+    - Backend: boq.routes.js, boq.controller.js (createBOQ, getBOQByOrder, updateBOQ)
+    - Frontend: Chat/Boq.jsx, BOQPreview.jsx, BOQDocument.jsx, ChatRoom.jsx,
+      techUser/DetailOrder.jsx, DetailOrderUser.jsx
+    - สถานะ: ใช้งานได้ (1 order = 1 BOQ, แก้ไขแล้วลบ items เดิมทั้งหมดแล้วสร้างใหม่)
+
+5.12 Payment
+    - หน้าที่: ชำระเงิน
+    - ที่พบ: มีเพียงหน้า QrTest.jsx สร้าง QR พร้อมเพย์จาก promptpay-qr + qrcode.react
+      (กรอกเบอร์พร้อมเพย์และจำนวนเงินเอง) ไม่ผูกกับ Order และไม่มี backend รองรับ
+    - สถานะ: ต้นแบบ/ทดลองเท่านั้น ยังไม่มีระบบชำระเงินจริง
+    - แผนการชำระเงินที่ต้องการ (โอน/พร้อมเพย์/เก็บเงินปลายทาง): [ต้องยืนยัน]
+
+5.13 Review
+    - หน้าที่: ให้คะแนน+คอมเมนต์หลังงานเสร็จ, ดูรีวิวตามบริการ, ค่าเฉลี่ยคะแนน
+    - Backend: review.route.js, review.controller.js (createReview ต้อง Status=COMPLETED
+      และ 1 order = 1 review; getServiceRating คืน {averageRating, totalReviews})
+    - Frontend: แสดงรีวิวใน showservice.jsx / viewShowService.jsx
+      "ไม่พบหน้าจอสำหรับเขียนรีวิว"  [ตรวจสอบจาก Source Code]
+    - สถานะ: Backend พร้อม / Frontend ขาดฟอร์มสร้างรีวิว
+
+5.14 Notification
+    - หน้าที่: แจ้งเตือน
+    - ที่พบ: ไม่พบโมเดล/ตาราง/API/หน้าจอแจ้งเตือนใด ๆ (ไม่มี FCM, ไม่มี email)
+    - สถานะ: ยังไม่มี
+
+5.15 Admin
+    - หน้าที่: จัดการผู้ใช้/ภาพรวมระบบ
+    - ที่พบ: backend endpoints (listuser, readuser, amountuser, updaterole,
+      updatestatus) แต่ frontend เป็น placeholder
+    - สถานะ: ยังไม่มีหน้าจอ
+
+5.16 Other Features ที่พบจริง
+    - Order Calendar (ปฏิทินรายเดือน แสดงจุดในวันที่มีงาน ทั้งงานในบทบาทช่างและลูกค้า)
+    - Service Area (พื้นที่ให้บริการระดับจังหวัด)
+    - PDF Export (ใบ BOQ ภาษาไทย ฟอนต์ Sarabun)
+    - Token expiry check ฝั่ง client (header จะเคลียร์ token ที่หมดอายุ)
+    - Rate limit การ login (5 ครั้ง / 15 นาที / IP)
+
+--------------------------------------------------------------------------------
+6. System Workflow
+--------------------------------------------------------------------------------
+6.1 สมัครสมาชิก + เข้าสู่ระบบ  [ตรวจสอบจาก Source Code]
+    1) ผู้ใช้กรอก Email/Password ที่ /register (yup ตรวจ email + password >= 6 +
+       confirm password ตรงกัน)
+    2) POST /api/register -> ตรวจ email ซ้ำ -> bcrypt hash (round 10) ->
+       สร้าง users โดย Role="USER", Status="ACTIVE"
+    3) frontend เรียก POST /api/login อัตโนมัติ -> เก็บ token + user ลง localStorage
+       (key: "token", "user")
+    4) แสดงฟอร์ม Newprofile (สร้าง profiles: ชื่อ/นามสกุล/เบอร์ 10 หลัก/เพศ/วันเกิด
+       + อัปโหลดรูปผ่าน /api/uploadprofile)
+    5) ทุก request ที่ต้องล็อกอินแนบ header authorization = <token> (ไม่ใส่ "Bearer")
+    6) Logout = ลบ localStorage แล้วกลับหน้าแรก
+
+6.2 ตั้งค่าข้อมูลช่าง (ก่อนรับงาน)  [ตรวจสอบจาก Source Code]
+    1) เปลี่ยน Role เป็น TECHNICIAN (ต้องเรียก PATCH /api/updaterole — ยังไม่มี UI)
+    2) เพิ่มพื้นที่ให้บริการ: /api/newservicearea (เลือกจังหวัดจาก /api/readprovinces)
+    3) สร้างบริการ: /api/newservice (Title, Category, Description, Price, รูป)
+    4) ข้อมูลจะแสดงในหน้าแรก (Home -> Show -> /api/listservice หรือ searchservices)
+
+6.3 ค้นหาบริการ -> ติดต่อช่าง  [ตรวจสอบจาก Source Code]
+    1) Home: พิมพ์คำค้น (Enter) หรือกดปุ่มหมวด (แมปไทย->enum) หรือดูทั้งหมด
+    2) Show.jsx เรียก /api/searchservices?Category= / ?q= หรือ /api/listservice
+    3) กรองจังหวัดฝั่ง client จาก User.ServiceAreas
+    4) คลิกการ์ด -> modal แสดง ShowService (รายละเอียด, พื้นที่ให้บริการ, รีวิว)
+    5) กด "ติดต่อผู้รับงาน" -> สร้าง Room_Id = `${Service_Id}_${minUserId}_${maxUserId}`
+       แล้ว navigate ไป /chat พร้อม state (Room_Id, Service_Id, ผู้ส่ง, ผู้รับ,
+       otherUserName, message = "สนใจงานบริการนี้ครับ")
+    6) ChatContainer ส่งข้อความแรกอัตโนมัติ (POST /api/newmessage)
+
+6.4 แชท + เสนอราคา + สร้าง Order  [ตรวจสอบจาก Source Code]
+    1) ทั้งสองฝ่ายคุยกันในห้อง (ข้อความ/รูป) — realtime ด้วย socket event
+       join_room + send_message + receive_message
+    2) ฝั่งช่าง (ตรวจจาก serviceOwnerId == currentUserId) กด "เสนอราคา"
+       -> POST /api/offer-price {Price, Work_Date, Work_Date_End, ...}
+       -> chats.Type = PRICE_OFFER
+    3) ฝั่งผู้ใช้เห็นข้อเสนอ กด "ยอมรับ"
+       -> POST /api/createorder {Users_Id=Receiver, Tech_Id=Sender, Service_Id,
+          Final_Price=Price, Work_Date, Work_Date_End, Chat_Id}
+       -> backend เปลี่ยน chat เป็น PRICE_ACCEPT และสร้าง orders Status=ACCEPTED
+       -> frontend emit send_message เพื่อให้อีกฝ่ายเห็นสถานะยอมรับ
+    4) กด "ปฏิเสธ" -> PATCH /api/rejectPrice -> chats.Type = PRICE_REJECT
+
+6.5 ดำเนินงาน -> ตรวจรับ -> (รีวิว)  [ตรวจสอบจาก Source Code]
+    1) ช่างเห็นงานใน Profile > กำหนดการ > แท็บ "ช่าง" (GET /api/readtechorder/:id)
+       กด "เริ่มงาน" -> PATCH /api/startorders/:id -> Status=IN_PROGRESS
+    2) กด "เสร็จสิ้นงาน" -> PATCH /api/finishorders/:id -> Status=WAITING_CONFIRM
+    3) ผู้ใช้เห็นในแท็บ "ผู้ใช้" (GET /api/readorderbyuserid/:id) เลือก
+       "ยืนยัน" -> PATCH /api/confirmorders/:id -> Status=COMPLETED
+       หรือ "ยกเลิก" -> PATCH /api/rejectorders/:id
+       [ขัดแย้ง: frontend ส่ง Status="CANCELLED" แต่ backend ตั้งเป็น IN_PROGRESS]
+    4) รายละเอียดงาน (DetailOrder/DetailOrderUser) แสดงข้อมูลงาน + โปรไฟล์อีกฝ่าย +
+       ที่อยู่ + แผนที่ + ปุ่มดู BOQ
+    5) รีวิว: API POST /api/createreview พร้อมเมื่อ Status=COMPLETED แต่ยังไม่มี
+       หน้าจอให้ผู้ใช้เขียนรีวิว
+    6) การชำระเงิน: ยังไม่มีขั้นตอนในระบบ (มีแค่หน้า QrTest ทดลอง)
+
+6.6 BOQ  [ตรวจสอบจาก Source Code]
+    1) ช่างเปิดห้องแชทของ Order ที่ Status=ACCEPTED (useMatchedOrder หา Order_Id)
+    2) กด "สร้างรายการ" -> กรอกตาราง -> ยืนยัน -> POST /api/newboq
+       (server คำนวณ Total_Price = Quantity * Unit_Price และ Total_Amount)
+    3) ระบบส่งข้อความ "BOQ_CREATED:<Order_Id>" เข้าห้องแชท
+    4) ปลายทางกด "ดูใบเสนอราคา" -> GET /api/readboqorder/:Order_Id ->
+       navigate ไป /BOQPreview แสดง PDF (หรือดาวน์โหลด BOQ.pdf)
+
+6.7 ขั้นตอนที่ยังไม่ครบใน workflow (ต้องยืนยันว่าต้องการแบบนี้หรือไม่)
+    - การเปลี่ยน Role เป็นช่าง
+    - การชำระเงินและการยืนยันยอด
+    - การแจ้งเตือนเมื่อมีข้อเสนอ/งานใหม่
+    - การเขียนรีวิว
+    - การยกเลิกงานจริง (สถานะ CANCELLED)
+    - การปิดงาน/สรุปยอดหลังชำระเงิน
+
+--------------------------------------------------------------------------------
+7. Business Rules
+--------------------------------------------------------------------------------
+7.1 สิทธิ์ของ USER  [ตรวจสอบจาก Source Code]
+    - สมัคร/เข้าสู่ระบบ, แก้ไขโปรไฟล์/ที่อยู่ของตัวเอง
+    - ดูบริการทั้งหมด/ค้นหา, ดูโปรไฟล์ช่าง, ดูรีวิว
+    - เปิดแชทกับเจ้าของบริการ, ยอมรับ/ปฏิเสธข้อเสนอราคา
+    - ดูงานของตัวเอง (orders.Users_Id = id), ยืนยันงาน (WAITING_CONFIRM -> COMPLETED)
+    - "ไม่สามารถ" สร้าง/แก้ไข/ลบบริการของคนอื่นได้ (controller เช็ค Users_Id)
+    - ข้อจำกัดที่ควรมีแต่ยังไม่มี: USER สามารถเรียก API ของช่าง/แอดมินได้ถ้ามี token
+
+7.2 สิทธิ์ของ TECHNICIAN  [ตรวจสอบจาก Source Code]
+    - สร้าง/แก้ไข/ลบบริการของตัวเอง (ตรวจ Users_Id ใน body)
+    - เพิ่ม/ลบพื้นที่ให้บริการของตัวเอง
+    - เสนอราคาในแชท (frontend จำกัดปุ่มเฉพาะเจ้าของบริการ)
+    - เริ่มงาน (ACCEPTED -> IN_PROGRESS) และแจ้งเสร็จ (-> WAITING_CONFIRM)
+    - สร้าง BOQ ของ Order ที่ตัวเองเป็นช่าง (backend ไม่ได้ตรวจ Tech_Id)
+    - ดูงานของตัวเอง (orders.Tech_Id = id)
+
+7.3 สิทธิ์ของ ADMIN  [ตรวจสอบจาก Source Code + ต้องยืนยัน]
+    - ตาม enum: มี role ADMIN
+    - API ที่คาดว่าเป็นของ ADMIN: listuser, readuser, amountuser, updaterole,
+      updatestatus, updateemail, updatepassword
+    - ปัจจุบัน: ไม่มีการตรวจ role ในทุก endpoint ข้างต้น
+    - สิทธิ์ที่ต้องการจริงของ ADMIN: [ต้องยืนยัน]
+
+7.4 เงื่อนไขการสร้างข้อมูล  [ตรวจสอบจาก Source Code]
+    - users: Email ห้ามซ้ำ, Password ขั้นต่ำ 6 ตัวอักษร (yup), Role บังคับเป็น USER
+      ตอนสมัคร, Status เริ่มต้น ACTIVE
+    - profiles: 1 user มีได้ 1 profile (Users_Id unique) สร้างซ้ำจะได้ 400
+    - services: ต้องมี Users_Id ที่มีอยู่จริง, Title, Category, Price > 0
+      (yup: positive), Description ไม่บังคับ
+    - addresses: Province, Latitude, Longitude, Is_Default บังคับ (yup)
+    - orders: ต้องมี Users_Id, Tech_Id, Service_Id, Final_Price, Work_Date,
+      Work_Date_End (backend ไม่ validate แต่ frontend ส่งครบจากข้อเสนอราคา)
+    - reviews: order ต้องมีจริง + Status=COMPLETED + ยังไม่มีรีวิวของ order นี้
+    - boqs: order ต้องมีจริง + ยังไม่มี BOQ ของ order นี้
+    - chats: ต้องมี Service_Id, Room_Id, Sender_Id, Receiver_Id
+      Type ถูกกำหนดจาก "มีไฟล์แนบหรือไม่" (IMAGE/MESSAGE)
+
+7.5 เงื่อนไขการแก้ไขและลบข้อมูล  [ตรวจสอบจาก Source Code]
+    - services: แก้/ลบได้เฉพาะเจ้าของ (service.Users_Id === body.Users_Id) ไม่งั้น 403
+      และเมื่อเปลี่ยนรูป/ลบ จะลบไฟล์เดิมใน uploads ด้วย
+    - addresses: แก้/ลบได้เฉพาะเจ้าของ (body.Users_Id) ไม่งั้น 403
+    - service_areas: update ตรวจ Area_Id + Users_Id (403 ถ้าไม่ตรง) แต่ delete
+      "ไม่ตรวจเจ้าของ"
+    - reviews: update/delete ไม่ตรวจเจ้าของหรือ role ใด ๆ
+    - chats: ไม่มีการแก้ไข/ลบข้อความ
+    - users: ไม่มีการลบบัญชี (ใช้ Status=BANNED/INACTIVE แทน)
+
+7.6 เงื่อนไขการเปลี่ยนสถานะ  [ตรวจสอบจาก Source Code]
+    - Order:
+        ACCEPTED --startorders--> IN_PROGRESS
+        IN_PROGRESS --finishorders--> WAITING_CONFIRM
+        WAITING_CONFIRM --confirmorders--> COMPLETED
+        rejectorders --> ตั้งเป็น IN_PROGRESS (ไม่ใช่ CANCELLED) [ขัดแย้ง]
+      ไม่มีการตรวจสถานะก่อนเปลี่ยน (เรียกซ้ำ/ข้ามสถานะได้)
+    - User Status: เปลี่ยนได้ผ่าน updatestatus (ACTIVE/INACTIVE/BANNED)
+      และ login จะปฏิเสธถ้า Status != ACTIVE (403 "Account is not active")
+    - Chat Type: MESSAGE/IMAGE ตอนสร้าง, PRICE_OFFER ตอนเสนอราคา,
+      PRICE_ACCEPT ตอนสร้าง order, PRICE_REJECT ตอนปฏิเสธ
+
+7.7 เงื่อนไขการชำระเงิน
+    - ไม่พบเงื่อนไขการชำระเงินใน Source Code (ไม่มี payment model/status)
+    - ต้องการให้มีขั้นตอนชำระเงินหรือไม่ และใช้ช่องทางใด: [ต้องยืนยัน]
+    - ต้องเก็บหลักฐานการโอน/สลิปหรือไม่: [ต้องยืนยัน]
+    - ใครเป็นผู้ยืนยันการชำระ (ผู้ใช้/ช่าง/แอดมิน): [ต้องยืนยัน]
+
+7.8 กฎทางธุรกิจอื่น ๆ ที่ควรระบุ (ยังไม่พบในโค้ด)
+    - จำนวนงานสูงสุดต่อช่างต่อวัน / การกันเวลาทับซ้อน: [ต้องยืนยัน]
+    - ค่าธรรมเนียมระบบ / คอมมิชชัน: [ต้องยืนยัน]
+    - การยกเลิกงานหลังเริ่มงานแล้วมีค่าปรับหรือไม่: [ต้องยืนยัน]
+    - อายุขั้นต่ำ/การยืนยันตัวตนช่าง (KYC): [ต้องยืนยัน]
+    - ระยะเวลาที่ข้อเสนอราคาหมดอายุ: [ต้องยืนยัน]
+
+--------------------------------------------------------------------------------
+8. API และการเชื่อมต่อ
+--------------------------------------------------------------------------------
+8.1 รูปแบบทั่วไป  [ตรวจสอบจาก Source Code]
+    - Base URL: http://localhost:3000/api
+    - Content-Type: application/json (ยกเว้นอัปโหลด = multipart/form-data, field "file")
+    - Authentication: header "authorization: <JWT>" (ไม่มีคำว่า Bearer)
+    - Response สำเร็จ: { "result": ... } หรือ { "message": "...", "result": ... }
+    - Response ผิดพลาด: { "message": "..." } + HTTP status = err.code || 500
+    - Static file: http://localhost:3000/uploads/<filename>
+    - Error handler กลางอยู่ใน server.js (4 พารามิเตอร์)
+
+8.2 ตาราง Endpoint ทั้งหมด (METHOD PATH | auth | รายละเอียด)
+    [ตรวจสอบจาก Source Code: routes/*.js]
+
+    AUTH
+    POST   /api/register              -            body {Email, Password} (yup)
+    POST   /api/login                 -            body {Email, Password}; rate limit 5/15น.
+    POST   /api/auth                  token        ทดสอบ token คืน {msg}
+
+    PROFILE / USER
+    POST   /api/newprofile            token        body {Users_Id, First_Name, Last_Name,
+                                                   Phone, Gender, Birth_Date}
+    POST   /api/uploadprofile         token        multipart file + Users_Id (อัปเดต Avatar)
+    PATCH  /api/updateprofile         token        multipart Users_Id, First_Name, ... , file?
+    GET    /api/readmyprofile/:id     token        โปรไฟล์เต็มของ user
+    GET    /api/readprofile/:id       -            โปรไฟล์ย่อ (First_Name, Last_Name,
+                                                   Avatar, Phone)
+    GET    /api/listuser              -            ผู้ใช้ทั้งหมด + Profile
+    GET    /api/readuser/:user_id     -            ผู้ใช้ + Profile
+    GET    /api/readuserbyemail/:email -           ผู้ใช้ + Profile ตามอีเมล
+    GET    /api/amountuser            -            จำนวนผู้ใช้ {result: number}
+    PATCH  /api/updateemail           token        body {Users_Id, Email} (yup email)
+    PATCH  /api/updatepassword        token        body {Users_Id, Password} (hash ใหม่)
+    PATCH  /api/updaterole            token        body {Users_Id, Role}
+    PATCH  /api/updatestatus          token        body {Users_Id, Status}
+    PATCH  /api/updateservicearea     token        body {Users_Id, Province, District}
+                                                   [ขัดแย้ง: District ไม่มีใน DB แล้ว]
+
+    SERVICE
+    POST   /api/newservice            token+file   multipart Users_Id, Title, Category,
+                                                   Description, Price, file?
+    GET    /api/listservice           -            บริการทั้งหมด + User/Profile
+    GET    /api/searchservices        -            query q, Category, Province
+    GET    /api/readservice/:id       -            บริการ + User + Profile
+    GET    /api/searchmyservice/:Users_Id -         บริการของ user นั้น
+    PATCH  /api/updateservice         token+file   multipart Service_Id, Users_Id, ...
+    DELETE /api/removeservice/:id     token        body {Users_Id} (ตรวจเจ้าของ)
+    POST   /api/newservicearea        -            body {Users_Id, Province}
+    DELETE /api/removeservicearea/:id -            ลบพื้นที่ (ไม่ตรวจเจ้าของ)
+    GET    /api/readmyservicearea/:Users_Id -       พื้นที่ของ user
+    PUT    /api/updateservicearea     -            body {Area_Id, Users_Id, Province}
+
+    ORDER
+    POST   /api/createorder           token        body {Users_Id, Tech_Id, Service_Id,
+                                                   Final_Price, Work_Date, Work_Date_End,
+                                                   Chat_Id}
+    GET    /api/listorder             -            order ทั้งหมด + User + Service
+    GET    /api/readuserorder/:id     -            order ตาม Order_Id
+    GET    /api/readtechorder/:id     -            order ที่ Tech_Id = id
+    GET    /api/readorderbyuserid/:id -            order ที่ Users_Id = id
+    GET    /api/reaorderbyidservice/:Service_Id -   order ของบริการนั้น
+                                                   (ชื่อ path สะกด "reaorder" ตามโค้ด)
+    PATCH  /api/startorders/:id       token        -> IN_PROGRESS
+    PATCH  /api/finishorders/:id      token        -> WAITING_CONFIRM
+    PATCH  /api/confirmorders/:id     token        -> COMPLETED
+    PATCH  /api/rejectorders/:id      token        -> IN_PROGRESS (ไม่ใช่ CANCELLED)
+
+    REVIEW
+    POST   /api/createreview          -            body {Order_Id, Rating, Comment}
+    GET    /api/listreview            -            รีวิวทั้งหมด + Order/User/Service
+    GET    /api/readreview/:id        -            รีวิวตาม Review_Id
+    GET    /api/readreviewbyservice/:serviceId -    รีวิวของบริการ
+    GET    /api/readreviewservicerating/:serviceId - {averageRating, totalReviews}
+    PATCH  /api/updatereview/:id      -            body {Rating, Comment}
+    DELETE /api/removereview/:id      -            ลบรีวิว
+
+    CHAT
+    POST   /api/newmessage            token+file   multipart Service_Id, Room_Id,
+                                                   Sender_Id, Receiver_Id, Message, file?
+    GET    /api/readmessages/:Room_Id token        ข้อความในห้อง (เรียง Created_At asc)
+    GET    /api/listmyrooms/:Users_Id token        ห้องล่าสุดของ user (1 แถว/ห้อง)
+    POST   /api/offer-price           token        body {Service_Id, Room_Id, Sender_Id,
+                                                   Receiver_Id, Price, Message?,
+                                                   Work_Date, Work_Date_End}
+    PATCH  /api/rejectPrice           -            body {Chat_Id} -> Type=PRICE_REJECT
+
+    ADDRESS
+    POST   /api/newaddress            -            body (yup addressSchema)
+    GET    /api/readmyaddresses/:Users_Id -         ที่อยู่ของ user (default ก่อน)
+    GET    /api/readaddressbyId/:id   -            ที่อยู่ตาม id
+    PUT    /api/updateaddress/:id     -            body (yup) + ตรวจเจ้าของ
+    DELETE /api/removeaddress/:id     -            body {Users_Id} + ตรวจเจ้าของ
+
+    LOCATION
+    GET    /api/readprovinces         -            จังหวัดทั้งหมด (เรียงตามชื่อ)
+    GET    /api/readdistricts/:provinceId -         อำเภอของจังหวัด
+    GET    /api/readsubdistricts/:districtId -      ตำบล + Postal_Code
+
+    BOQ
+    POST   /api/newboq                -            body {Order_Id, Items:[{Name,
+                                                   Description, Quantity, Unit, Unit_Price}]}
+    GET    /api/readboqorder/:Order_Id -            BOQ + Items
+    PUT    /api/updateboq/:BOQ_Id     -            body {Items:[...]} (แทนที่ทั้งชุด)
+
+8.3 Authentication Middleware  [ตรวจสอบจาก Source Code]
+    - middleware/verifytoken.js: อ่าน req.headers["authorization"] ->
+      ถ้าไม่มี token โยน error 401 "Please enter the token"
+      -> jwt.verify(token, process.env.SECRET) -> ถ้าผิดโยน 403 "token invalided"
+      -> สำเร็จเรียก next()
+    - ข้อสังเกต: ไม่ได้เก็บ decoded user ลง req (เช่น req.user) ทำให้ controller
+      ไม่รู้ว่าใครเรียก และไม่สามารถตรวจสิทธิ์จาก token ได้
+    - ข้อสังเกต: createError ถูกเรียกใน callback ของ jwt.verify (กรณี token ผิด)
+      ซึ่งเป็น async context → error อาจไม่ถูกส่งเข้า error handler ปกติ
+
+8.4 Authorization
+    - ไม่มี middleware ตรวจ Role
+    - การตรวจสิทธิ์ระดับข้อมูลทำใน controller บางจุด (services, addresses,
+      service_areas update) โดยเทียบ Users_Id จาก body กับเจ้าของข้อมูล
+    - endpoint ที่ยังเปิดกว้าง (ไม่ต้อง token เลย): register, login, listservice,
+      searchservices, readservice, readprofile, listuser, readuser, amountuser,
+      order GET ทุกตัว, review ทุกตัว, chat rejectPrice, address ทุกตัว,
+      location ทุกตัว, boq ทุกตัว, servicearea (สร้าง/ลบ/แก้)
+
+8.5 Validation  [ตรวจสอบจาก Source Code]
+    - ใช้ yup ผ่าน utils/validate.js: registerscheema, loginscheema,
+      updateemailcheema, createServiceSchema, addressSchema
+    - validate() ใช้ abortEarly:false แล้วรวม error ด้วย "," ส่งเป็น Error ธรรมดา
+    - endpoint อื่น (order, chat, review, boq, profile, role/status) ไม่มี schema
+      → พึ่งการแปลง Number() ใน controller และ Prisma error
+
+8.6 Error Handling  [ตรวจสอบจาก Source Code]
+    - createError(code, msg) => throw Error พร้อม .code
+    - server.js: app.use((err,req,res,next) => res.status(err.code||500)
+      .json({message: err.message||"server error"}))
+    - ข้อสังเกต: หลายจุดเรียก createError โดยไม่ใส่ "throw"/"return"
+      (เช่น auth.controller, profile.controller) → error ถูกสร้างแต่ไม่ถูกโยน
+      ทำให้บางเคสตอบ 200 พร้อมข้อมูลผิด หรือไปพังที่ขั้นตอนถัดไป
+    - Prisma error (เช่น unique constraint) จะกลายเป็น 500 พร้อมข้อความดิบ
+
+8.7 การเชื่อมต่อ Frontend กับ Backend  [ตรวจสอบจาก Source Code]
+    - axios เรียก URL เต็ม http://localhost:3000/api/... กระจายในทุกคอมโพเนนต์
+    - token อ่านจาก localStorage.getItem("token") ใส่ header authorization
+    - ข้อมูลผู้ใช้ปัจจุบันอ่านจาก localStorage.getItem("user") -> .payload.id / .role
+    - ไม่มี Axios instance กลาง / ไม่มี interceptor / ไม่มี .env ของ frontend
+    - รูปภาพใช้ http://localhost:3000/uploads/<filename>
+    - Socket ใช้ io("http://localhost:3000") (hardcode ใน useSocket.js)
+
+--------------------------------------------------------------------------------
+9. Realtime / External Services
+--------------------------------------------------------------------------------
+9.1 Socket.IO Architecture  [ตรวจสอบจาก Source Code]
+    - Server: Backend/socket/chat.socket.js ถูกเรียกจาก server.js (chatSocket(io))
+    - CORS: origin "*"
+    - ไม่มี authentication ใน socket (ไม่ตรวจ token ตอน connect)
+    - Client: hooks/useSocket.js -> io("http://localhost:3000"), คืน socket instance
+
+9.2 Chat Room และ Event  [ตรวจสอบจาก Source Code]
+    - Room_Id format: `${Service_Id}_${minUserId}_${maxUserId}` (utils/generateRoomId.js)
+      → 1 บริการ + 1 คู่สนทนา = 1 ห้อง (ห้องถูกสร้างโดยปริยายเมื่อมีข้อความแรก)
+    - Event ฝั่ง client -> server:
+        "join_room"     payload: roomId (string) -> socket.join(roomId)
+        "send_message"  payload: chat object (result จาก API) -> server emit ต่อ
+    - Event ฝั่ง server -> client:
+        "receive_message" payload: chat object (ใช้ทั้งข้อความใหม่และอัปเดตสถานะ
+                          PRICE_ACCEPT/PRICE_REJECT)
+    - "disconnect" -> log "User Disconnected"
+    - การบันทึก DB เกิดจาก REST API (/newmessage, /offer-price, /rejectPrice)
+      แล้ว client ค่อย emit ข้อมูลลงห้อง (ไม่ได้บันทึกใน socket handler)
+
+9.3 การส่งข้อความและรูปภาพ  [ตรวจสอบจาก Source Code]
+    - ข้อความ: POST /api/newmessage (multipart) -> Type = MESSAGE (ถ้าไม่มีไฟล์)
+    - รูป: แนบ field "file" -> Type = IMAGE, เก็บชื่อไฟล์ใน chats.Image
+      แสดงผลด้วย <img src="http://localhost:3000/uploads/<Image>">
+    - ฝั่ง client ทำ optimistic UI ด้วย Chat_Id ชั่วคราว (crypto.randomUUID())
+      แล้วแทนที่ด้วยข้อมูลจริงจาก API
+    - ไม่มี limit ขนาดไฟล์/ชนิดไฟล์ใน multer (รับทุกไฟล์)
+
+9.4 Map และ Geocoding  [ตรวจสอบจาก Source Code]
+    - ใช้ Leaflet + react-leaflet, tile จาก OpenStreetMap
+    - พิกัดได้จาก: (ก) navigator.geolocation (ข) คลิกบนแผนที่
+    - ไม่มีการเรียก Geocoding/Reverse Geocoding API ใด ๆ
+    - จังหวัด/อำเภอ/ตำบล มาจากฐานข้อมูลที่ seed (ไม่ใช่ API ภายนอก)
+    - หน้า /map เรียก <CustomerMap /> โดยไม่ส่ง myId → การบันทึกที่อยู่จากหน้านี้
+      จะส่ง Users_Id = undefined  [ตรวจสอบจาก Source Code]
+
+9.5 Payment Gateway
+    - ไม่มี Payment Gateway จริง
+    - พบเฉพาะ QrTest.jsx (promptpay-qr + qrcode.react) สำหรับสร้าง QR ตัวอย่าง
+    - ต้องการเชื่อมผู้ให้บริการรายใด (พร้อมเพย์/Omise/Stripe/2C2P): [ต้องยืนยัน]
+
+9.6 External APIs
+    - OpenStreetMap tile server (https://{s}.tile.openstreetmap.org/...)
+    - ไม่พบ API ภายนอกอื่น
+    - มีแผนใช้ API ใดเพิ่ม (เช่น Google Maps, LINE, Firebase): [ต้องยืนยัน]
+
+9.7 บริการภายนอกอื่น ๆ
+    - ไม่มี cloud storage / CDN / email / SMS / push notification
+    - ไฟล์อัปโหลดเก็บในเครื่อง (Backend/uploads) → ถ้า deploy หลาย instance
+      ต้องเปลี่ยนไปใช้ object storage [ต้องยืนยัน]
+
+--------------------------------------------------------------------------------
+10. Development Status
+--------------------------------------------------------------------------------
+10.1 Completed (ใช้งานได้จริงในโค้ด)  [ตรวจสอบจาก Source Code]
+    - สมัครสมาชิก / เข้าสู่ระบบ / logout / rate limit login / ตรวจ token หมดอายุ
+    - สร้าง-แก้ไขโปรไฟล์ + อัปโหลดรูปโปรไฟล์ (ลบไฟล์เก่าเมื่อเปลี่ยนรูป)
+    - CRUD บริการ + อัปโหลดรูปบริการ + ตรวจเจ้าของ
+    - พื้นที่ให้บริการระดับจังหวัด (เพิ่ม/ดู/ลบ/แก้)
+    - ค้นหา/กรองบริการตามคำค้น หมวด และจังหวัด
+    - หน้ารายละเอียดบริการ + รีวิว (แสดง)
+    - ที่อยู่: เพิ่ม/แก้/ลบ/ตั้งค่าเริ่มต้น + แผนที่ + เลือกจังหวัด-อำเภอ-ตำบล
+    - แชทข้อความ/รูป + realtime + รายการห้อง
+    - เสนอราคา/ยอมรับ/ปฏิเสธ + สร้าง Order
+    - เปลี่ยนสถานะงาน (เริ่ม/เสร็จ/ยืนยัน) + ปฏิทินงาน
+    - รายละเอียดงาน + แผนที่ตำแหน่งลูกค้า
+    - BOQ: สร้าง/ดู/แก้ไข + PDF (Sarabun) + ปุ่มดู BOQ ในแชท
+    - Backend รีวิว (สร้าง/อ่าน/แก้/ลบ/ค่าเฉลี่ย) — พร้อมใช้งานผ่าน API
+
+10.2 In Progress (โค้ดมีแต่ยังไม่สมบูรณ์)
+    - view/viewProfile.jsx (มีคอมเมนต์ "ต้องทำต่อ") และ ViewService.jsx
+      (อ้าง setData ที่ไม่มี → ปุ่มลบจะ error)
+    - QrTest.jsx (ทดลอง QR พร้อมเพย์ ยังไม่ผูก Order)
+    - ระบบ Role/Authorization (มี enum + API แต่ไม่มี middleware/หน้าจอ)
+    - Admin (มีเฉพาะไฟล์ placeholder)
+    - การแจ้งเตือน/สถานะอ่านแล้วในแชท
+    - ความสอดคล้องของสถานะ CANCELLED (frontend ส่ง แต่ backend ไม่รับ)
+    [ตรวจสอบจาก Source Code]
+
+10.3 Pending (ยังไม่เริ่ม/ไม่พบโค้ด)
+    - ระบบชำระเงิน + ยืนยันการชำระ + ใบเสร็จ
+    - หน้าจอเขียนรีวิว (ผู้ใช้ให้คะแนนหลัง COMPLETED)
+    - ระบบแจ้งเตือน (in-app/push/email)
+    - หน้าจอ ADMIN (จัดการผู้ใช้/ban/ดูสถิติ)
+    - Forgot password / Reset password (ลิงก์ /forgot ไม่มี route)
+    - ระบบยืนยันตัวตนช่าง (KYC) / เอกสารรับรอง
+    - Chat: read receipt, typing, pagination, แนบไฟล์ที่ไม่ใช่รูป
+    - Unit test / Integration test (npm test ยังว่าง)
+    - Docker / CI-CD / deployment config
+    - การจัดการหลายรูปต่อบริการ, pagination รายการบริการ
+    [ตรวจสอบจาก Source Code + ต้องยืนยันลำดับความสำคัญ]
+
+10.4 Known Issues (ปัญหาที่พบในโค้ด)  [ตรวจสอบจาก Source Code]
+    (1) [ขัดแย้ง] rejectorders: frontend ส่ง {Status:"CANCELLED"} แต่ controller
+        ตั้ง Status = "IN_PROGRESS" → งานที่ "ยกเลิก" จะกลับไปสถานะกำลังทำ
+        และ enum CANCELLED ไม่ถูกใช้ที่ไหนเลย
+    (2) [ขัดแย้ง] PATCH /api/updateservicearea ใช้ฟิลด์ District ซึ่งถูก drop
+        จากตาราง service_areas แล้ว (migration 20260826131224) → endpoint นี้จะ error
+    (3) createError ถูกเรียกโดยไม่ throw/return หลายจุด (auth.controller,
+        profile.controller, service.controller, review.controller ฯลฯ)
+        → เคส "email ซ้ำ" / "ไม่พบข้อมูล" อาจไม่ตอบ error ตามที่ควร
+    (4) verifytoken: ไม่เก็บ decoded payload ลง req → controller ตรวจสิทธิ์จาก
+        token ไม่ได้; กรณี token ผิดอาจ throw ใน callback ของ jwt.verify
+    (5) ไม่มี Role-based authorization: ผู้ใช้ทั่วไปเรียก updaterole/updatestatus/
+        updatelistuser ได้ → ช่องโหว่ยกระดับสิทธิ์ (privilege escalation)
+    (6) Endpoint ที่ไม่ต้อง login แต่ควรมี auth: order GET ทั้งหมด, review ทั้งหมด,
+        chat rejectPrice, address ทั้งหมด, boq ทั้งหมด, servicearea (post/delete/put),
+        listuser/readuser/amountuser
+    (7) createOrder: ไม่ตรวจว่ามี Order ของคู่/บริการนี้อยู่แล้ว → กดยอมรับซ้ำ
+        สร้าง Order ซ้ำได้; ไม่ตรวจว่า Chat_Id เป็นของผู้เรียก
+    (8) createOrder ใช้ Number(Final_Price)/new Date(Work_Date) โดยไม่ validate
+        → ถ้าค่าไม่ครบจะได้ NaN/Invalid Date แล้ว Prisma error 500
+    (9) reviews.Rating ไม่ถูกจำกัด 1-5 (ทั้ง validation และ DB)
+    (10) chats.Sender_Id/Receiver_Id ไม่มี FK → ลบ user แล้วข้อความยังอ้าง id เดิม
+    (11) chats ไม่มี relation ไป users ทำให้ต้องยิง API เพิ่มทีละห้องเพื่อเอาชื่อคู่สนทนา
+         (ChatContainer ยิง readprofile หลายครั้งแบบ N+1)
+    (12) upload.js รับทุกชนิดไฟล์ ไม่จำกัดขนาด/ชนิด (เสี่ยงอัปโหลดไฟล์อันตราย)
+    (13) server.js: port 3000 hardcode, CORS "*", ไม่ได้ใช้ helmet แม้ติดตั้งไว้
+    (14) หน้า /map ส่ง CustomerMap โดยไม่มี myId → บันทึกที่อยู่จะได้ Users_Id undefined
+    (15) ViewService.jsx เรียก setData (ไม่มีในสโคป) → ปุ่มลบบริการจะ error
+    (16) DetailOrderUser.jsx เรียก service.Title / service.Description ก่อนมีข้อมูล
+        (service เริ่มต้น null) → อาจ crash ตอน render ครั้งแรก
+    (17) ใช้ชื่อไฟล์ CustomerMap.jsx.jsx (extension ซ้ำ) พึ่งพฤติกรรมการ resolve
+        ของ Vite; import เขียนเป็น CustomerMap.jsx ซึ่งเสี่ยงสับสน
+    (18) ชื่อ path "/api/reaorderbyidservice" สะกดผิด (reaorder) แต่ถูกเรียกใช้ตามนั้น
+    (19) ไม่มี pagination ทั้ง services/orders/reviews/chats → ช้าถ้าข้อมูลเยอะ
+    (20) Frontend hardcode http://localhost:3000 ทุกจุด → ย้าย environment ยาก
+    (21) UserContext ถูกประกาศแต่ไม่ถูกใช้ → ข้อมูลผู้ใช้กระจายอยู่ใน localStorage
+    (22) ไฟล์ขยะ/ทดลอง: peak.txt (ว่าง), techUser/text.jsx, admin/admin.jsx (ไม่ route),
+        OrderMap.jsx (ไม่ถูกใช้), listservice.jsx (ไม่ถูก route โดยตรง)
+
+    ปัญหาที่ทีมเจอจริงนอกเหนือจากนี้ (ที่โค้ดมองไม่เห็น): [กรอกข้อมูล]
+
+--------------------------------------------------------------------------------
+11. ข้อจำกัดและแนวทางการพัฒนา
+--------------------------------------------------------------------------------
+11.1 เวลาที่เหลือในการพัฒนา
+    - วันที่ปัจจุบันที่ใช้ประเมิน: 15 พ.ย. 2026
+    - กำหนดส่ง/สอบ: [ต้องยืนยัน]
+    - เวลาที่เหลือ (สัปดาห์/วัน): [กรอกข้อมูล]
+    - งานที่ต้องเสร็จก่อนสอบ (Must-have): [กรอกข้อมูล]
+
+11.2 ข้อจำกัดด้านเทคโนโลยี  [ตรวจสอบจาก Source Code]
+    - Express 5 + ESM: ต้อง import ด้วยนามสกุลไฟล์ .js เสมอ, พฤติกรรม error handling
+      ต่างจาก Express 4 (async error ถูกจับให้อัตโนมัติในบางกรณี)
+    - Prisma 6 + MySQL: ชื่อ field ในสคีมาเป็น Pascal_Snake ต้องอ้างให้ตรงเป๊ะ
+      (เช่น Users_Id ไม่ใช่ users_id)
+    - ไม่มี TypeScript → ไม่มี type safety, ต้องระวังการแปลง Number() เอง
+    - ไฟล์อัปโหลดเก็บในดิสก์เครื่องเดียว
+    - แผนที่ใช้ OpenStreetMap (ไม่ต้อง API key แต่ไม่มี geocoding)
+    - Socket.IO ไม่มี auth → ต้องเพิ่มถ้าต้องการความปลอดภัย
+    - ข้อจำกัดอื่นจากอาจารย์/ขอบเขตโครงงาน: [ต้องยืนยัน]
+
+11.3 สิ่งที่ไม่ต้องการให้เปลี่ยนแปลง
+    - โครงสร้าง Prisma schema เดิม (ชื่อตาราง/ฟิลด์) เพราะผูกกับข้อมูลที่มีอยู่: [ต้องยืนยัน]
+    - รูปแบบ API response { result } / { message } ที่ frontend ใช้อยู่: [ต้องยืนยัน]
+    - หน้าตา/ธีมสี/ฟอนต์ Sarabun: [ต้องยืนยัน]
+    - ฟีเจอร์ที่ห้ามแตะ/ห้ามลบ: [กรอกข้อมูล]
+
+11.4 รูปแบบการเขียนโค้ด (ตามที่พบจริง ควรทำตามเพื่อความสอดคล้อง)
+    - Backend: 1 ไฟล์ route + 1 ไฟล์ controller ต่อโดเมน, ใช้ export const ชื่อฟังก์ชัน,
+      try/catch แล้ว next(err), ใช้ createError(code,msg), import prisma จาก config
+    - Frontend: ฟังก์ชันคอมโพเนนต์แบบ export default function, ใช้ useState/useEffect,
+      axios เรียก URL เต็ม, CSS แยกไฟล์ชื่อเดียวกับคอมโพเนนต์, ข้อความ UI ภาษาไทย
+    - การตั้งชื่อ: ตัวแปร/ฟังก์ชันอังกฤษ, ข้อความหน้าจอไทย, field ตามชื่อใน DB
+    - ต้องการให้คงสไตล์นี้หรือปรับ (เช่น เพิ่ม service layer / TypeScript): [ต้องยืนยัน]
+
+11.5 แนวทางการพัฒนาที่ต้องการ
+    - ลำดับความสำคัญของงานถัดไป: [กรอกข้อมูล]
+    - ต้องการให้แก้บั๊กก่อนเพิ่มฟีเจอร์ หรือเพิ่มฟีเจอร์ก่อน: [ต้องยืนยัน]
+    - ต้องการ refactor หรือไม่ (เช่น แยก service layer, ย้าย base URL ไป env): [ต้องยืนยัน]
+
+11.6 ข้อควรระวังในการแก้ไข Source Code
+    - ห้ามลบ/เปลี่ยนชื่อ field ใน schema.prisma โดยไม่สร้าง migration ใหม่
+      (มี migration 50 ไฟล์แล้ว ต้องรัน npx prisma migrate dev)
+    - ถ้าแก้ enum (เช่น เพิ่ม OrderStatus) ต้อง migrate + แก้ frontend ที่เทียบ string
+    - ระวังการเปลี่ยน signature ของ API ที่ frontend เรียกอยู่ (ดูข้อ 8.2 ให้ครบ)
+    - รูปแบบ header token คือค่าดิบ ไม่มี "Bearer" — ถ้าจะเปลี่ยนต้องแก้ทั้ง 20+ จุด
+    - Chat ใช้ Room_Id เป็น string ที่คำนวณจาก Service_Id + user ids → เปลี่ยนสูตร
+      จะทำให้ห้องเก่าแยกออกจากห้องใหม่
+    - การลบไฟล์ใน uploads เกิดขึ้นใน controller (update/delete service, update profile)
+      → ระวังลบไฟล์ที่ยังถูกอ้างถึง
+    - อย่า commit .env (มี SECRET และรหัส DB)
+    - ระวังการเรียก createError แบบไม่ throw (ควรแก้เป็น throw createError(...))
+
+--------------------------------------------------------------------------------
+12. สิ่งที่ต้องการให้ AI Agent ช่วยในอนาคต
+--------------------------------------------------------------------------------
+12.1 ฟีเจอร์ที่ต้องการพัฒนา (เรียงตามความสำคัญ)
+    1) [กรอกข้อมูล]
+    2) [กรอกข้อมูล]
+    3) [กรอกข้อมูล]
+    ตัวอย่างที่ระบบยังขาดและอาจต้องทำ: ระบบชำระเงิน, ฟอร์มรีวิว, หน้าจอ ADMIN,
+    การแจ้งเตือน, forgot password  [ต้องยืนยันว่าต้องการอันใด]
+
+12.2 ปัญหาที่ต้องการแก้ไข
+    1) [กรอกข้อมูล]
+    2) [กรอกข้อมูล]
+    ปัญหาที่โค้ดชี้ชัดและควรแก้ก่อน (ถ้าเห็นด้วย):
+       - rejectorders ต้องตั้งเป็น CANCELLED
+       - updateservicearea อ้าง District ที่ไม่มีแล้ว
+       - createError ที่ไม่ได้ throw
+       - เพิ่มการตรวจ Role (ADMIN) และผูก req.user จาก token
+       - เพิ่ม validation ของ order/review/chat/boq
+
+12.3 สิ่งที่ต้องการให้ตรวจสอบ
+    - [กรอกข้อมูล] เช่น ความปลอดภัยของ API, performance ของ query, UX ของแชท
+
+12.4 งานที่วางแผนจะทำต่อ (Roadmap)
+    - ระยะสั้น (1-2 สัปดาห์): [กรอกข้อมูล]
+    - ระยะกลาง (ก่อนสอบ): [กรอกข้อมูล]
+    - ระยะยาว (หลังส่ง): [กรอกข้อมูล]
+
+--------------------------------------------------------------------------------
+ภาคผนวก A: ข้อมูลที่ยังขาดและต้องให้เจ้าของโปรเจกต์ยืนยัน (สรุปสั้น)
+--------------------------------------------------------------------------------
+A1. ชื่อทางการของโปรเจกต์ + วัตถุประสงค์เชิงวิชาการ
+A2. กลุ่มผู้ใช้จริงและขอบเขตพื้นที่ให้บริการ (จังหวัดใด)
+A3. ขั้นตอนการเปลี่ยน USER -> TECHNICIAN (ใครอนุมัติ)
+A4. กฎการชำระเงิน (ช่องทาง, ผู้ยืนยัน, เก็บสลิปหรือไม่, ค่าธรรมเนียม)
+A5. กฎการยกเลิกงาน/ค่าปรับ/การเลื่อนนัด
+A6. การจำกัดสิทธิ์ ADMIN ที่ต้องการจริง
+A7. ลำดับความสำคัญของงานที่เหลือ + กำหนดส่ง
+A8. สิ่งที่ห้ามแก้ (schema/UI/API)
+A9. แผน deploy (เครื่อง server, โดเมน, ฐานข้อมูลจริง)
+A10. ข้อขัดแย้งที่ต้องเลือกทาง: สถานะ CANCELLED, ฟิลด์ District ของ service_areas,
+     การใช้ UserContext, การเก็บ token แบบไม่ใส่ Bearer
+
+================================================================================
+จบแบบฟอร์ม
+================================================================================

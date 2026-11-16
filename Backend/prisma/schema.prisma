@@ -52,116 +52,138 @@ enum ChatType {
   PRICE_REJECT
 }
 
+enum PaymentStatus {
+  PENDING
+  WAITING_CONFIRMATION
+  PAID
+  REJECTED
+}
+
 model users {
-  Users_Id Int @id @default(autoincrement())
-  Email    String @unique
-  Password String
-  Role   Role
-  Status Status @default(ACTIVE)
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
-  Profile profiles?
-  Services services[]
-  CustomerOrders orders[] @relation("CustomerOrders")
-  TechnicianOrders orders[] @relation("TechnicianOrders")
-  Addresses addresses[]
-  ServiceAreas service_areas[]
+  Users_Id         Int             @id @default(autoincrement())
+  Email            String          @unique
+  Password         String
+  Role             Role
+  Status           Status          @default(ACTIVE)
+  Created_At       DateTime        @default(now())
+  Updated_At       DateTime        @updatedAt
+  Profile          profiles?
+  Services         services[]
+  CustomerOrders   orders[]        @relation("CustomerOrders")
+  TechnicianOrders orders[]        @relation("TechnicianOrders")
+  Addresses        addresses[]
+  ServiceAreas     service_areas[]
 }
 
 model service_areas {
-  Area_Id Int @id @default(autoincrement())
-  Users_Id Int
-  Province String
+  Area_Id    Int      @id @default(autoincrement())
+  Users_Id   Int
+  Province   String
   Created_At DateTime @default(now())
-  User users @relation(fields: [Users_Id], references: [Users_Id])
+  User       users    @relation(fields: [Users_Id], references: [Users_Id])
 }
 
 model profiles {
-  Profile_Id      Int      @id @default(autoincrement())
-  Users_Id        Int      @unique
-  First_Name      String?
-  Last_Name       String?
-  Phone           String?
-  Avatar          String?
-  Gender          Gender?
-  Birth_Date      DateTime?
-  Created_At      DateTime @default(now())
-  Updated_At      DateTime @updatedAt
-  User users @relation(fields: [Users_Id], references: [Users_Id])
+  Profile_Id Int       @id @default(autoincrement())
+  Users_Id   Int       @unique
+  First_Name String?
+  Last_Name  String?
+  Phone      String?
+  Avatar     String?
+  Gender     Gender?
+  Birth_Date DateTime?
+  Payment_QR String?
+  Created_At DateTime  @default(now())
+  Updated_At DateTime  @updatedAt
+  User       users     @relation(fields: [Users_Id], references: [Users_Id])
 }
 
 model addresses {
-  Address_Id Int @id @default(autoincrement())
-  Users_Id Int
-  Address String?
-  Province String?
-  District String?
+  Address_Id  Int      @id @default(autoincrement())
+  Users_Id    Int
+  Address     String?
+  Province    String?
+  District    String?
   Subdistrict String?
   Postal_Code String?
-  Latitude Float
-  Longitude Float
-  Is_Default Boolean @default(false)
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
-  User users @relation(fields: [Users_Id],references: [Users_Id])
+  Latitude    Float
+  Longitude   Float
+  Is_Default  Boolean  @default(false)
+  Created_At  DateTime @default(now())
+  Updated_At  DateTime @updatedAt
+  User        users    @relation(fields: [Users_Id], references: [Users_Id])
 }
 
 model services {
-  Service_Id  Int               @id @default(autoincrement())
+  Service_Id  Int             @id @default(autoincrement())
   Users_Id    Int
   Title       String
   Category    ServiceCategory
   Description String?
   Price       Float
   Image       String?
-  Created_At  DateTime          @default(now())
-  Updated_At  DateTime          @updatedAt
+  Created_At  DateTime        @default(now())
+  Updated_At  DateTime        @updatedAt
 
-  User   users   @relation(fields: [Users_Id], references: [Users_Id])
+  User   users    @relation(fields: [Users_Id], references: [Users_Id])
   Orders orders[]
   Chats  chats[]
 }
 
 model orders {
-  Order_Id       Int         @id @default(autoincrement())
-  Users_Id       Int
-  Tech_Id        Int
-  Service_Id     Int
-  Final_Price    Float?
-  Work_Date      DateTime?
-  Work_Date_End  DateTime?
-  Status         OrderStatus @default(ACCEPTED)
-  Created_At     DateTime    @default(now())
-  Updated_At     DateTime    @updatedAt
-  User users @relation("CustomerOrders", fields: [Users_Id], references: [Users_Id])
-  TechUser users @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id])
-  Service services @relation(fields: [Service_Id], references: [Service_Id])
-  Review  reviews?
-  BOQ boqs?
+  Order_Id      Int         @id @default(autoincrement())
+  Users_Id      Int
+  Tech_Id       Int
+  Service_Id    Int
+  Final_Price   Float?
+  Work_Date     DateTime?
+  Work_Date_End DateTime?
+  Status        OrderStatus @default(ACCEPTED)
+  Created_At    DateTime    @default(now())
+  Updated_At    DateTime    @updatedAt
+  User          users       @relation("CustomerOrders", fields: [Users_Id], references: [Users_Id])
+  TechUser      users       @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id])
+  Service       services    @relation(fields: [Service_Id], references: [Service_Id])
+  Review        reviews?
+  BOQ           boqs?
+  Payment       payments?
+}
+
+model payments {
+  Payment_Id    Int           @id @default(autoincrement())
+  Order_Id      Int           @unique
+  Amount        Float
+  Slip_Image    String?
+  Status        PaymentStatus @default(PENDING)
+  Reject_Reason String?
+  Paid_At       DateTime?
+  Created_At    DateTime      @default(now())
+  Updated_At    DateTime      @updatedAt
+  Order         orders        @relation(fields: [Order_Id], references: [Order_Id])
 }
 
 model boqs {
-  BOQ_Id       Int      @id @default(autoincrement())
-  Order_Id     Int      @unique
-  Total_Amount Float    @default(0)
-  Created_At   DateTime @default(now())
-  Updated_At   DateTime @updatedAt
-  Order orders @relation(fields: [Order_Id], references: [Order_Id])
-  Items boq_items[]
+  BOQ_Id       Int         @id @default(autoincrement())
+  Order_Id     Int         @unique
+  Total_Amount Float       @default(0)
+  Created_At   DateTime    @default(now())
+  Updated_At   DateTime    @updatedAt
+  Order        orders      @relation(fields: [Order_Id], references: [Order_Id])
+  Items        boq_items[]
 }
 
 model boq_items {
-  BOQ_Item_Id  Int      @id @default(autoincrement())
-  BOQ_Id       Int
-  Name         String
-  Description  String?
-  Quantity     Float
-  Unit         String
-  Unit_Price   Float
-  Total_Price  Float
-  Created_At   DateTime @default(now())
-  Updated_At   DateTime @updatedAt
-  BOQ boqs @relation(fields: [BOQ_Id], references: [BOQ_Id])
+  BOQ_Item_Id Int      @id @default(autoincrement())
+  BOQ_Id      Int
+  Name        String
+  Description String?
+  Quantity    Float
+  Unit        String
+  Unit_Price  Float
+  Total_Price Float
+  Created_At  DateTime @default(now())
+  Updated_At  DateTime @updatedAt
+  BOQ         boqs     @relation(fields: [BOQ_Id], references: [BOQ_Id])
 }
 
 model reviews {
@@ -175,45 +197,45 @@ model reviews {
 }
 
 model chats {
-  Chat_Id        Int       @id @default(autoincrement())
-  Service_Id     Int
-  Room_Id        String
-  Sender_Id      Int
-  Receiver_Id    Int
-  Type           ChatType  @default(MESSAGE)
-  Message        String?
-  Price          Float?
-  Work_Date      DateTime?
-  Work_Date_End  DateTime?
-  Image          String?
-  Created_At     DateTime  @default(now())
-  Service services @relation(fields: [Service_Id], references: [Service_Id])
+  Chat_Id       Int       @id @default(autoincrement())
+  Service_Id    Int
+  Room_Id       String
+  Sender_Id     Int
+  Receiver_Id   Int
+  Type          ChatType  @default(MESSAGE)
+  Message       String?
+  Price         Float?
+  Work_Date     DateTime?
+  Work_Date_End DateTime?
+  Image         String?
+  Created_At    DateTime  @default(now())
+  Service       services  @relation(fields: [Service_Id], references: [Service_Id])
 }
 
 model provinces {
-  Province_Id Int @id @default(autoincrement())
-  Name String @unique
-  Districts districts[]
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
+  Province_Id Int         @id @default(autoincrement())
+  Name        String      @unique
+  Districts   districts[]
+  Created_At  DateTime    @default(now())
+  Updated_At  DateTime    @updatedAt
 }
 
 model districts {
-  District_Id Int @id @default(autoincrement())
-  Province_Id Int
-  Name String
-  Province provinces @relation(fields: [Province_Id],references: [Province_Id])
+  District_Id  Int            @id @default(autoincrement())
+  Province_Id  Int
+  Name         String
+  Province     provinces      @relation(fields: [Province_Id], references: [Province_Id])
   Subdistricts subdistricts[]
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
+  Created_At   DateTime       @default(now())
+  Updated_At   DateTime       @updatedAt
 }
 
 model subdistricts {
-  Subdistrict_Id Int @id @default(autoincrement())
-  District_Id Int
-  Name String
-  Postal_Code String?
-  District districts @relation(fields: [District_Id],references: [District_Id])
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
+  Subdistrict_Id Int       @id @default(autoincrement())
+  District_Id    Int
+  Name           String
+  Postal_Code    String?
+  District       districts @relation(fields: [District_Id], references: [District_Id])
+  Created_At     DateTime  @default(now())
+  Updated_At     DateTime  @updatedAt
 }
