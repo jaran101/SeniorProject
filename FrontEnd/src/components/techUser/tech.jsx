@@ -31,13 +31,13 @@ export default function Tech({ techorder,onStartOrder,onFinishOrder }) {
             const serviceMap = {}
             const profileMap = {}
 
-             results.forEach(([serviceRes, profileRes]) => {
+             results.forEach(([serviceRes, profileRes],index) => {
                 const service = serviceRes.data.result
                 const profile = profileRes.data.result
+                const order = techorder[index];
                 serviceMap[service.Service_Id] = service
-                profileMap[profile.Users_Id] = profile
+                profileMap[order.Users_Id] = profile 
             })
-
             setServicelist(serviceMap)
             setProfilelist(profileMap)
         }
