@@ -6,6 +6,7 @@ import Data from "./data";
 import Newprofile from "./newprofile";
 import SearchMyservice from "./service/searchmyservice";
 import Tau from "./techUser/tau";
+import Admin from "./admin/admin";
 import "./Profile.css";
 
 export default function Profile() {
@@ -19,6 +20,7 @@ export default function Profile() {
   const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
   const {profileUser,loading} = useUser();
+  console.log(profileUser)
   // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
   const changePage = (newPage) => {
     if (newPage === page|| newPage === pendingPage) return;
@@ -35,7 +37,6 @@ export default function Profile() {
 };
 
 
-console.log(profileUser)
 
  const loadProfile = async (id) => {
       try {
@@ -128,7 +129,11 @@ return (
         <button onClick={() => changePage("data")} className="profile-button">
           ข้อมูลส่วนตัว
         </button>
-        <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ</button>
+        <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ
+        </button>
+        <button className="profile-button" onClick={() => changePage("admin")} >
+          Admin
+        </button>
       </div>
       {/* แสดง component ที่เลือกตามหน้าในเมนู */}
       <div  
@@ -137,7 +142,7 @@ return (
         {page === "data" && <Data profile={profile} onProfileUpdated={setProfile} addresses={addresses} setAddresses={setAddresses} />}
         {page === "searchmyservice" && <SearchMyservice />}
         {page === "tau" && <Tau />}
-        
+        {page === "admin" && <Admin />}
 
       </div>
     </div>

@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./tech.css"
+import { getStatusText } from "../../utils/orderStatus"
 export default function Tech({ techorder,onStartOrder,onFinishOrder }) {
     const [servicelist, setServicelist] = useState({})
     const [profilelist, setProfilelist] = useState({})
@@ -66,7 +67,7 @@ export default function Tech({ techorder,onStartOrder,onFinishOrder }) {
                         <tr key={order.Order_Id}>
                             <td>{order.Order_Id}</td>
                             <td>{servicelist[order.Service_Id]?.Title}</td>
-                            <td>{order.Status}</td>
+                            <td>{getStatusText(order.Status)}</td>
                             <td>{profilelist[order.Users_Id]?.First_Name}</td>
                             <td>{formatDate(order.Work_Date)}</td>
                             <td>{formatDate(order.Work_Date_End)}</td>
