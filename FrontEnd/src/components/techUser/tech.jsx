@@ -77,7 +77,7 @@ export default function Tech({ techorder,onStartOrder,onFinishOrder }) {
                                 </button>
                             </td>
                             <td>{order.Status ==="ACCEPTED" && (
-                                <button onClick={() => onStartOrder(order.Order_Id)}>เริ่มงาน</button>
+                                <button onClick={() => onStartOrder(order.Order_Id)} className="Start_button" >เริ่มงาน</button>
                             )}
                             {order.Status ==="IN_PROGRESS" && (
                                 <button onClick={() => onFinishOrder(order.Order_Id)}>เสร็จสิ้นงาน</button>

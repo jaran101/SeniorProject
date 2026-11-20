@@ -1,0 +1,21 @@
+.Button_DownLoad{
+    background-color: rgb(8, 83, 180);
+    border-radius: 3px;
+    border: none;
+    font-size: 16px;
+    color: aliceblue;
+}
+
+.Button_DownLoad:hover{
+    transition: all 0.3s ease;
+    transform: scale(1.2);
+}
+
+.QrPage {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: aliceblue;
+  min-height: 100vh;
+}

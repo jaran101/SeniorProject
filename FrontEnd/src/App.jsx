@@ -77,7 +77,7 @@ export default function App() {
         <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
         <Route path="/DetailOrderUser" element={<Layout><DetailOrderUser /></Layout>}/>
         <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
-        <Route path="/QrTest" element={<Layout><QrTest /></Layout>}/>
+        <Route path="/QrTest/:orderId" element={<><QrTest /></>}/>
         <Route path="/admin" element={<Layout><Admin /></Layout>}/>
       </Routes>
     )   

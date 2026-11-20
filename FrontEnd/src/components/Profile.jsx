@@ -131,7 +131,7 @@ return (
         </button>
         <button onClick={() => changePage("tau")} className="profile-button">กำหนดการ
         </button>
-        <button className="profile-button" onClick={() => changePage("admin")} >
+        <button className="profile-button" onClick={() => navigate("/admin")} >
           Admin
         </button>
       </div>

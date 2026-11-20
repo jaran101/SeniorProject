@@ -84,7 +84,8 @@ export const getProfileById = async (req, res, next) => {
         First_Name:true,
         Last_Name:true,
         Avatar:true,
-        Phone:true
+        Phone:true,
+        PromptPay_Id:true
       }
     });
     if (!profile) {

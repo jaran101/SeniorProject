@@ -3,11 +3,14 @@ import axios from "axios"
 import Tech from "./tech";
 import User from "./user";
 import OrderCalendar from "../OrderCalendar.jsx"
+import { useNavigate } from "react-router-dom";
+import QrTest from "../QrTest.jsx"
 import "./tau.css";
 export default function Tau() {
   const [page, setPage] = useState("tech");
   const [techorder, setTechorder] = useState([])
   const [userorder, setUserorder] = useState([])
+  const navigate = useNavigate();
   const token = localStorage.getItem("token")
   const [id,setId] = useState()
 
@@ -90,19 +93,9 @@ const handleFinishOrder = async (orderId) => {
 }
 
 const handleconfirmorders = async (orderId) => {
-  try {
-    await axios.patch(
-      `http://localhost:3000/api/confirmorders/${orderId}`,
-      {Status: "COMPLETED"},
-      { headers: { authorization: token } }
-    )
-    setUserorder(prev =>
-      prev.map(t => t.Order_Id === orderId ? { ...t, Status: "COMPLETED" } : t)
-    )
-    alert("เสร็จสิ้นงานแล้ว")
-  } catch (err) {
-    console.log(err.response?.data?.message)
-  }
+
+        navigate(`/QrTest/${orderId}`, { state: { orderId: orderId } });
+
 }
 
 const handlerejectorders = async (orderId) => {
