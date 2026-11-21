@@ -132,3 +132,56 @@ export const getPaymentByOrderId = async (req, res, next) => {
   }
 };
 
+export const updatePaymentStatus = async (req, res, next) => {
+    try {
+        const { Order_Id, Users_Id, Status, Reject_Reason } = req.body;
+        if (!Order_Id || !Users_Id || !Status) {
+            createError(400, "Order_Id, Users_Id and Status are required");
+        }
+        if (Status !== "PAID" && Status !== "REJECTED") {
+            createError(400, "Invalid payment status");
+        }
+        const order = await prisma.orders.findUnique({
+            where: {
+                Order_Id: Number(Order_Id)
+            },
+            select: {
+                Tech_Id: true,
+                Payment: {
+                    select: {
+                        Payment_Id: true,
+                        Status: true
+                    }
+                }
+            }
+        });
+        if (!order) {
+            createError(404, "Order not found");
+        }
+        if (order.Tech_Id !== Number(Users_Id)) {
+            createError(403, "You are not the technician of this order");
+        }
+        if (!order.Payment) {
+            createError(404, "Payment not found");
+        }
+        if (order.Payment.Status !== "WAITING_CONFIRMATION") {
+            createError(400, "Payment is not waiting for confirmation");
+        }
+        if (Status === "REJECTED" && !Reject_Reason) {
+            createError(400, "Reject_Reason is required");
+        }
+        const result = await prisma.payments.update({
+            where: {
+                Order_Id: Number(Order_Id)
+            },
+            data: {
+                Status,
+                Reject_Reason: Status === "REJECTED" ? Reject_Reason : null,
+                Paid_At: Status === "PAID" ? new Date() : null
+            }
+        });
+        res.json({message: "Update payment status success",result});
+    } catch (err) {
+        next(err);
+    }
+};
