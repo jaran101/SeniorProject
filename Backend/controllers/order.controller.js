@@ -171,11 +171,15 @@ export const rejectOrder = async (req, res, next) => {
   }
 };
 export const getMyOder=async (req,res,next)=>{
-  const {id}=req.params
+  try {
+    const {id}=req.params
   const orders=await prisma.orders.findMany({
     where:{
       Users_Id:Number(id)
     }
   })
   res.json({ message: "Reject Order Success", result:orders});
+  } catch (err) {
+    next(err)
+  }
 };

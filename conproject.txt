@@ -1,7 +1,9 @@
 ================================================================================
 แบบฟอร์มส่งต่อบริบทโปรเจกต์ให้ AI Agent (Project Context Handover Form)
-เวอร์ชันฟอร์ม: 1.0
-วันที่ตรวจสอบ Source Code: 15 พ.ย. 2026
+เวอร์ชันฟอร์ม: 1.1
+วันที่ตรวจสอบ Source Code: 21 พ.ย. 2026 (commit ล่าสุด 560e750)
+ประวัติเวอร์ชัน: 1.0 (15 พ.ย. 2026) -> 1.1 (21 พ.ย. 2026)
+                  เพิ่ม payments/PromptPay_Id/หน้าจอ Admin/QR ตาม Order/ยูทิลสถานะไทย
 วิธีใช้: ช่องที่มี [ตรวจสอบจาก Source Code] = ยืนยันจากโค้ดแล้ว ไม่ต้องตอบซ้ำ
         ช่องที่มี [ต้องยืนยัน] = เจ้าของโปรเจกต์ต้องเติม/แก้
         ช่อง [กรอกข้อมูล] = เว้นว่างไว้ให้เติม
@@ -34,8 +36,10 @@
       จัดการโปรไฟล์/ที่อยู่  [ตรวจสอบจาก Source Code: enum Role]
     - TECHNICIAN (ช่าง): สร้าง/แก้ไข/ลบบริการของตัวเอง, กำหนดพื้นที่ให้บริการ (จังหวัด),
       เสนอราคาในแชท, เริ่มงาน/แจ้งงานเสร็จ, สร้าง BOQ  [ตรวจสอบจาก Source Code]
-    - ADMIN: มี enum และ API จัดการผู้ใช้ (listuser/updaterole/updatestatus/amountuser)
-      แต่ยังไม่มีหน้าจอใช้งานจริง  [ตรวจสอบจาก Source Code]
+    - ADMIN: มี enum + API จัดการผู้ใช้ (listuser/updaterole/updatestatus/amountuser)
+      และมีหน้าจอ /admin (แดชบอร์ดนับจำนวน user/บริการ/ออเดอร์ + รายชื่อผู้ใช้)
+      แต่ "ไม่มีการตรวจ role" และยังไม่มีฟังก์ชันจัดการผู้ใช้ในหน้าจอ
+      [ตรวจสอบจาก Source Code]
     - กลุ่มผู้ใช้จริงที่ตั้งใจไว้ (เช่น นักศึกษาในมหาวิทยาลัย / ช่างในจังหวัดใด): [ต้องยืนยัน]
 
 1.5 สถานะปัจจุบันของโปรเจกต์
@@ -43,8 +47,11 @@
       [ตรวจสอบจาก Source Code]
     - Git: branch ปัจจุบัน = peak, มี branch main/bas และ remote origin
       (github.com/jaran101/SeniorProject)  [ตรวจสอบจาก Source Code]
-    - Commit ล่าสุด: "feat: update user profile handling, add DetailOrderUser component,
-      and implement token expiration check"  [ตรวจสอบจาก Source Code]
+    - Commit ล่าสุด: "feat: enhance profile handling by adding PromptPay_Id and update
+      QrTest component for order-specific QR generation" (560e750)
+      ตั้งแต่ commit 3cf642c (15 พ.ย.) มี 5 commit ใหม่: เพิ่ม PromptPay_Id, ตาราง
+      payments, หน้าจอ Admin, QR ตาม Order และยูทิลแปลงสถานะเป็นข้อความไทย
+      [ตรวจสอบจาก Source Code: git log]
     - ระยะของโปรเจกต์ (เช่น โครงงาน 1 / โครงงาน 2 / กำลังสอบป้องกัน): [ต้องยืนยัน]
     - เปอร์เซ็นต์ความคืบหน้าโดยประมาณ: [กรอกข้อมูล]
     - วันที่ต้องส่ง/สอบ: [กรอกข้อมูล]
@@ -87,7 +94,8 @@
         react-router-dom 6.30.3, axios 1.16.1, yup 1.7.1,
         socket.io-client 4.8.3, leaflet 1.9.4 + react-leaflet 4.2.1 (OpenStreetMap),
         @react-pdf/renderer 4.9.0 (สร้าง PDF ของ BOQ),
-        promptpay-qr 0.5.0 + qrcode.react 4.2.0 (ทดลอง QR พร้อมเพย์),
+        promptpay-qr 0.5.0 + qrcode.react 4.2.0 (สร้าง QR พร้อมเพย์ตาม Order ได้แล้ว
+        แต่ยังไม่มีการบันทึกผลการชำระเงินลงฐานข้อมูล),
         framer-motion 12.38.0 (ติดตั้ง; ต้องยืนยันว่ามีการใช้งานจริงหรือไม่)
       [ตรวจสอบจาก Source Code]
     - Font: Sarabun (ไฟล์ .ttf ใน src/assets/fonts) ใช้กับ PDF  [ตรวจสอบจาก Source Code]
@@ -103,7 +111,8 @@
     - Map: Leaflet + react-leaflet + TileLayer จาก OpenStreetMap
       (https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)
       ไม่พบการใช้ Geocoding API / Google Maps  [ตรวจสอบจาก Source Code]
-    - External Services: ไม่พบ Payment Gateway จริง, ไม่พบ Email/SMS, ไม่พบ Cloud Storage
+    - External Services: ไม่พบ Payment Gateway จริง (มีเฉพาะ QR พร้อมเพย์ให้โอนเอง),
+      ไม่พบ Email/SMS, ไม่พบ Cloud Storage
       (ไฟล์อัปโหลดเก็บในโฟลเดอร์ local Backend/uploads แล้วเสิร์ฟที่ /uploads)
       [ตรวจสอบจาก Source Code]
     - ระบบจะ deploy จริงหรือไม่ / ที่ไหน: [ต้องยืนยัน]
@@ -140,10 +149,11 @@
     ├─ socket/
     │   └─ chat.socket.js         event join_room / send_message / receive_message
     ├─ prisma/
-    │   ├─ schema.prisma          โครงสร้างฐานข้อมูล (12 models, 5 enums)
+    │   ├─ schema.prisma          โครงสร้างฐานข้อมูล (14 models, 6 enums)
     │   ├─ seed.js                seed จังหวัด/อำเภอ/ตำบล จากไฟล์ JSON
     │   ├─ data/                  provinces.json, districts.json, subdistricts.json
-    │   └─ migrations/            50 migration (2025-09-25 ถึง 2026-08-26)
+    │   └─ migrations/            40 migration (2025-09-25 ถึง 2026-11-17;
+    │                               ล่าสุด 20261117154624 เพิ่ม PromptPay_Id + payments)
     └─ uploads/                   ไฟล์รูปที่อัปโหลด (พบ 14 ไฟล์ตอนตรวจ)
 
 3.2 โครงสร้าง Folder ของ Frontend  [ตรวจสอบจาก Source Code ทั้งหมด]
@@ -151,16 +161,18 @@
     ├─ index.html                 title = "my-app"
     ├─ vite.config.js             plugin react + proxy /api
     ├─ package.json
-    ├─ public/                    favicon.svg, icons.svg, imagesPrompay.png, index.html
+    ├─ public/                    favicon.svg, icons.svg, imagesPrompay.png,
+    │                             thaiqr.png (โลโก้ไทย QR), index.html
     └─ src/
         ├─ main.jsx               mount App ใต้ BrowserRouter
-        ├─ App.jsx                ตาราง Route ทั้งหมด (22 path) + Layout (Header/Footer)
+        ├─ App.jsx                ตาราง Route ทั้งหมด (23 path) + Layout (Header/Footer)
         ├─ UserContext.jsx        (ประกาศไว้แต่ไม่ถูกใช้)
         ├─ index.css, App.css
         ├─ assets/fonts/Sarabun/  ฟอนต์สำหรับ PDF
         ├─ utils/
         │   ├─ generateRoomId.js  สร้าง Room_Id = `${Service_Id}_${minUserId}_${maxUserId}`
-        │   └─ isTokenExpired.js  decode JWT ฝั่ง client เพื่อเช็ค exp
+        │   ├─ isTokenExpired.js  decode JWT ฝั่ง client เพื่อเช็ค exp
+        │   └─ orderStatus.js     แปลงสถานะอังกฤษเป็นข้อความไทย (getStatusText)
         └─ components/
             ├─ Home.jsx                 หน้าแรก + ช่องค้นหา + ปุ่มหมวดหมู่
             ├─ Profile.jsx              โปรไฟล์ของฉัน (แท็บ งานของฉัน / ข้อมูลส่วนตัว / กำหนดการ)
@@ -168,7 +180,9 @@
             ├─ editprofile.jsx          ฟอร์มแก้ไขโปรไฟล์ + จัดการที่อยู่ + เพิ่มที่อยู่บนแผนที่
             ├─ newprofile.jsx           ฟอร์มสร้างโปรไฟล์ครั้งแรก + อัปโหลดรูป
             ├─ OrderCalendar.jsx        ปฏิทินงาน (เดือน) ของทั้งช่างและผู้ใช้
-            ├─ QrTest.jsx               หน้าทดลองสร้าง QR พร้อมเพย์ (ไม่ผูกกับ Order)
+            ├─ QrTest.jsx               สร้าง QR พร้อมเพย์ตาม Order (route /QrTest/:orderId)
+            │                           ดึงยอดจาก Final_Price + PromptPay_Id ของช่าง,
+            │                           ดาวน์โหลดรูป QR การ์ด, แนบสลิปได้แต่ยังไม่อัปโหลด
             ├─ Logout.jsx               ลบ token/user แล้วกลับหน้าแรก
             ├─ auth/                    lar.jsx (สลับแท็บ), Login.jsx, register.jsx
             ├─ bar/                     header.jsx (เมนู + ชื่อผู้ใช้), footer.jsx
@@ -208,7 +222,9 @@
             │   ├─ viewAccout.jsx       แสดงข้อมูลส่วนตัวของช่าง
             │   ├─ ViewService.jsx      รายการบริการของช่าง
             │   └─ viewShowService.jsx  รายละเอียดบริการ (มุมดูของผู้อื่น)
-            ├─ admin/admin.jsx          placeholder แสดง <h1>Admin</h1> (ไม่ถูก route)
+            ├─ admin/
+            │   ├─ admin.jsx            แดชบอร์ด /admin: นับ user/บริการ/ออเดอร์ + รายชื่อผู้ใช้
+            │   └─ admin.css            (ไฟล์ว่าง ไม่ถูก import)
             └─ hooks/
                 ├─ useSocket.js         เชื่อม io("http://localhost:3000")
                 └─ useUser.js           โหลดโปรไฟล์จาก token ใน localStorage
@@ -242,7 +258,9 @@
     - Naming: ชื่อ model/field ใช้ Pascal_Snake (เช่น Users_Id, Created_At)
       ชื่อ model เป็นตัวพิมพ์เล็กพหูพจน์ (users, profiles, services, orders, chats, ...)
       [ตรวจสอบจาก Source Code]
-    - จำนวน model: 12 / จำนวน enum: 5  [ตรวจสอบจาก Source Code]
+    - จำนวน model: 14 / จำนวน enum: 6  [ตรวจสอบจาก Source Code]
+      (model: users, service_areas, profiles, addresses, services, orders, payments,
+       boqs, boq_items, reviews, chats, provinces, districts, subdistricts)
 
 4.2 รายชื่อตาราง (Model) และ Field สำคัญ  [ตรวจสอบจาก Source Code: prisma/schema.prisma]
 
@@ -260,10 +278,13 @@
 
     (2) profiles
         Profile_Id PK, Users_Id Int @unique (FK -> users), First_Name?, Last_Name?,
-        Phone?, Avatar?, Gender? (enum), Birth_Date?, Created_At, Updated_At
+        Phone?, Avatar?, Gender? (enum), Birth_Date?, PromptPay_Id? (เพิ่ม 17 พ.ย. 2026),
+        Created_At, Updated_At
         ความสัมพันธ์: users 1:1
         หมายเหตุ: ฟิลด์ Address ถูก "ลบออก" แล้วใน migration 20260823061739
         (ย้ายไปตาราง addresses) [ตรวจสอบจาก Source Code: migration]
+        หมายเหตุ: PromptPay_Id ถูกอ่านใน GET /api/readprofile/:id แต่ "ไม่มี API/ฟอร์ม
+        ใดเขียนค่านี้" → ปกติจะเป็น null
 
     (3) addresses
         Address_Id PK, Users_Id FK, Address?, Province?, District?, Subdistrict?,
@@ -285,7 +306,8 @@
         Final_Price Float?, Work_Date DateTime?, Work_Date_End DateTime?,
         Status OrderStatus @default(ACCEPTED), Created_At, Updated_At
         ความสัมพันธ์: User (relation "CustomerOrders"), TechUser (relation
-        "TechnicianOrders"), Service, Review (1:1 optional), BOQ (1:1 optional)
+        "TechnicianOrders"), Service, Review (1:1 optional), BOQ (1:1 optional),
+        Payment (1:1 optional)
 
     (7) boqs
         BOQ_Id PK, Order_Id Int @unique (FK), Total_Amount Float @default(0),
@@ -315,6 +337,13 @@
     (13) subdistricts
         Subdistrict_Id PK, District_Id FK, Name, Postal_Code?, Created_At, Updated_At
 
+    (14) payments  (เพิ่มใหม่ 17 พ.ย. 2026)
+        Payment_Id PK, Order_Id Int @unique (FK -> orders), Amount Float,
+        Slip_Image?, Status PaymentStatus @default(PENDING), Reject_Reason?,
+        Paid_At?, Created_At, Updated_At
+        หมายเหตุ: มีตารางใน DB แล้ว แต่ยัง "ไม่มี route/controller" ใดอ่านหรือเขียนตารางนี้
+        → การชำระเงินยังไม่ถูกบันทึกจริง
+
 4.3 ความสัมพันธ์ระหว่างตาราง (สรุป)
     users 1--1 profiles
     users 1--N services           (users.Users_Id = services.Users_Id)
@@ -326,6 +355,7 @@
     services 1--N chats
     orders 1--1 reviews (ผ่าน Order_Id @unique)
     orders 1--1 boqs    (ผ่าน Order_Id @unique)
+    orders 1--1 payments (ผ่าน Order_Id @unique; เพิ่ม 17 พ.ย. 2026)
     boqs   1--N boq_items
     provinces 1--N districts 1--N subdistricts
     หมายเหตุ: chats ไม่มี FK ไป users; addresses/service_areas เก็บชื่อจังหวัดเป็น string
@@ -339,6 +369,7 @@
     ServiceCategory: ELECTRICAL | PLUMBING | AIR_CONDITIONER | PAINTING |
                      CONSTRUCTION | FURNITURE | CLEANING | OTHER
     ChatType      : MESSAGE | IMAGE | PRICE_OFFER | PRICE_ACCEPT | PRICE_REJECT
+    PaymentStatus : PENDING | WAITING_CONFIRMATION | PAID | REJECTED  (ยังไม่ถูกใช้)
 
     สถานะ Order ที่โค้ดใช้จริง (ดูข้อ 7):
       ACCEPTED (ค่าเริ่มต้นตอนสร้าง order) -> IN_PROGRESS -> WAITING_CONFIRM -> COMPLETED
@@ -346,14 +377,15 @@
 
 4.5 ข้อจำกัด/เงื่อนไขของฐานข้อมูล  [ตรวจสอบจาก Source Code]
     - Unique: users.Email, profiles.Users_Id, boqs.Order_Id, reviews.Order_Id,
-      provinces.Name
-    - 1 Order มีได้ 1 Review และ 1 BOQ เท่านั้น
+      payments.Order_Id, provinces.Name
+    - 1 Order มีได้ 1 Review, 1 BOQ และ 1 Payment เท่านั้น
     - FK ทั้งหมดเป็น ON DELETE RESTRICT / ON UPDATE CASCADE (ตาม migration.sql)
       → ลบ user ที่มี service/order อยู่จะลบไม่ได้ (ยังไม่มี soft delete)
     - Rating เป็น Int แต่ "ไม่มี check 1-5" ทั้ง DB และ validation
     - Latitude/Longitude ใน addresses เป็น NOT NULL (frontend บังคับให้ปักหมุด)
     - ข้อมูลจังหวัด/อำเภอ/ตำบล มาจาก seed (prisma/data/*.json) ต้องรัน seed ก่อน
-    - ยังไม่มีตาราง notifications / payments / audit logs / refresh tokens
+    - ยังไม่มีตาราง notifications / audit logs / refresh tokens
+      (มีตาราง payments แล้วแต่ยังไม่มีโค้ด backend ใช้งาน)
     - ชื่อ Database/ผู้ใช้/รหัสผ่าน ตาม .env (root/1234) ใช้เฉพาะเครื่อง dev
       → production ต้องเปลี่ยน [ต้องยืนยัน]
 
@@ -378,6 +410,7 @@
     - หน้าที่: จำกัดสิทธิ์ USER/TECHNICIAN/ADMIN
     - Backend: "ไม่พบ" middleware ตรวจ Role (verifytoken ตรวจแค่ว่า token ถูกต้อง)
     - Frontend: ซ่อน/แสดงเมนูตามการมี token และเทียบ userId กับเจ้าของบริการในแชท
+      แต่ปุ่ม "Admin" ใน Profile และ route /admin แสดงให้ทุกบัญชี ไม่เช็ค Role
     - สถานะ: ยังไม่สมบูรณ์ — endpoint สำคัญ เช่น updaterole/updatestatus
       เรียกได้ด้วย token ใดก็ได้  [ตรวจสอบจาก Source Code]
 
@@ -386,8 +419,9 @@
     - ผู้ใช้: ADMIN (ตามเจตนา), ปัจจุบันเปิดให้ token ใดก็เรียกได้
     - Backend: profile.route.js + profile.controller.js (getAllUser, getUserById,
       getUserByEmail, amountUser, updateRole, updateStatus, updateEmail, updatePassword)
-    - Frontend: ไม่มีหน้าจอ ADMIN จริง (admin/admin.jsx เป็น placeholder ไม่ถูก route)
-    - สถานะ: Backend พร้อม / Frontend ยังไม่มี
+    - Frontend: มีหน้า /admin (admin/admin.jsx) แบบอ่านอย่างเดียว — นับจำนวน
+      ผู้ใช้/บริการ/ออเดอร์ + แสดงรายชื่อผู้ใช้ ยังไม่มีปุ่มเปลี่ยน role/status
+    - สถานะ: Backend พร้อม / Frontend มีแค่แดชบอร์ดสรุป (ไม่ตรวจ role)
 
 5.4 Technician Management (การสมัครเป็นช่าง/ข้อมูลช่าง)
     - หน้าที่: แสดงโปรไฟล์ช่าง, บริการของช่าง, พื้นที่ให้บริการ
@@ -469,10 +503,22 @@
     - สถานะ: ใช้งานได้ (1 order = 1 BOQ, แก้ไขแล้วลบ items เดิมทั้งหมดแล้วสร้างใหม่)
 
 5.12 Payment
-    - หน้าที่: ชำระเงิน
-    - ที่พบ: มีเพียงหน้า QrTest.jsx สร้าง QR พร้อมเพย์จาก promptpay-qr + qrcode.react
-      (กรอกเบอร์พร้อมเพย์และจำนวนเงินเอง) ไม่ผูกกับ Order และไม่มี backend รองรับ
-    - สถานะ: ต้นแบบ/ทดลองเท่านั้น ยังไม่มีระบบชำระเงินจริง
+    - หน้าที่: ชำระเงินให้ช่างผ่าน PromptPay QR หลังงานเสร็จ (ก่อนกดยืนยันรับงาน)
+    - ที่พบ (Frontend):
+        QrTest.jsx ที่ route /QrTest/:orderId
+        - GET /api/readuserorder/:orderId -> เอา Final_Price มาเป็นยอดเงิน
+        - GET /api/readprofile/:Tech_Id -> เอา PromptPay_Id + ชื่อ-นามสกุลช่าง
+        - สร้าง QR ด้วย promptpay-qr + QRCodeCanvas (qrcode.react)
+        - ดาวน์โหลด QR เป็นรูปการ์ด PNG (มีโลโก้ไทย QR จาก public/thaiqr.png)
+        - ปุ่ม "แนบสลิป" เลือกไฟล์รูปได้ แต่เก็บแค่ state + preview ในเครื่อง
+          "ไม่มีการอัปโหลด/ส่ง API ใด ๆ"
+    - ที่พบ (Backend): ตาราง payments + enum PaymentStatus มีใน schema แล้ว
+      แต่ "ไม่มี route/controller" สำหรับสร้าง/อ่าน/อัปเดตการชำระเงิน
+      → ไม่มีการบันทึกยอด/สลิป/สถานะการจ่ายลง DB
+    - สถานะ: ต้นแบบ — สร้าง QR ตาม Order ได้ แต่ยังไม่ใช่ระบบชำระเงินที่สมบูรณ์
+    - ปัญหาที่ตามมา: PromptPay_Id ไม่มีที่ให้ช่างกรอก (ไม่มีฟอร์ม/API เขียน)
+      → QR มักสร้างจากเบอร์ว่าง; และเมื่อกด "ยืนยัน" ระบบพาไปหน้า QR
+      โดยไม่เรียก /api/confirmorders ทำให้ Order ไม่เป็น COMPLETED
     - แผนการชำระเงินที่ต้องการ (โอน/พร้อมเพย์/เก็บเงินปลายทาง): [ต้องยืนยัน]
 
 5.13 Review
@@ -489,10 +535,15 @@
     - สถานะ: ยังไม่มี
 
 5.15 Admin
-    - หน้าที่: จัดการผู้ใช้/ภาพรวมระบบ
-    - ที่พบ: backend endpoints (listuser, readuser, amountuser, updaterole,
-      updatestatus) แต่ frontend เป็น placeholder
-    - สถานะ: ยังไม่มีหน้าจอ
+    - หน้าที่: ภาพรวมระบบ + ดูรายชื่อผู้ใช้
+    - Backend: ใช้ endpoint สาธารณะเดิม (amountuser, listservice, listuser, listorder)
+      ไม่มี endpoint เฉพาะแอดมินเพิ่ม
+    - Frontend: components/admin/admin.jsx (route /admin และปุ่ม "Admin" ใน Profile)
+      แสดงจำนวนผู้ใช้/บริการ/ออเดอร์ + รายชื่อผู้ใช้ (id, ชื่อ, อีเมล)
+    - สถานะ: มีหน้าจอแล้วระดับหนึ่ง แต่ยังไม่มีการตรวจ role (ใครล็อกอินก็กดเข้าได้),
+      ไม่มีฟังก์ชัน ban/เปลี่ยน role ในหน้าจอ, และรายชื่อผู้ใช้แสดงชื่อเป็น undefined
+      เพราะอ่าน user.Firstname/Lastname ซึ่งไม่มีใน response (ต้องใช้ user.Profile.First_Name)
+      [ตรวจสอบจาก Source Code]
 
 5.16 Other Features ที่พบจริง
     - Order Calendar (ปฏิทินรายเดือน แสดงจุดในวันที่มีงาน ทั้งงานในบทบาทช่างและลูกค้า)
@@ -500,6 +551,8 @@
     - PDF Export (ใบ BOQ ภาษาไทย ฟอนต์ Sarabun)
     - Token expiry check ฝั่ง client (header จะเคลียร์ token ที่หมดอายุ)
     - Rate limit การ login (5 ครั้ง / 15 นาที / IP)
+    - แปลงสถานะออเดอร์เป็นข้อความไทยด้วย utils/orderStatus.js (getStatusText)
+    - QR พร้อมเพย์ตาม Order + ดาวน์โหลดรูป QR (หน้า /QrTest/:orderId)
 
 --------------------------------------------------------------------------------
 6. System Workflow
@@ -549,15 +602,20 @@
     1) ช่างเห็นงานใน Profile > กำหนดการ > แท็บ "ช่าง" (GET /api/readtechorder/:id)
        กด "เริ่มงาน" -> PATCH /api/startorders/:id -> Status=IN_PROGRESS
     2) กด "เสร็จสิ้นงาน" -> PATCH /api/finishorders/:id -> Status=WAITING_CONFIRM
-    3) ผู้ใช้เห็นในแท็บ "ผู้ใช้" (GET /api/readorderbyuserid/:id) เลือก
-       "ยืนยัน" -> PATCH /api/confirmorders/:id -> Status=COMPLETED
-       หรือ "ยกเลิก" -> PATCH /api/rejectorders/:id
-       [ขัดแย้ง: frontend ส่ง Status="CANCELLED" แต่ backend ตั้งเป็น IN_PROGRESS]
-    4) รายละเอียดงาน (DetailOrder/DetailOrderUser) แสดงข้อมูลงาน + โปรไฟล์อีกฝ่าย +
+    3) ผู้ใช้เห็นในแท็บ "ผู้ใช้" (GET /api/readorderbyuserid/:id) แล้วเลือกจาก dropdown
+       - "ยืนยัน" -> frontend พาไปหน้า /QrTest/:orderId (หน้าจ่ายเงิน QR พร้อมเพย์)
+         "ไม่เรียก PATCH /api/confirmorders แล้ว" → Order ยังคง WAITING_CONFIRM
+       - "ยกเลิก" -> PATCH /api/rejectorders/:id
+         [ขัดแย้ง: frontend ส่ง Status="CANCELLED" แต่ backend ตั้งเป็น IN_PROGRESS
+          และ frontend อัปเดต state ในเครื่องเป็น CANCELLED ทำให้จอโชว์ไม่ตรง DB]
+    4) การชำระเงิน (ตามที่โค้ดทำได้ตอนนี้):
+       - หน้า QR ดึงยอด Final_Price และ PromptPay_Id ของช่างมาแสดง
+       - ผู้ใช้โอนเองผ่านแอปธนาคาร แล้วแนบสลิป (ยังไม่ถูกส่งขึ้นเซิร์ฟเวอร์)
+       - ไม่มีขั้นตอนยืนยันการชำระ/เปลี่ยนสถานะออเดอร์อัตโนมัติ
+    5) รายละเอียดงาน (DetailOrder/DetailOrderUser) แสดงข้อมูลงาน + โปรไฟล์อีกฝ่าย +
        ที่อยู่ + แผนที่ + ปุ่มดู BOQ
-    5) รีวิว: API POST /api/createreview พร้อมเมื่อ Status=COMPLETED แต่ยังไม่มี
-       หน้าจอให้ผู้ใช้เขียนรีวิว
-    6) การชำระเงิน: ยังไม่มีขั้นตอนในระบบ (มีแค่หน้า QrTest ทดลอง)
+    6) รีวิว: API POST /api/createreview พร้อมเมื่อ Status=COMPLETED แต่ยังไม่มี
+       หน้าจอให้ผู้ใช้เขียนรีวิว (และตอนนี้ UI ทำให้ไปถึง COMPLETED ได้ยากขึ้น)
 
 6.6 BOQ  [ตรวจสอบจาก Source Code]
     1) ช่างเปิดห้องแชทของ Order ที่ Status=ACCEPTED (useMatchedOrder หา Order_Id)
@@ -569,7 +627,9 @@
 
 6.7 ขั้นตอนที่ยังไม่ครบใน workflow (ต้องยืนยันว่าต้องการแบบนี้หรือไม่)
     - การเปลี่ยน Role เป็นช่าง
-    - การชำระเงินและการยืนยันยอด
+    - การบันทึกการชำระเงิน (ตาราง payments ยังไม่มี API) และการยืนยันยอด
+    - การกด "ยืนยันรับงาน" ให้ Order เป็น COMPLETED (ตอนนี้เปลี่ยนไปหน้า QR แทน)
+    - การให้ช่างกรอก PromptPay_Id ของตัวเอง
     - การแจ้งเตือนเมื่อมีข้อเสนอ/งานใหม่
     - การเขียนรีวิว
     - การยกเลิกงานจริง (สถานะ CANCELLED)
@@ -582,7 +642,8 @@
     - สมัคร/เข้าสู่ระบบ, แก้ไขโปรไฟล์/ที่อยู่ของตัวเอง
     - ดูบริการทั้งหมด/ค้นหา, ดูโปรไฟล์ช่าง, ดูรีวิว
     - เปิดแชทกับเจ้าของบริการ, ยอมรับ/ปฏิเสธข้อเสนอราคา
-    - ดูงานของตัวเอง (orders.Users_Id = id), ยืนยันงาน (WAITING_CONFIRM -> COMPLETED)
+    - ดูงานของตัวเอง (orders.Users_Id = id), "ยืนยัน" = ไปหน้าจ่ายเงิน QR
+      (ไม่ใช่เปลี่ยนสถานะเป็น COMPLETED แล้ว)
     - "ไม่สามารถ" สร้าง/แก้ไข/ลบบริการของคนอื่นได้ (controller เช็ค Users_Id)
     - ข้อจำกัดที่ควรมีแต่ยังไม่มี: USER สามารถเรียก API ของช่าง/แอดมินได้ถ้ามี token
 
@@ -599,6 +660,7 @@
     - API ที่คาดว่าเป็นของ ADMIN: listuser, readuser, amountuser, updaterole,
       updatestatus, updateemail, updatepassword
     - ปัจจุบัน: ไม่มีการตรวจ role ในทุก endpoint ข้างต้น
+      และหน้า /admin ก็ไม่ตรวจ role (มีปุ่มAdmin ใน Profile ทุกบัญชี)
     - สิทธิ์ที่ต้องการจริงของ ADMIN: [ต้องยืนยัน]
 
 7.4 เงื่อนไขการสร้างข้อมูล  [ตรวจสอบจาก Source Code]
@@ -630,15 +692,22 @@
         ACCEPTED --startorders--> IN_PROGRESS
         IN_PROGRESS --finishorders--> WAITING_CONFIRM
         WAITING_CONFIRM --confirmorders--> COMPLETED
+                           (ยังมี endpoint นี้ แต่ frontend ไม่เรียกแล้ว)
         rejectorders --> ตั้งเป็น IN_PROGRESS (ไม่ใช่ CANCELLED) [ขัดแย้ง]
       ไม่มีการตรวจสถานะก่อนเปลี่ยน (เรียกซ้ำ/ข้ามสถานะได้)
+      ปัจจุบัน UI ฝั่งผู้ใช้: "ยืนยัน" -> /QrTest/:orderId (ไม่เปลี่ยนสถานะ)
     - User Status: เปลี่ยนได้ผ่าน updatestatus (ACTIVE/INACTIVE/BANNED)
       และ login จะปฏิเสธถ้า Status != ACTIVE (403 "Account is not active")
     - Chat Type: MESSAGE/IMAGE ตอนสร้าง, PRICE_OFFER ตอนเสนอราคา,
       PRICE_ACCEPT ตอนสร้าง order, PRICE_REJECT ตอนปฏิเสธ
 
 7.7 เงื่อนไขการชำระเงิน
-    - ไม่พบเงื่อนไขการชำระเงินใน Source Code (ไม่มี payment model/status)
+    - ตาราง payments + enum PaymentStatus (PENDING/WAITING_CONFIRMATION/PAID/REJECTED)
+      ถูกเพิ่มใน DB แล้ว (migration 20261117154624) แต่ "ไม่มีโค้ด backend ใช้งาน"
+    - Flow ที่โค้ดทำได้: ผู้ใช้เปิด QR พร้อมเพย์ของช่าง (ยอด = Final_Price) แล้วโอนเอง
+      + แนบสลิปฝั่ง client (ยังไม่ถูกบันทึก)
+    - ยังไม่มี: การบันทึกการจ่าย, การตรวจสลิป, การอนุมัติ/ปฏิเสธ, การเปลี่ยน
+      Order เป็น COMPLETED หลังจ่าย, ใบเสร็จ
     - ต้องการให้มีขั้นตอนชำระเงินหรือไม่ และใช้ช่องทางใด: [ต้องยืนยัน]
     - ต้องเก็บหลักฐานการโอน/สลิปหรือไม่: [ต้องยืนยัน]
     - ใครเป็นผู้ยืนยันการชำระ (ผู้ใช้/ช่าง/แอดมิน): [ต้องยืนยัน]
@@ -755,6 +824,11 @@
     GET    /api/readboqorder/:Order_Id -            BOQ + Items
     PUT    /api/updateboq/:BOQ_Id     -            body {Items:[...]} (แทนที่ทั้งชุด)
 
+    PAYMENT
+    (ไม่พบ endpoint ใด ๆ)  ตาราง payments ถูกสร้างแล้วแต่ยังไม่มี route/controller
+    หน้า /QrTest/:orderId ใช้ GET /api/readuserorder/:id + GET /api/readprofile/:id
+    (ทั้งคู่เป็น public) และไม่มีการส่งข้อมูลการชำระเงินกลับไปที่ backend
+
 8.3 Authentication Middleware  [ตรวจสอบจาก Source Code]
     - middleware/verifytoken.js: อ่าน req.headers["authorization"] ->
       ถ้าไม่มี token โยน error 401 "Please enter the token"
@@ -837,8 +911,10 @@
       จะส่ง Users_Id = undefined  [ตรวจสอบจาก Source Code]
 
 9.5 Payment Gateway
-    - ไม่มี Payment Gateway จริง
-    - พบเฉพาะ QrTest.jsx (promptpay-qr + qrcode.react) สำหรับสร้าง QR ตัวอย่าง
+    - ไม่มี Payment Gateway จริง / ไม่เชื่อม API ธนาคารหรือผู้ให้บริการชำระเงิน
+    - ใช้ QR พร้อมเพย์ (promptpay-qr + qrcode.react) สร้างจาก PromptPay_Id ของช่าง
+      โดยยอดเงินมาจาก orders.Final_Price — ผู้ใช้โอนและแนบสลิปเอง
+    - ไม่มีการตรวจสอบการโอนอัตโนมัติ (ไม่มี webhook / callback)
     - ต้องการเชื่อมผู้ให้บริการรายใด (พร้อมเพย์/Omise/Stripe/2C2P): [ต้องยืนยัน]
 
 9.6 External APIs
@@ -864,26 +940,34 @@
     - ที่อยู่: เพิ่ม/แก้/ลบ/ตั้งค่าเริ่มต้น + แผนที่ + เลือกจังหวัด-อำเภอ-ตำบล
     - แชทข้อความ/รูป + realtime + รายการห้อง
     - เสนอราคา/ยอมรับ/ปฏิเสธ + สร้าง Order
-    - เปลี่ยนสถานะงาน (เริ่ม/เสร็จ/ยืนยัน) + ปฏิทินงาน
+    - เปลี่ยนสถานะงาน (เริ่ม/เสร็จ) + แสดงสถานะเป็นข้อความไทย + ปฏิทินงาน
     - รายละเอียดงาน + แผนที่ตำแหน่งลูกค้า
     - BOQ: สร้าง/ดู/แก้ไข + PDF (Sarabun) + ปุ่มดู BOQ ในแชท
     - Backend รีวิว (สร้าง/อ่าน/แก้/ลบ/ค่าเฉลี่ย) — พร้อมใช้งานผ่าน API
+    - QR พร้อมเพย์ตาม Order + ดาวน์โหลดรูป QR (หน้า /QrTest/:orderId)
+    - หน้า Admin แบบอ่านอย่างเดียว (นับ user/บริการ/ออเดอร์ + รายชื่อผู้ใช้)
+    - แปลงสถานะเป็นข้อความไทย (utils/orderStatus.js)
 
 10.2 In Progress (โค้ดมีแต่ยังไม่สมบูรณ์)
     - view/viewProfile.jsx (มีคอมเมนต์ "ต้องทำต่อ") และ ViewService.jsx
       (อ้าง setData ที่ไม่มี → ปุ่มลบจะ error)
-    - QrTest.jsx (ทดลอง QR พร้อมเพย์ ยังไม่ผูก Order)
-    - ระบบ Role/Authorization (มี enum + API แต่ไม่มี middleware/หน้าจอ)
-    - Admin (มีเฉพาะไฟล์ placeholder)
+    - ระบบชำระเงิน: มีตาราง payments + หน้า QR ตาม Order แต่ไม่มี API บันทึกผล
+      และการแนบสลิปยังไม่ถูกส่งขึ้นเซิร์ฟเวอร์
+    - PromptPay_Id: มีคอลัมน์ + ถูกอ่านใน readprofile แต่ไม่มีที่กรอก/บันทึกค่า
+    - ระบบ Role/Authorization (มี enum + API + หน้า /admin แต่ไม่มี middleware/guard)
+    - Admin: เป็นแดชบอร์ดอ่านอย่างเดียว ยังไม่มีจัดการผู้ใช้/ban/เปลี่ยน role
+    - การยืนยันรับงาน: ปุ่ม "ยืนยัน" พาไปหน้า QR แทนการเปลี่ยนสถานะ COMPLETED
     - การแจ้งเตือน/สถานะอ่านแล้วในแชท
-    - ความสอดคล้องของสถานะ CANCELLED (frontend ส่ง แต่ backend ไม่รับ)
+    - ความสอดคล้องของสถานะ CANCELLED (frontend ส่ง/แสดง แต่ backend ไม่รับ)
     [ตรวจสอบจาก Source Code]
 
 10.3 Pending (ยังไม่เริ่ม/ไม่พบโค้ด)
-    - ระบบชำระเงิน + ยืนยันการชำระ + ใบเสร็จ
+    - Backend ของการชำระเงิน (สร้าง/อัปโหลดสลิป/อนุมัติ/ปฏิเสธ + ผูกกับ Order)
+    - ขั้นตอนปิดงานหลังชำระเงิน (ให้ Order เป็น COMPLETED + ใบเสร็จ)
     - หน้าจอเขียนรีวิว (ผู้ใช้ให้คะแนนหลัง COMPLETED)
     - ระบบแจ้งเตือน (in-app/push/email)
-    - หน้าจอ ADMIN (จัดการผู้ใช้/ban/ดูสถิติ)
+    - ฟังก์ชันจัดการผู้ใช้ในหน้า ADMIN (ban/เปลี่ยน role/ดูสถิติเชิงลึก)
+    - ฟอร์มให้ช่างตั้ง PromptPay_Id
     - Forgot password / Reset password (ลิงก์ /forgot ไม่มี route)
     - ระบบยืนยันตัวตนช่าง (KYC) / เอกสารรับรอง
     - Chat: read receipt, typing, pagination, แนบไฟล์ที่ไม่ใช่รูป
@@ -928,8 +1012,25 @@
     (19) ไม่มี pagination ทั้ง services/orders/reviews/chats → ช้าถ้าข้อมูลเยอะ
     (20) Frontend hardcode http://localhost:3000 ทุกจุด → ย้าย environment ยาก
     (21) UserContext ถูกประกาศแต่ไม่ถูกใช้ → ข้อมูลผู้ใช้กระจายอยู่ใน localStorage
-    (22) ไฟล์ขยะ/ทดลอง: peak.txt (ว่าง), techUser/text.jsx, admin/admin.jsx (ไม่ route),
-        OrderMap.jsx (ไม่ถูกใช้), listservice.jsx (ไม่ถูก route โดยตรง)
+    (22) ไฟล์ขยะ/ทดลอง: techUser/text.jsx, techUser/OrderMap.jsx (ไม่ถูกใช้),
+        service/listservice.jsx (ไม่ถูก route โดยตรง), admin/admin.css (ว่าง),
+        import QrTest ใน tau.jsx ที่ไม่ได้ใช้
+    (23) [ใหม่] ปุ่ม "ยืนยัน" ของผู้ใช้ไม่เรียก /api/confirmorders แล้ว แต่พาไป
+        หน้า /QrTest/:orderId → Order ไม่มีทางเป็น COMPLETED จาก UI
+        (รีวิวจึงสร้างไม่ได้เพราะ createreview บังคับ Status=COMPLETED)
+    (24) [ใหม่] ตาราง payments + enum PaymentStatus ไม่มี route/controller ใช้งาน
+        → ข้อมูลการชำระเงินไม่ถูกบันทึก; สลิปที่แนบหายเมื่อออกจากหน้า
+    (25) [ใหม่] PromptPay_Id ไม่มี API/ฟอร์มเขียนค่า จึงมักเป็น null
+        → QR ที่สร้างอาจผิด/ใช้ไม่ได้ (payload จากเบอร์ว่าง)
+    (26) [ใหม่] /admin และปุ่ม Admin แสดงให้ทุกบัญชี ไม่ตรวจ role
+        และรายชื่อผู้ใช้ใช้ user.Firstname/user.Lastname (ไม่มีจริง) → แสดง undefined
+    (27) [ใหม่] /QrTest/:orderId อยู่นอก Layout (ไม่มี Header/Footer) และเปิดได้
+        โดยไม่ต้องล็อกอิน เพราะใช้ API public ทั้งหมด
+    (28) [ใหม่] tau.jsx อัปเดต state ในเครื่องเป็น CANCELLED หลัง rejectorders
+        แต่ DB ได้ IN_PROGRESS → หน้าจอไม่ตรงกับฐานข้อมูลจนกว่าจะรีเฟรช
+    (29) [ใหม่] orderStatus.js มีคีย์ PENDING/REJECTED/ON_HOLD ซึ่งไม่ใช่ค่าใน
+        enum OrderStatus (เตรียมไว้ใช้กับ Payment แต่ยังไม่มีที่ใช้)
+    (30) [ใหม่] Profile.jsx มี console.log(profileUser) หลงเหลือในตัวคอมโพเนนต์
 
     ปัญหาที่ทีมเจอจริงนอกเหนือจากนี้ (ที่โค้ดมองไม่เห็น): [กรอกข้อมูล]
 
@@ -937,7 +1038,7 @@
 11. ข้อจำกัดและแนวทางการพัฒนา
 --------------------------------------------------------------------------------
 11.1 เวลาที่เหลือในการพัฒนา
-    - วันที่ปัจจุบันที่ใช้ประเมิน: 15 พ.ย. 2026
+    - วันที่ปัจจุบันที่ใช้ประเมิน: 21 พ.ย. 2026
     - กำหนดส่ง/สอบ: [ต้องยืนยัน]
     - เวลาที่เหลือ (สัปดาห์/วัน): [กรอกข้อมูล]
     - งานที่ต้องเสร็จก่อนสอบ (Must-have): [กรอกข้อมูล]
@@ -974,7 +1075,9 @@
 
 11.6 ข้อควรระวังในการแก้ไข Source Code
     - ห้ามลบ/เปลี่ยนชื่อ field ใน schema.prisma โดยไม่สร้าง migration ใหม่
-      (มี migration 50 ไฟล์แล้ว ต้องรัน npx prisma migrate dev)
+      (มี migration 40 ไฟล์แล้ว ต้องรัน npx prisma migrate dev)
+    - migration ล่าสุด (20261117154624) เพิ่ม profiles.PromptPay_Id และตาราง payments
+      → เครื่องอื่นต้องรัน migrate ก่อนใช้งานโค้ดล่าสุด
     - ถ้าแก้ enum (เช่น เพิ่ม OrderStatus) ต้อง migrate + แก้ frontend ที่เทียบ string
     - ระวังการเปลี่ยน signature ของ API ที่ frontend เรียกอยู่ (ดูข้อ 8.2 ให้ครบ)
     - รูปแบบ header token คือค่าดิบ ไม่มี "Bearer" — ถ้าจะเปลี่ยนต้องแก้ทั้ง 20+ จุด
@@ -984,6 +1087,10 @@
       → ระวังลบไฟล์ที่ยังถูกอ้างถึง
     - อย่า commit .env (มี SECRET และรหัส DB)
     - ระวังการเรียก createError แบบไม่ throw (ควรแก้เป็น throw createError(...))
+    - QR พร้อมเพย์ผูกกับ PromptPay_Id ของช่างและ Final_Price ของ Order
+      → ถ้าจะเปลี่ยนวิธีชำระเงิน ต้องแก้ทั้ง QrTest.jsx และแนวคิดตาราง payments
+    - ถ้าเพิ่ม API การชำระเงิน ควรผูกกับ Order_Id (unique 1:1) และใช้ enum
+      PaymentStatus ที่มีอยู่ ไม่สร้างสถานะซ้ำซ้อน
 
 --------------------------------------------------------------------------------
 12. สิ่งที่ต้องการให้ AI Agent ช่วยในอนาคต
@@ -992,14 +1099,17 @@
     1) [กรอกข้อมูล]
     2) [กรอกข้อมูล]
     3) [กรอกข้อมูล]
-    ตัวอย่างที่ระบบยังขาดและอาจต้องทำ: ระบบชำระเงิน, ฟอร์มรีวิว, หน้าจอ ADMIN,
-    การแจ้งเตือน, forgot password  [ต้องยืนยันว่าต้องการอันใด]
+    ตัวอย่างที่ระบบยังขาดและอาจต้องทำ: Backend การชำระเงิน (payments), ฟอร์มรีวิว,
+    หน้าจอ ADMIN ที่จัดการผู้ใช้ได้, การแจ้งเตือน, forgot password,
+    ฟอร์มกรอก PromptPay_Id  [ต้องยืนยันว่าต้องการอันใด]
 
 12.2 ปัญหาที่ต้องการแก้ไข
     1) [กรอกข้อมูล]
     2) [กรอกข้อมูล]
     ปัญหาที่โค้ดชี้ชัดและควรแก้ก่อน (ถ้าเห็นด้วย):
-       - rejectorders ต้องตั้งเป็น CANCELLED
+       - rejectorders ต้องตั้งเป็น CANCELLED (และ frontend ไม่ควร hardcode สถานะ)
+       - ปุ่ม "ยืนยัน" ต้องเรียก confirmorders หรือออกแบบ flow ชำระเงินให้ครบ
+       - payments ยังไม่มี API + PromptPay_Id ยังไม่มีที่กรอก
        - updateservicearea อ้าง District ที่ไม่มีแล้ว
        - createError ที่ไม่ได้ throw
        - เพิ่มการตรวจ Role (ADMIN) และผูก req.user จาก token
@@ -1027,6 +1137,11 @@ A8. สิ่งที่ห้ามแก้ (schema/UI/API)
 A9. แผน deploy (เครื่อง server, โดเมน, ฐานข้อมูลจริง)
 A10. ข้อขัดแย้งที่ต้องเลือกทาง: สถานะ CANCELLED, ฟิลด์ District ของ service_areas,
      การใช้ UserContext, การเก็บ token แบบไม่ใส่ Bearer
+A11. [ใหม่] Flow การชำระเงินที่ต้องการ: ยืนยันก่อนหรือหลังจ่าย? ใครตรวจสลิป?
+     ต้องมีหน้าจออนุมัติการชำระ (ใช้ enum PaymentStatus) หรือไม่
+A12. [ใหม่] ใครเป็นผู้กรอก PromptPay_Id ของช่าง และต้องแสดง/ซ่อนจากผู้ใช้อย่างไร
+A13. [ใหม่] ต้องการให้ปุ่ม "ยืนยัน" ทั้งเปลี่ยนสถานะเป็น COMPLETED และเปิดหน้า QR
+     หรือแยกเป็นสองขั้นตอน (จ่าย -> ช่าง/ระบบยืนยัน -> COMPLETED)
 
 ================================================================================
 จบแบบฟอร์ม
