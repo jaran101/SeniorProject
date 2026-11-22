@@ -2,7 +2,61 @@
 import prisma from "../config/prisma.js";
 import createError from "../utils/createError.js";
 import fs from "fs";
-
+export const createPayment = async (req, res, next) => {
+    try {
+        const { Order_Id, Users_Id } = req.body;
+        if (!Order_Id || !Users_Id) {
+            createError(400, "Order_Id and Users_Id are required");
+        }
+        const order = await prisma.orders.findUnique({
+            where: {
+                Order_Id: Number(Order_Id)
+            },
+            select: {
+                Users_Id: true,
+                Status: true,
+                Final_Price: true
+            }
+        });
+        if (!order) {
+            createError(404, "Order not found");
+        }
+        if (order.Users_Id !== Number(Users_Id)) {
+            createError(403, "You are not the owner of this order");
+        }
+        if (order.Status !== "COMPLETED") {
+            createError(400, "Order is not completed");
+        }
+        if (order.Final_Price === null || order.Final_Price === undefined) {
+            createError(400, "Order price not found");
+        }
+        const payment = await prisma.payments.findUnique({
+            where: {
+                Order_Id: Number(Order_Id)
+            }
+        });
+        if (payment) {
+            createError(400, "Payment already exists");
+        }
+        const result = await prisma.payments.create({
+            data: {
+                Order_Id: Number(Order_Id),
+                Amount: order.Final_Price,
+                Status: "PENDING"
+            },
+            select: {
+                Payment_Id: true,
+                Order_Id: true,
+                Amount: true,
+                Status: true,
+                Created_At: true
+            }
+        });
+        res.json({message: "Create payment success",result});
+    } catch (err) {
+        next(err);
+    }
+};
 export const uploadPaymentSlip = async (req, res, next) => {
   let uploadSuccess = false;
   try {
@@ -48,7 +102,6 @@ export const uploadPaymentSlip = async (req, res, next) => {
           Order_Id: Number(Order_Id)
         },
         data: {
-          Amount: order.Final_Price,
           Slip_Image: `slips/${req.file.filename}`,
           Status: "WAITING_CONFIRMATION",
           Reject_Reason: null
@@ -57,7 +110,6 @@ export const uploadPaymentSlip = async (req, res, next) => {
       : await prisma.payments.create({
         data: {
           Order_Id: Number(Order_Id),
-          Amount: order.Final_Price,
           Slip_Image: `slips/${req.file.filename}`,
           Status: "WAITING_CONFIRMATION"
         }
