@@ -1,22 +1,20 @@
-import { useRef,useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import generatePayload from "promptpay-qr";
-import { useLocation } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 
 import axios from "axios";
 import "./QrTest.css";
-function QrTest() {
+function QrTest({ orderId, onClose, onUploaded }) {
   const [phone, setPhone] = useState(""); // เปลี่ยนเป็นเลขของคุณ
   const [amount, setAmount] = useState(1);
   const payload = generatePayload(phone, { amount });
-  const location = useLocation();
-  const { orderId } = location?.state || {};
   const [order, setOrder] = useState(null);
   const [tech_id, setTech_id] = useState(null);
   const [techName, setTechName] = useState(null);
   const fileRef = useRef(null);
   const [slip, setSlip] = useState(null); // เก็บไฟล์ที่เลือก
   const [preview, setPreview] = useState(null); // เก็บ URL ไว้โชว์ตัวอย่าง
+  console.log("orderId:", orderId)
   useEffect(() => {
     if (!orderId) return;
     const fetchOrder = async () => {
@@ -114,57 +112,93 @@ function QrTest() {
       img.src = src;
     });
 
-    const handleSelectSlip = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  setSlip(file)
-  setPreview(URL.createObjectURL(file))
+  const handleSelectSlip = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSlip(file)
+    setPreview(URL.createObjectURL(file))
+  }
 
-};
-  return (
-    <div className="QrPage">
-      <h2>FixChang Prompay</h2>
 
-      <div style={{ marginTop: 16 }}>
-        <QRCodeCanvas
-          id="qr-canvas"
-          value={payload}
-          size={300}
-          style={{ width: 200, height: 200 }}
-          level="H"
-          imageSettings={{
-            src: "/imagesPrompay.png",
-            height: 60,
-            width: 60,
-            excavate: true,
-          }}
-        />
-      </div>
 
-      <div>{techName}</div>
-      <div>
-        <label>เลขพร้อมเพย์: {phone} </label>
-      </div>
-      <div>
-        <label>ยอดเงิน: </label>
-        {amount} บาท
-      </div>
-      <p>
-        หลังจากทำการชำระเงินแล้วอย่าลืมส่งใบเสร็จการชำระเงินเพื่อเป็นหลักฐานให้ช่างด้วยนะครับ
-      </p>
-      <button onClick={handleDownload} className="Button_DownLoad">
-        ดาวน์โหลด QR
-      </button>
-      <input
-        type="file"
-        accept="image/*"
-        ref={fileRef}
-        onChange={handleSelectSlip}
-        hidden
-      />
-      <button onClick={() => fileRef.current.click()}>แนบสลิป</button>
+  const handleUploadSlip = async() => {
+    if (!preview) return;
+        const user = JSON.parse(localStorage.getItem("user"));
+    const formData = new FormData();
+    formData.append("Order_Id",orderId)
+    formData.append("Users_Id", user?.payload?.id);
+    formData.append("file", slip);
+    try {
+        const response = await axios.post("http://localhost:3000/api/uploadslip", formData, {
+      headers: { authorization: localStorage.getItem("token") },
+    });
+    console.log(response.data.result)
+    alert("ส่งสลิปแล้ว");
+   onUploaded();   // สั่งให้ User ดึง payment ใหม่
+    onClose();  
+    } catch (err) {
+      alert(err.response?.data?.message || "ส่งสลิปไม่สำเร็จ");
+      console.log(err.response?.data?.message || "ส่งสลิปไม่สำเร็จ"); 
+    }
+  };
+
+return (
+  <div className="QrPage">
+    <div className="divHead">
+          <h2>FixChang Prompay</h2>
     </div>
-  );
+
+    <div style={{ marginTop: 16 }}>
+      <QRCodeCanvas
+        id="qr-canvas"
+        value={payload}
+        size={300}
+        style={{ width: 200, height: 200 }}
+        level="H"
+        imageSettings={{
+          src: "/imagesPrompay.png",
+          height: 60,
+          width: 60,
+          excavate: true,
+        }}
+      />
+    </div>
+
+    <div>{techName}</div>
+    <div>
+      <label>เลขพร้อมเพย์: {phone} </label>
+    </div>
+    <div>
+      <label>ยอดเงิน: </label>
+      {amount} บาท
+    </div>
+    <p>
+      หลังจากทำการชำระเงินแล้วอย่าลืมส่งใบเสร็จการชำระเงินเพื่อเป็นหลักฐานให้ช่างด้วยนะครับ
+    </p>
+    <button onClick={handleDownload} className="Button_DownLoad">
+      ดาวน์โหลด QR
+    </button>
+    <input
+      type="file"
+      accept="image/*"
+      ref={fileRef}
+      onChange={handleSelectSlip}
+      hidden
+    />
+    <button className="Immage_Import" onClick={() => fileRef.current.click()}>เลือกไฟล์</button>
+    {preview && (
+      <div>
+        <button onClick={() => setPreview(null)}>x</button>
+        <button onClick={handleUploadSlip}>อัปโหลดสลิป</button>
+        <div> <img src={preview} alt="" className="Slip_Image" /></div>
+       
+
+      </div>
+    )}
+
+
+  </div>
+);
 }
 
 export default QrTest;

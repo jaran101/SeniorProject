@@ -222,7 +222,7 @@ console.log("service",service)
           </p>
         </div>
         <div className="order-id">
-          #{order.Order_Id}
+          #{order?.Order_Id}
         </div>
       </div>
       {/* =====================================
@@ -244,7 +244,7 @@ console.log("service",service)
                 หมายเลขคำสั่งซื้อ
               </span>
               <span className="info-value order-number">
-                #{order.Order_Id}
+                #{order?.Order_Id}
               </span>
 
               <button
@@ -261,7 +261,7 @@ console.log("service",service)
                 บริการ
               </span>
               <span className="info-value">
-                {service.Title || "-"}
+                {service?.Title || "-"}
               </span>
             </div>
             {/* Description */}
@@ -270,7 +270,7 @@ console.log("service",service)
                 รายละเอียดงาน
               </span>
               <div className="description">
-                {service.Description || "-"}
+                {service?.Description || "-"}
               </div>
             </div>
             {/* Date */}
@@ -282,7 +282,7 @@ console.log("service",service)
                 </span>
                 <strong>
                   {formatDate(
-                    order.Work_Date
+                    order?.Work_Date
                   )}
                 </strong>
               </div>

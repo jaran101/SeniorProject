@@ -94,7 +94,7 @@ export default memo(function Data({
           className="back-data-button"
           onClick={() => setShow(false)}
         >
-          <span aria-hidden="true">←</span> กลับไปข้อมูลส่วนตัว
+          ← กลับไปข้อมูลส่วนตัว
         </button>
 
         <Editprofile
@@ -114,35 +114,19 @@ export default memo(function Data({
   return (
     <main className="data-page">
       <header className="data-page-heading">
-        <div>
-          <p className="data-eyebrow">MY ACCOUNT</p>
-          <h1>ข้อมูลส่วนตัว</h1>
-          <p className="data-page-description">
-            จัดการข้อมูลส่วนตัวและที่อยู่สำหรับใช้บริการช่าง
-          </p>
-        </div>
+        <h1>ข้อมูลส่วนตัว</h1>
 
         <button
           type="button"
           className="bdata"
           onClick={() => setShow(true)}
         >
-          <span aria-hidden="true">✎</span>
           แก้ไขข้อมูล
         </button>
       </header>
 
       <section className="data-card">
-        <div className="data-card-heading">
-          <div className="data-heading-icon" aria-hidden="true">
-            <span>U</span>
-          </div>
-
-          <div>
-            <h2>รายละเอียดบัญชี</h2>
-            <p>ข้อมูลที่ใช้สำหรับติดต่อและยืนยันตัวตน</p>
-          </div>
-        </div>
+        <h2 className="data-card-title">รายละเอียดบัญชี</h2>
 
         <div className="data-grid">
           <div className="data-item">
@@ -177,17 +161,13 @@ export default memo(function Data({
           <div className="data-item data-address-item">
             <span className="data-label">ที่อยู่เริ่มต้น</span>
             <p>{addressText}</p>
+
             {defaultAddress && (
               <span className="default-address-badge">
                 ที่อยู่เริ่มต้น
               </span>
             )}
           </div>
-        </div>
-
-        <div className="data-card-footer">
-          <span className="data-status-dot" />
-          ข้อมูลโปรไฟล์ของคุณ
         </div>
       </section>
     </main>

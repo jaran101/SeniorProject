@@ -20,7 +20,6 @@ export default function Profile() {
   const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
   const {profileUser,loading} = useUser();
-  console.log(profileUser)
   // เปลี่ยนหน้าที่จะแสดงในส่วนเนื้อหาเมื่อกดเมนูต่าง ๆ
   const changePage = (newPage) => {
     if (newPage === page|| newPage === pendingPage) return;

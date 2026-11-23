@@ -1,0 +1,71 @@
+/* พื้นหลังหน้าหลัก */
+.slip-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    min-height: 70vh;
+    background-color: #f5f5f5;
+    font-family: "Kanit", sans-serif;
+    box-sizing: border-box;
+}
+
+/* กล่องหลัก */
+.slip-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+/* หัวข้อ */
+.slip-title {
+    text-align: center;
+    font-size: 24px;
+    color: #a67c5b;
+    margin: 0 0 20px;
+    font-weight: 600;
+}
+
+/* Order ID */
+.slip-order {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.slip-order span {
+    color: #333;
+    font-weight: 600;
+}
+
+/* กรอบรูป */
+/* .slip-image-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #f8f6f3;
+    padding: 15px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1px solid #e8e0d8;
+} */
+
+/* รูปสลิป */
+.img_slip {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.Warring_Text{
+    line-height: 2px;
+}

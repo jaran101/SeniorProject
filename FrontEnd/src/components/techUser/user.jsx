@@ -4,13 +4,19 @@ import { useNavigate } from "react-router-dom";
 import "./tech.css";
 import { getStatusText } from "../../utils/orderStatus";
 export default function User({
-  userorder,
-  handleconfirmorders,
-  handlerejectorders,
+      userorder,
+      handleconfirmorders,
+      handlerejectorders,
+      qrShow,
+      qr,
+      refreshKey,
 }) {
   const [servicelist, setServicelist] = useState({});
   const [profilelist, setProfilelist] = useState({});
   const token = localStorage.getItem("token");
+  const [paymentlist, setPaymentlist] = useState({});
+  const localUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
+
   const navigate = useNavigate();
 
   console.log(userorder);
@@ -36,6 +42,7 @@ export default function User({
                 headers: { authorization: token },
               },
             ),
+
           ]),
         ),
       );
@@ -55,27 +62,59 @@ export default function User({
     fetchservice();
   }, [userorder]);
 
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      const results = await Promise.all(
+        userorder.map(async (order) => {
+            if (order.Status !== "COMPLETED") return [order.Order_Id, null];
+          try {
+            const res = await axios.get(
+              `http://localhost:3000/api/readpayment/${order.Order_Id}`,
+              {
+                params: { Users_Id: localUserId },
+                headers: { authorization: token },
+              },
+            );
+            return [order.Order_Id, res.data.result];
+          } catch (err) {
+            return [order.Order_Id, null]; // 404 = ยังไม่มี payment
+          }
+        }),
+      );
+      setPaymentlist(Object.fromEntries(results));
+    };
+    fetchPayments();
+    }, [userorder, refreshKey]);
+
+  
+
   return (
     <div>
       <table>
         <thead>
           <tr>
             <th>order</th>
-            <th>service</th>
-            <th>status</th>
-            <th>customer</th>
-            <th>กำหนดการเริ่มงาน</th>
-            <th>กำหนดสิ้นสุดงาน</th>
+            <th>บริการ</th>
+            <th>สถานะ</th>
+            <th>ช่าง</th>
+            <th>วันเริ่มงาน</th>
+            <th>วันสิ้นสุดงาน</th>
             <th>รายละเอียด</th>
             <th>ดำเนินการ</th>
           </tr>
         </thead>
         <tbody>
           {userorder.map((order) => (
+            
             <tr key={order.Order_Id}>
               <td>{order.Order_Id}</td>
               <td>{servicelist[order.Service_Id]?.Title}</td>
-              <td>{getStatusText(order.Status)}</td>
+              <td>
+                {paymentlist[order.Order_Id]
+                  ? getStatusText(paymentlist[order.Order_Id].Status)
+                  : getStatusText(order.Status)}
+              </td>
               <td>{profilelist[order.Tech_Id]?.First_Name}</td>
               <td>{formatDate(order.Work_Date)}</td>
               <td>{formatDate(order.Work_Date_End)}</td>
@@ -84,6 +123,7 @@ export default function User({
                   onClick={() =>
                     navigate("/DetailOrderUser", { state: { order: order } })
                   }
+                  className="Detail_Button"
                 >
                   รายละเอียด
                 </button>
@@ -91,9 +131,11 @@ export default function User({
               <td>
                 {order.Status === "WAITING_CONFIRM" && (
                   <select
+                    disabled={qrShow}
                     defaultValue=""
                     onChange={(e) => {
                       const value = e.target.value;
+                      e.target.value = "";
                       if (value === "COMPLETED")
                         handleconfirmorders(order.Order_Id);
                       else if (value === "CANCELLED")
@@ -107,6 +149,15 @@ export default function User({
                     <option value="CANCELLED">ยกเลิก</option>
                   </select>
                 )}
+
+                            {order.Status === "COMPLETED" &&
+                !["WAITING_CONFIRMATION", "PAIDING"].includes(
+                  paymentlist[order.Order_Id]?.Status,  
+                ) && (
+                  <button onClick={() => qr(order.Order_Id)}>ชำระเงิน</button>
+                )}
+
+
               </td>
             </tr>
           ))}
