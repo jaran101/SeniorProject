@@ -1,13 +1,15 @@
 // utils/orderStatus.js
 export const statusText = {
   ACCEPTED: "ยอมรับ",
-  IN_PROGRESS: "อยู่ในระหว่างดำเนินการ",
-  WAITING_CONFIRM: "รอการยืนยัน",
-  COMPLETED: "เสร็จสิ้น",
+  IN_PROGRESS: "กำลังดำเนินการ",
+  WAITING_CONFIRM: "รอลูกค้ายืนยัน",
+  COMPLETED: "งานเสร็จสิ้น",
   CANCELLED: "ยกเลิก",
-  PENDING: "รอดำเนินการ",
+  PENDING: "รอการชำระเงิน",
   REJECTED: "ปฏิเสธ",
-  ON_HOLD: "พักงาน",};
+  WAITING_CONFIRMATION:"รอช่างยืนยัน",
+  PAID:"ชำระเงินแล้ว"
+  };
 
 // TODO 2: ฟังก์ชันช่วย ถ้าไม่เจอสถานะในตาราง ให้คืนค่าเดิมกลับไป
 export function getStatusText(status) {

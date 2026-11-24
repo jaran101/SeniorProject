@@ -260,3 +260,33 @@
   }
 
 }
+
+.qr-overlay {
+  position: fixed;
+  inset: 0;                      /* top/right/bottom/left = 0 คลุมเต็มจอ */
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;                 /* ให้อยู่เหนือทุก element */
+}
+
+.qr-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;              /* เนื้อหายาวเกินให้เลื่อนในกล่อง */
+  max-width: 90vw;
+}
+
+.qr-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+}

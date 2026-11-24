@@ -2,15 +2,93 @@
     display: flex;
 }
 
-.Start_button{
-    background-color: #4CAF50; /* Green */
+.Start_button {
+  background-color: #4caf50;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
+}
+
+.Start_button:hover {
+  background-color: #43a047;
+  box-shadow: 0 6px 14px rgba(76, 175, 80, 0.5);
+  transform: translateY(-2px);
+}
+
+.Start_button:active {
+  box-shadow: 0 1px 3px rgba(76, 175, 80, 0.4);
+  transform: translateY(0);
+}
+
+.Start_button:disabled {
+  background-color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.Finis_Button {
+  background-color: #0f3d6e;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(15, 61, 110, 0.4);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
+}
+
+.Finis_Button:hover {
+  background-color: #14518f;
+  box-shadow: 0 6px 14px rgba(15, 61, 110, 0.5);
+  transform: translateY(-2px);
+}
+
+.Finis_Button:active {
+  box-shadow: 0 1px 3px rgba(15, 61, 110, 0.4);
+  transform: translateY(0);
+}
+
+.Finis_Button:disabled {
+  background-color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.Detail_Button{
+    border-radius: 3px;
     border: none;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin: 4px 2px;
-    cursor: pointer;
+    background-color: rgb(128, 128, 128);
+    color: rgb(255, 255, 255);
+    font-weight: 200;
+    padding: 4px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
+}
+.Detail_Button:hover{
+    background-color: rgb(165, 162, 162);
+    color: rgb(255, 255, 255);
+    /* transition: all 0.4s ease-in-out; */
+    transform: scale(1.2);    
+      transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgb(165, 162, 162,0.4);;
+
+
 }

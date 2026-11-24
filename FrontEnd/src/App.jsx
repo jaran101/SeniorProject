@@ -23,6 +23,7 @@ import NewServiceArea from "./components/area/newservicearea.jsx";
 import BOQPreview from "./components/Chat/BOQPreview.jsx";
 import DetailOrderUser from "./components/techUser/DetailOrderUser.jsx";
 import Admin from "./components/admin/admin.jsx";
+import Slip from "./components/slip.jsx";
 //--------------------------------
 import ChatContainer from "./components/Chat/ChatContainer";
 import ViewProfile from "./components/view/viewProfile";
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
         <Route path="/QrTest/:orderId" element={<><QrTest /></>}/>
         <Route path="/admin" element={<Layout><Admin /></Layout>}/>
+         <Route path="/slip" element={<Layout><Slip /></Layout>}/>
       </Routes>
     )   
 }
