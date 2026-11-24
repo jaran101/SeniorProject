@@ -56,7 +56,29 @@ export const upProfile = async (req, res, next) => {
     next(err);
   }
 };
-
+export const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.users.findUnique({
+      where: {
+        Users_Id: Number(id),
+      },
+    });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+    await prisma.users.delete({
+      where: {
+        Users_Id: Number(id),
+      },
+    });
+    res.json({message: "Delete User Success",});
+  } catch (err) {
+    next(err);
+  }
+};
 export const getMyProfile = async (req, res, next) => {
   try {
     const { id } = req.params;

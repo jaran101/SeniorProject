@@ -4,13 +4,14 @@ import { verifytoken } from "../middleware/verifytoken.js";
 import {validate,updateemailcheema} from "../utils/validate.js";
 import {createProfile,upProfile,getMyProfile,updateProfile,updateEmail,updatePassword,
   updateRole,updateStatus,getAllUser,getUserById,getUserByEmail,amountUser,editServiceArea,
-getProfileById} from "../controllers/profile.controller.js";
+getProfileById,deleteUser} from "../controllers/profile.controller.js";
 const route = express.Router();
 route.post("/newprofile", verifytoken, createProfile);
 route.post("/uploadprofile", verifytoken, multer, upProfile);
 route.patch("/updateprofile", verifytoken, multer, updateProfile);
 route.get("/readmyprofile/:id",verifytoken,getMyProfile);
 route.get("/readprofile/:id",getProfileById);
+route.delete("/removeuser/:id",deleteUser);
 route.get("/listuser", getAllUser);
 route.get("/readuser/:user_id", getUserById);
 route.get("/readuserbyemail/:email", getUserByEmail);

@@ -80,7 +80,7 @@ model service_areas {
   Users_Id   Int
   Province   String
   Created_At DateTime @default(now())
-  User       users    @relation(fields: [Users_Id], references: [Users_Id])
+  User       users    @relation(fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
 }
 
 model profiles {
@@ -95,7 +95,7 @@ model profiles {
   PromptPay_Id String?
   Created_At   DateTime  @default(now())
   Updated_At   DateTime  @updatedAt
-  User         users     @relation(fields: [Users_Id], references: [Users_Id])
+  User         users     @relation(fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
 }
 
 model addresses {
@@ -111,7 +111,7 @@ model addresses {
   Is_Default  Boolean  @default(false)
   Created_At  DateTime @default(now())
   Updated_At  DateTime @updatedAt
-  User        users    @relation(fields: [Users_Id], references: [Users_Id])
+  User        users    @relation(fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
 }
 
 model services {
@@ -125,7 +125,7 @@ model services {
   Created_At  DateTime        @default(now())
   Updated_At  DateTime        @updatedAt
 
-  User   users    @relation(fields: [Users_Id], references: [Users_Id])
+  User   users    @relation(fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
   Orders orders[]
   Chats  chats[]
 }
@@ -141,9 +141,9 @@ model orders {
   Status        OrderStatus @default(ACCEPTED)
   Created_At    DateTime    @default(now())
   Updated_At    DateTime    @updatedAt
-  User          users       @relation("CustomerOrders", fields: [Users_Id], references: [Users_Id])
-  TechUser      users       @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id])
-  Service       services    @relation(fields: [Service_Id], references: [Service_Id])
+  User          users       @relation("CustomerOrders", fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
+  TechUser      users       @relation("TechnicianOrders", fields: [Tech_Id], references: [Users_Id], onDelete: Cascade)
+  Service       services    @relation(fields: [Service_Id], references: [Service_Id], onDelete: Cascade)
   Review        reviews?
   BOQ           boqs?
   Payment       payments?
@@ -159,7 +159,7 @@ model payments {
   Paid_At       DateTime?
   Created_At    DateTime      @default(now())
   Updated_At    DateTime      @updatedAt
-  Order         orders        @relation(fields: [Order_Id], references: [Order_Id])
+  Order         orders        @relation(fields: [Order_Id], references: [Order_Id], onDelete: Cascade)
 }
 
 model boqs {
@@ -168,7 +168,7 @@ model boqs {
   Total_Amount Float       @default(0)
   Created_At   DateTime    @default(now())
   Updated_At   DateTime    @updatedAt
-  Order        orders      @relation(fields: [Order_Id], references: [Order_Id])
+  Order        orders      @relation(fields: [Order_Id], references: [Order_Id], onDelete: Cascade)
   Items        boq_items[]
 }
 
@@ -183,7 +183,7 @@ model boq_items {
   Total_Price Float
   Created_At  DateTime @default(now())
   Updated_At  DateTime @updatedAt
-  BOQ         boqs     @relation(fields: [BOQ_Id], references: [BOQ_Id])
+  BOQ         boqs     @relation(fields: [BOQ_Id], references: [BOQ_Id], onDelete: Cascade)
 }
 
 model reviews {
@@ -192,8 +192,7 @@ model reviews {
   Rating     Int
   Comment    String?
   Created_At DateTime @default(now())
-
-  Order orders @relation(fields: [Order_Id], references: [Order_Id])
+  Order      orders   @relation(fields: [Order_Id], references: [Order_Id], onDelete: Cascade)
 }
 
 model chats {
@@ -209,7 +208,7 @@ model chats {
   Work_Date_End DateTime?
   Image         String?
   Created_At    DateTime  @default(now())
-  Service       services  @relation(fields: [Service_Id], references: [Service_Id])
+  Service       services  @relation(fields: [Service_Id], references: [Service_Id], onDelete: Cascade)
 }
 
 model provinces {
@@ -224,7 +223,7 @@ model districts {
   District_Id  Int            @id @default(autoincrement())
   Province_Id  Int
   Name         String
-  Province     provinces      @relation(fields: [Province_Id], references: [Province_Id])
+  Province     provinces      @relation(fields: [Province_Id], references: [Province_Id], onDelete: Cascade)
   Subdistricts subdistricts[]
   Created_At   DateTime       @default(now())
   Updated_At   DateTime       @updatedAt
@@ -235,7 +234,7 @@ model subdistricts {
   District_Id    Int
   Name           String
   Postal_Code    String?
-  District       districts @relation(fields: [District_Id], references: [District_Id])
+  District       districts @relation(fields: [District_Id], references: [District_Id], onDelete: Cascade)
   Created_At     DateTime  @default(now())
   Updated_At     DateTime  @updatedAt
 }
