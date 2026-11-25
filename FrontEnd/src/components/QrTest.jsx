@@ -4,6 +4,7 @@ import { QRCodeCanvas } from "qrcode.react";
 
 import axios from "axios";
 import "./QrTest.css";
+import { getStatusText } from "../utils/orderStatus";
 function QrTest({ orderId, onClose, onUploaded }) {
   const [phone, setPhone] = useState(""); // เปลี่ยนเป็นเลขของคุณ
   const [amount, setAmount] = useState(1);
@@ -11,8 +12,11 @@ function QrTest({ orderId, onClose, onUploaded }) {
   const [order, setOrder] = useState(null);
   const [tech_id, setTech_id] = useState(null);
   const [techName, setTechName] = useState(null);
+  const localUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
+  const token = localStorage.getItem("token");
   const fileRef = useRef(null);
   const [slip, setSlip] = useState(null); // เก็บไฟล์ที่เลือก
+  const [showSlipImage,setShowSlipImage]=useState(null);
   const [preview, setPreview] = useState(null); // เก็บ URL ไว้โชว์ตัวอย่าง
   console.log("orderId:", orderId)
   useEffect(() => {
@@ -142,6 +146,25 @@ function QrTest({ orderId, onClose, onUploaded }) {
     }
   };
 
+    const fetchPayments = async () => {
+        try{
+          const response = await axios.get(`http://localhost:3000/api/readpayment/${orderId}`,
+                        {
+              params: { Users_Id: localUserId },
+              headers: { authorization: token },
+            },
+          )
+          setShowSlipImage(response.data.result)
+          console.log("Show",showSlipImage)
+        }catch(err){
+          console.log(err.response?.data?.message || err.message);
+        }
+    };
+
+  useEffect(() => {
+    fetchPayments();
+  }, [orderId]);
+
 return (
   <div className="QrPage">
     <div className="divHead">
@@ -163,7 +186,7 @@ return (
         }}
       />
     </div>
-
+        <div className="QR_Detail">
     <div>{techName}</div>
     <div>
       <label>เลขพร้อมเพย์: {phone} </label>
@@ -172,9 +195,12 @@ return (
       <label>ยอดเงิน: </label>
       {amount} บาท
     </div>
+    </div>
     <p>
       หลังจากทำการชำระเงินแล้วอย่าลืมส่งใบเสร็จการชำระเงินเพื่อเป็นหลักฐานให้ช่างด้วยนะครับ
     </p>
+      
+      <div>
     <button onClick={handleDownload} className="Button_DownLoad">
       ดาวน์โหลด QR
     </button>
@@ -186,17 +212,38 @@ return (
       hidden
     />
     <button className="Immage_Import" onClick={() => fileRef.current.click()}>เลือกไฟล์</button>
+</div>
     {preview && (
-      <div>
-        <button onClick={() => setPreview(null)}>x</button>
-        <button onClick={handleUploadSlip}>อัปโหลดสลิป</button>
-        <div> <img src={preview} alt="" className="Slip_Image" /></div>
-       
+      <div >
+        <div className="div_Slip_Button">
+
+        <button onClick={() => setPreview(null)} className="Slip_close">x</button>
+        <button className="Upload_Slip" onClick={handleUploadSlip}>อัปโหลดสลิป</button>
+        
+        </div>
+
+        <div> 
+          <img src={preview} alt="" className="Slip_Image" />
+        </div>
+      
+
 
       </div>
     )}
-
-
+      {showSlipImage?.Slip_Image && (
+  <div>
+    <div className="RejectText">
+    <p>สลิปที่ส่งไปแล้ว</p>
+     <p>สถานะ:{getStatusText(showSlipImage.Status)}</p>
+     <p>สาเหตุ:{showSlipImage.Reject_Reason}</p>  
+        </div>
+      <img
+      src={`http://localhost:3000/uploads/${showSlipImage.Slip_Image}`}
+      alt=""
+      className="Slip_Image"
+    />
+  </div>
+)}
   </div>
 );
 }
