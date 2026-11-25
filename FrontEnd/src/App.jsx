@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import Login from "./components/auth/Login";
 import Profile from "./components/Profile";
 import Header from "./components/bar/header";
+import Sidebar from "./components/bar/Sidebar.jsx";
 import Footer from "./components/bar/footer";
 import Show from "./components/service/Show.jsx";
 import Data from"./components/data";
@@ -42,14 +43,16 @@ import "./components/service/show.css";
 import "./components/newprofile.css";
 import "./components/service/searchmyservice.css";
 import "./components/service/showservice.css";
+import { Sliders } from "lucide-react";
 function Layout({ children }) {
   return (
     <div className="page">
-      <Header />
+
+      <Sidebar />
       <main className="content">
-      {children}
+        {children}
+        <Footer />
       </main>
-      <Footer />
     </div>
   );
 }

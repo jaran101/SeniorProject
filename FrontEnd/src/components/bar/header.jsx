@@ -69,17 +69,23 @@ export default function Header() {
             <>
               {user && !isProfilePage && (
                 <li className="p1">
-                  <a href="/profile">Profile</a>
+                  <a href="/profile">บัญชี</a>
                 </li>
               )}
             </>
           )}
           {user && !isChatPage && (
             <li className="p1">
-              <a href="/chat">Chat</a>
+              <a href="/chat">ข้อความ</a>
             </li>
+            
           )}
-
+              {user && !isChatPage && (
+            <li className="p1">
+              <a href="/">รายงาน</a>
+            </li>
+            
+          )}
           
           {user && <li className="buttonLogout">
             <Logout />
