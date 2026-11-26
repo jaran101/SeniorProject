@@ -5,6 +5,8 @@ import ServiceCreate from "./servicecreate";
 import ServiceOption from "./serviceoption";
 import Readmyservicearea from "../area/readmyservicearea";
 import "./SearchMyservice.css";
+import {getCategory} from "../../utils/getCategoryText.js";
+import {X}from "lucide-react"
 
 export default function SearchMyservice() {
   const token = localStorage.getItem("token");
@@ -145,7 +147,7 @@ export default function SearchMyservice() {
                 )}
 
                 <span className="serviceCategory">
-                  {service.Category || "บริการทั่วไป"}
+                  {getCategory(service.Category || "บริการทั่วไป")}
                 </span>
               </div>
 
@@ -228,11 +230,17 @@ export default function SearchMyservice() {
 
       {/* Modal แก้ไขบริการ */}
       {showEdit && (
-        <div className="oo">
+        <div className="Modal_Edit">
+          <div className="X_div">
+            <button className="X_Clost" onClick={() => setShowEdit(false)}  >
+              <X  />
+            </button>
+          </div>
+          <div className="ServiceOption">
           <ServiceOption
             onClose={() => setShowEdit(false)}
             serviceId={serviceId}
-          />
+          /></div>
         </div>
       )}
 

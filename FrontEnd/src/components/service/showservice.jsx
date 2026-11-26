@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./ShowService.css";
 import { generateRoomId } from "../../utils/generateRoomId";
-
+import {getCategory} from "../../utils/getCategoryText.js";
 export default function ShowService({ service }) {
   const navigate = useNavigate();
   const [receiverData, setReceiverData] = useState(null);
@@ -146,7 +146,8 @@ function formatTime(date) {
             <div className="info-row">
               <div className="info-item">
                 <span className="info-title">ประเภทงาน</span>
-                <span className="category-badge">{service?.Category || "-"}</span>
+                <span className="category-badge">
+                  {getCategory(service?.Category || "-")}</span>
               </div>
 
               <div className="info-item">
