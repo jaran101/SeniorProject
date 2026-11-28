@@ -57,88 +57,90 @@ export const createPayment = async (req, res, next) => {
         next(err);
     }
 };
-export const uploadPaymentSlip = async (req, res, next) => {
-  let uploadSuccess = false;
-  try {
-    const { Order_Id, Users_Id } = req.body;
-    if (!Order_Id || !Users_Id) {
-      createError(400, "Order_Id and Users_Id are required");
-    }
-    if (!req.file) {
-      createError(400, "Slip file is required");
-    }
-    const order = await prisma.orders.findUnique({
-      where: {
-        Order_Id: Number(Order_Id)
+  export const uploadPaymentSlip = async (req, res, next) => {
+    let uploadSuccess = false;
+    try {
+      const { Order_Id, Users_Id } = req.body;
+      if (!Order_Id || !Users_Id) {
+        createError(400, "Order_Id and Users_Id are required");
       }
-    });
-    if (!order) {
-      createError(404, "Order not found");
-    }
-    if (order.Users_Id !== Number(Users_Id)) {
-      createError(403, "You are not the owner of this order");
-    }
-    if (order.Status !== "COMPLETED") {
-      createError(400, "Order is not completed");
-    }
-    if (order.Final_Price === null || order.Final_Price === undefined) {
-      createError(400, "Order price not found");
-    }
-    const payment = await prisma.payments.findUnique({
-      where: {
-        Order_Id: Number(Order_Id)
+      if (!req.file) {
+        createError(400, "Slip file is required");
       }
-    });
-    if (payment && payment.Status === "PAID") {
-      createError(400, "Payment has already been completed");
-    }
-    if (payment && payment.Status === "WAITING_CONFIRMATION") {
-      createError(400, "Payment is waiting for confirmation");
-    }
-    const oldSlip = payment?.Slip_Image;
-    const result = payment
-      ? await prisma.payments.update({
+      const order = await prisma.orders.findUnique({
         where: {
           Order_Id: Number(Order_Id)
-        },
-        data: {
-          Slip_Image: `slips/${req.file.filename}`,
-          Status: "WAITING_CONFIRMATION",
-          Reject_Reason: null
-        }
-      })
-      : await prisma.payments.create({
-        data: {
-          Order_Id: Number(Order_Id),
-          Slip_Image: `slips/${req.file.filename}`,
-          Status: "WAITING_CONFIRMATION"
         }
       });
-    uploadSuccess = true;
-    if (oldSlip) {
-      const oldPath = `uploads/${oldSlip}`;
-      if (fs.existsSync(oldPath)) {
-        try {
-          fs.unlinkSync(oldPath);
-        } catch (err) {
-          console.error("Cannot delete old slip:", err);
+      if (!order) {
+        createError(404, "Order not found");
+      }
+      if (order.Users_Id !== Number(Users_Id)) {
+        createError(403, "You are not the owner of this order");
+      }
+      if (order.Status !== "COMPLETED") {
+        createError(400, "Order is not completed");
+      }
+      if (order.Final_Price === null || order.Final_Price === undefined) {
+        createError(400, "Order price not found");
+      }
+      const payment = await prisma.payments.findUnique({
+        where: {
+          Order_Id: Number(Order_Id)
+        }
+      });
+      if (payment && payment.Status === "PAID") {
+        createError(400, "Payment has already been completed");
+      }
+      if (payment && payment.Status === "WAITING_CONFIRMATION") {
+        createError(400, "Payment is waiting for confirmation");
+      }
+      const oldSlip = payment?.Slip_Image;
+      const result = payment
+        ? await prisma.payments.update({
+          where: {
+            Order_Id: Number(Order_Id)
+          },
+          data: {
+            Slip_Image: `slips/${req.file.filename}`,
+            Status: "WAITING_CONFIRMATION",
+            Reject_Reason: null
+          }
+        })
+        : await prisma.payments.create({
+          data: {
+            Order_Id: Number(Order_Id),
+            Slip_Image: `slips/${req.file.filename}`,
+            Status: "WAITING_CONFIRMATION"
+          }
+        });
+      uploadSuccess = true;
+      if (oldSlip) {
+        const oldPath = `uploads/${oldSlip}`;
+        if (fs.existsSync(oldPath)) {
+          try {
+            fs.unlinkSync(oldPath);
+          } catch (err) {
+            console.error("Cannot delete old slip:", err);
+          }
         }
       }
-    }
-    res.json({
-      message: "Upload slip success", result
-    });
-  } catch (err) {
-    if (!uploadSuccess && req.file) {
-      const newPath = `uploads/slips/${req.file.filename}`;
-      if (fs.existsSync(newPath)) {
-        fs.unlinkSync(newPath);
+      res.json({
+        message: "Upload slip success", result
+      });
+    } catch (err) {
+      if (!uploadSuccess && req.file) {
+        const newPath = `uploads/slips/${req.file.filename}`;
+        if (fs.existsSync(newPath)) {
+          fs.unlinkSync(newPath);
+        }
       }
+      next(err);
     }
-    next(err);
-  }
-};
+  };
 
+
+  
 export const getPaymentByOrderId = async (req, res, next) => {
   try {
     const { Order_Id } = req.params;

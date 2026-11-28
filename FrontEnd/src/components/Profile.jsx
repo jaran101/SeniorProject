@@ -8,7 +8,20 @@ import SearchMyservice from "./service/searchmyservice";
 import Tau from "./techUser/tau";
 import Admin from "./admin/admin";
 import "./Profile.css";
-
+import {
+  Menu,
+  X,
+  House,
+  UserRound,
+  MessageCircle,
+  ClipboardList,
+  Search,
+  BriefcaseBusiness,
+  ChevronsRight,
+  ChevronsLeft,
+  MapPin,
+  ShieldCheck,
+} from "lucide-react";
 export default function Profile() {
 //Ustate---------------------------------------------------------------------------------
   const [user, setUser] = useState(null);
@@ -99,7 +112,7 @@ export default function Profile() {
 //Ui----------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------
 return (
-    <div>
+    <div className="All">
       {/* ส่วนแสดงข้อมูลผู้ใช้และรูปโปรไฟล์ */}
       <div className="profile-container">
         <div className="profile-image">
@@ -114,8 +127,8 @@ return (
           )}
         </div>
         <div className="profile-box">
-          <p>
-            ชื่อ:{profileUser?.First_Name} {profileUser?.Last_Name}
+          <p className="Profile_Name">
+          {profileUser?.First_Name} {profileUser?.Last_Name}
           </p>
           <p>โทร:{profile?.Phone}</p>
         </div>

@@ -1,50 +1,132 @@
-.Button_DownLoad{
-    background-color: rgb(8, 83, 180);
-    border-radius: 3px;
-    border: none;
-    font-size: 16px;
-    color: aliceblue;
-}
-
-.Button_DownLoad:hover{
-    transition: all 0.3s ease;
-    transform: scale(1.2);
-}
-
 .QrPage {
   padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
   background-color: aliceblue;
   min-height: 100vh;
 }
 
-.Slip_Image{
+.divHead {
+  background-color: #0f3d6e;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  padding: 8px 0;
+}
+
+.Slip_Image {
   max-width: 100%;
   max-height: 70vh;
   object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.Immage_Import{
-    background-color: rgb(151, 151, 151);
-    border: none;
-    border-radius: 3px;
-    font-weight: 100;
-    color: #ffffff;
-    padding: 2px;
-    margin-top: 2px;
+/* ปุ่มคู่: ดาวน์โหลด (ซ้าย) + เลือกไฟล์ (ขวา) */
+.Button_DownLoad,
+.Immage_Import {
+  border: none;
+  font-size: 16px;
+  color: #ffffff;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
 }
 
-.Immage_Import:hover{
-    transition: all 0.3s ease;
-    transform: scale(1.1);
+.Button_DownLoad {
+  background-color: #0f3d6e;
+  border-radius: 6px 0 0 6px;
 }
 
-.divHead{
-    background-color: rgb(23, 93, 185);
-    width: 100%;
-    text-align: center;
-    color: #ffffff;
+.Immage_Import {
+  background-color: #6b7280;
+  border-radius: 0 6px 6px 0;
 }
 
+.Button_DownLoad:hover,
+.Immage_Import:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.Button_DownLoad:hover { background-color: #14518f; }
+.Immage_Import:hover { background-color: #4b5563; }
+
+.div_Slip_Button {
+  display: flex;
+  justify-content: flex-start;
+    height: 30px;
+    width: 200px;
+  gap: 2px;
+  margin: 2px 0;
+}
+
+/* ปุ่มปิด / ยกเลิก */
+.Slip_close {
+  background-color: crimson;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
+}
+
+.Slip_close:hover {
+  background-color: #b01030;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(220, 20, 60, 0.4);
+}
+
+/* ปุ่มอัปโหลดสลิป */
+.Upload_Slip {
+  background-color: darkorange;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s;
+}
+
+.Upload_Slip:hover {
+  background-color: #e67e00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.45);
+}
+
+.Slip_close:active,
+.Upload_Slip:active,
+.Button_DownLoad:active,
+.Immage_Import:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.Button_DownLoad:disabled,
+.Immage_Import:disabled,
+.Upload_Slip:disabled {
+  background-color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.RejectText{
+  gap: 3px;
+  line-height: 8px;
+}
+
+.QR_Detail{
+  gap: 20px;
+  text-align: center;
+  font-size: 16px;
+
+}

@@ -4,12 +4,17 @@ import { useNavigate } from "react-router-dom";
 import "./tech.css";
 import { getStatusText } from "../../utils/orderStatus";
 import Slip from "../slip";
-export default function Tech({ techorder, onStartOrder, onFinishOrder }) {
+export default function Tech({
+  techorder,
+  onStartOrder,
+  onFinishOrder,
+  refreshKey,
+}) {
   const [servicelist, setServicelist] = useState({});
   const [profilelist, setProfilelist] = useState({});
   const token = localStorage.getItem("token");
   const [paymentlist, setPaymentlist] = useState({});
-  const [slipShow,setSlipShow]= useState(false);
+  const [slipShow, setSlipShow] = useState(false);
   const [slipOrderId, setSlipOrderId] = useState(null);
   const localUserId = JSON.parse(localStorage.getItem("user"))?.payload?.id;
   const navigate = useNavigate();
@@ -55,35 +60,32 @@ export default function Tech({ techorder, onStartOrder, onFinishOrder }) {
     fetchservice();
   }, [techorder]);
 
-    useEffect(() => {
-    const fetchPayments = async () => {
-      const results = await Promise.all(
-        techorder.map(async (order) => {
+  const fetchPayments = async () => {
+    const results = await Promise.all(
+      techorder.map(async (order) => {
         if (order.Status !== "COMPLETED") return [order.Order_Id, null];
 
-          try {
-            const res = await axios.get(
-              `http://localhost:3000/api/readpayment/${order.Order_Id}`,
-              {
-                params: { Users_Id: localUserId },
-                headers: { authorization: token },
-              },
-            );
-            console.log("payment",res.data.result)
-            return [order.Order_Id, res.data.result];
-          } catch (err) {
-            return [order.Order_Id, null]; // 404 = ยังไม่มี payment
-          }
-        }),
-      );
-      setPaymentlist(Object.fromEntries(results));
-    };
+        try {
+          const res = await axios.get(
+            `http://localhost:3000/api/readpayment/${order.Order_Id}`,
+            {
+              params: { Users_Id: localUserId },
+              headers: { authorization: token },
+            },
+          );
+
+          return [order.Order_Id, res.data.result];
+        } catch (err) {
+          return [order.Order_Id, null]; // 404 = ยังไม่มี payment
+        }
+      }),
+    );
+    setPaymentlist(Object.fromEntries(results));
+  };
+
+  useEffect(() => {
     fetchPayments();
-  }, [techorder]);
-
-  
-
-
+  }, [techorder, refreshKey]);
 
   return (
     <div>
@@ -118,8 +120,8 @@ export default function Tech({ techorder, onStartOrder, onFinishOrder }) {
                 <button
                   onClick={() =>
                     navigate("/DetailOrder", { state: { order: order } })
-                }
-                className="Detail_Button"
+                  }
+                  className="Detail_Button"
                 >
                   รายละเอียด
                 </button>
@@ -134,35 +136,49 @@ export default function Tech({ techorder, onStartOrder, onFinishOrder }) {
                   </button>
                 )}
                 {order.Status === "IN_PROGRESS" && (
-                  <button  className="Finis_Button"  onClick={() => onFinishOrder(order.Order_Id)}>
+                  <button
+                    className="Finis_Button"
+                    onClick={() => onFinishOrder(order.Order_Id)}
+                  >
                     เสร็จสิ้นงาน
                   </button>
                 )}
-                {paymentlist[order.Order_Id]?.Status === "WAITING_CONFIRMATION" || paymentlist[order.Order_Id]?.Status === "PENDING" && (
-                 <button onClick={() => {setSlipShow(true),
-                  setSlipOrderId(order.Order_Id);} }>
+                {(paymentlist[order.Order_Id]?.Status ===
+                  "WAITING_CONFIRMATION" ||
+                  paymentlist[order.Order_Id]?.Status === "PENDING") && (
+                  <button
+                    onClick={() => {
+                      setSlipShow(true);
+                      setSlipOrderId(order.Order_Id);
+                    }}
+                    className="CheckSlip"
+                  >
                     ตรวจสลิป
                   </button>
                 )}
-              
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-       {slipShow && (
-            <div className="qr-overlay" onClick={() => setSlipShow(false)}>
-              <div className="qr-modal" onClick={(e) => e.stopPropagation()}>
-                <button className="qr-close" onClick={() => setSlipShow(false)}>
-                  ×
-                </button>
-                <Slip
-                    orderId={slipOrderId}
-                    payment={paymentlist[slipOrderId]}
-/>
-              </div>
-            </div>
-          )}
+      {slipShow && (
+        <div className="qr-overlay" onClick={() => setSlipShow(false)}>
+          <div className="qr-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="qr-close" onClick={() => setSlipShow(false)}>
+              ×
+            </button>
+
+            <Slip
+              orderId={slipOrderId}
+              payment={paymentlist[slipOrderId]}
+              onDone={async () => {
+                await fetchPayments();
+                setSlipShow(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

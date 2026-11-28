@@ -5,7 +5,7 @@
 .Start_button {
   background-color: #4caf50;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4);
+  /* box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4); */
   border: none;
   color: white;
   padding: 6px 12px;
@@ -40,7 +40,7 @@
 .Finis_Button {
   background-color: #0f3d6e;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(15, 61, 110, 0.4);
+  /* box-shadow: 0 2px 6px rgba(15, 61, 110, 0.4); */
   border: none;
   color: white;
   padding: 6px 12px;
@@ -79,6 +79,7 @@
     color: rgb(255, 255, 255);
     font-weight: 200;
     padding: 4px;
+    font-size: 14px;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
     background-color 0.2s;
 }
@@ -90,5 +91,46 @@
       transform: translateY(-2px);
         box-shadow: 0 6px 14px rgb(165, 162, 162,0.4);;
 
+
+}
+.CheckSlip {
+    background-color: rgb(212, 131, 8);
+    border-radius: 3px;
+    padding: 6px 12px;
+    border: none;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    font-weight: 200;
+    padding: 4px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+        background-color 0.2s;
+}
+
+.CheckSlip:hover {
+    transform: scale(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgb(165, 162, 162, 0.4);
+    padding: 4px;
+
+}
+
+.pay{
+  background-color: #3088e7;
+    border-radius: 3px;
+    padding: 6px 12px;
+    border: none;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    font-weight: 200;
+    padding: 4px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+        background-color 0.2s;
+}
+
+.pay:hover {
+    transform: scale(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgb(165, 162, 162, 0.4);
+    padding: 4px;
 
 }

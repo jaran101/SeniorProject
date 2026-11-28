@@ -154,7 +154,7 @@ export default function User({
                 !["WAITING_CONFIRMATION", "PAIDING"].includes(
                   paymentlist[order.Order_Id]?.Status,  
                 ) && (
-                  <button onClick={() => qr(order.Order_Id)}>ชำระเงิน</button>
+                  <button className="pay" onClick={() => qr(order.Order_Id)}>ชำระเงิน</button>
                 )}
 
 

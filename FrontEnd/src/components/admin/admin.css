@@ -1,0 +1,143 @@
+
+.Table_Data {
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.Table_Data table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-radius: 10px;
+}
+
+
+
+.Table_Data th,
+.Table_Data td {
+    padding: 8px 12px;
+    height: 50px;
+    box-sizing: border-box;
+    vertical-align: middle;
+
+}
+
+.Table_Data th {
+    background-color: #c09877;
+    color: white;
+    
+}
+
+.Table_Data tbody tr:hover {
+    background-color: #ffffff7e;
+}
+
+/* ตัดข้อความ */
+.text-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    line-height: 20px;
+}
+
+/* กำหนดความกว้างแต่ละคอลัมน์ */
+.Table_Data th:nth-child(1),
+.Table_Data td:nth-child(1) {
+    width: 60px;
+    text-align: center;
+}
+
+.Table_Data th:nth-child(2),
+.Table_Data td:nth-child(2),
+.Table_Data th:nth-child(3),
+.Table_Data td:nth-child(3) {
+    width: 150px;
+}
+
+.Table_Data th:nth-child(4),
+.Table_Data td:nth-child(4) {
+    width: 150px;
+}
+
+.Table_Data th:nth-child(5),
+.Table_Data td:nth-child(5) {
+    width: 150px;
+}
+
+.Table_Data th:nth-child(6),
+.Table_Data td:nth-child(6),
+.Table_Data th:nth-child(7),
+.Table_Data td:nth-child(7) {
+    width: 60px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.Table_Data th:nth-child(8),
+.Table_Data td:nth-child(8)
+ {
+        width: 60px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.Table_Data td > div {
+    max-height: 40px;
+    overflow: hidden;
+}
+
+/* Icon */
+.Edit_Icon,
+.Delete_Icon {
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.Edit_Icon {
+    color: #c58b55;
+}
+
+.Edit_Icon:hover {
+    color: #8b5e34;
+    transform: scale(1.2);
+}
+
+.Delete_Icon {
+    color: #e05252;
+}
+
+.Delete_Icon:hover {
+    color: #b52b2b;
+    transform: scale(1.2);
+}
+
+.Data_Length{
+    display: flex;
+    gap: 15px;
+    padding: 10px 0px 0px 10px;
+}
+.Leng_Data{
+    background-color: rgb(255, 255, 255);
+    width: fit-content;
+    padding: 0px 5px 0px 5px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.icon{
+    size:30;
+    color:#a67c5b; 
+    stroke-width: 1.8; 
+}

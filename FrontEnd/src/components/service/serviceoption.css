@@ -1,0 +1,28 @@
+.category{
+    width: 200px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.img_service{
+    height: auto;
+    width: 200px;
+}
+
+.Option_Input{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.Service_Option{
+    display: flex;
+    padding: 10px;
+    border-radius: 0px 0px 10px 10px;
+    background-color: rgb(233, 217, 196);
+    gap: 5px;
+}
+.x{
+    color: red;
+    size: 10px;
+}

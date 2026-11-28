@@ -1,18 +1,25 @@
 .show-card {
-  background: #fff;
-  border: 0.5px solid #e0cdb8;
-  border-radius: 16px;
-  overflow: hidden;
-  margin: 1rem auto;
-  gap: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  flex:1;
+    background: #fff;
+    border: 0.5px solid #e0cdb8;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 1rem auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    min-width: 0;
 }
-.show-c2{
-  display: flex;
-  gap: 10px;
+.show-c2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: scroll;
+}
 
+.Show-c3{
+  display: flex;
+  
 }
+
 .show-service{
   width: 270px;
   height: auto;
