@@ -1,10 +1,15 @@
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import Show from "./service/Show";
 
 export default function Home() {
   const [text, setText] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
-  const [categories] = useState([
+  const [searchText, setSearchText] = useState(null);
+
+  const showRef = useRef(null);
+
+  const categories = [
     "งานทั้งหมด",
     "ไฟฟ้า",
     "ประปา",
@@ -14,76 +19,98 @@ export default function Home() {
     "เฟอร์นิเจอร์",
     "ทำความสะอาด",
     "อื่นๆ",
-  ]);
-  const [searchText, setSearchText] = useState(null); // TODO 0: state ใหม่
+  ];
 
   const handleSelect = (item) => {
     setSelectedItem(item);
-    setSearchText(null); // เคลียร์ searchText เมื่อเลือก category ใหม่
+    setSearchText(null);
   };
 
-  const handleSearch = (event) => {
-    if (event.key !== "Enter") return;
-    //         เพิ่ม: setSelectedItem(null) เคลียร์ category เก่าด้วย
-    setSearchText(text);
+  const handleSearch = () => {
     setSelectedItem(null);
-  };
+    setSearchText(text.trim());
 
-  //---------------------------------------------------------------------
-  //UI
-  //---------------------------------------------------------------------
+    setTimeout(() => {
+      showRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+  };
 
   return (
     <>
       <div className="HomeHeader">
-        <h1 className="f1">เรียกช่างใกล้บ้าน ง่าย รวดเร็ว ไว้ใจได้</h1>
-        <p className="f2">รวมช่างมืออาชีพหลากหลายประเภท</p>
-        <p className="f2">พร้อมรีวิวจากผู้ใช้จริง</p>
+        <section className="hero">
+         <div className="Name_Banner">
+          <img
+            src="/images/FixChang.png"
+            alt="Fix Chang"
+            className="Image_Header"
+          />
+            <span className="Fix">Fix</span>
+            <span className="Chang">Chang</span>
+            </div>
+          <div className="hero-text">
+            <h1>หาช่างง่าย ๆ จบทุกงานซ่อม ใกล้บ้านคุณ</h1>
+            <p>ค้นหาช่างมืออาชีพ พร้อมให้บริการคุณ</p>
+
+            <div className="hero-search">
+              <input
+                type="text"
+                className="i3"
+                placeholder="ค้นหาบริการ..."
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </section>
       </div>
-      {/* <hr className="line" /> */}
-      <input
-        type="text"
-        className="i3"
-        placeholder="ค้นหาบริการ..."
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        onKeyDown={handleSearch}
-      />
 
-      <br />
-      <p className="f1">เลือกประเภท</p>
-      <br />
-      {/* <hr className="line" /> */}
+      <div ref={showRef} className="service-section">
+        <p className="f1">เลือกประเภท</p>
 
-      {/* ── ปุ่มประเภท ── */}
-      <div className="job-scroll">
-        {categories.map((item) => (
-          <button
-            className={`button2 ${selectedItem === item ? "active" : ""}`}
-            key={item}
-            onClick={() => handleSelect(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-
-      <div className="show">
-        <div className="show">
-          {(selectedItem || searchText) && (
+        <div className="job-scroll">
+          {categories.map((item) => (
             <button
-              className="buttonRed"
-              onClick={() => {
-                setSelectedItem(null);
-                setSearchText(null);
-                setText("");
-              }}
+              className={`button2 ${
+                selectedItem === item ? "active" : ""
+              }`}
+              key={item}
+              onClick={() => handleSelect(item)}
             >
-              X
+              {item}
             </button>
-          )}
-          <Show category={selectedItem} searchText={searchText} />
+          ))}
         </div>
+
+        <section className="show">
+          <div className="show-content">
+            {(selectedItem || searchText) && (
+              <button
+                className="buttonRed"
+                onClick={() => {
+                  setSelectedItem(null);
+                  setSearchText(null);
+                  setText("");
+                }}
+              >
+                X
+              </button>
+            )}
+
+            <Show
+              category={selectedItem}
+              searchText={searchText}
+            />
+          </div>
+        </section>
       </div>
     </>
   );
