@@ -11,7 +11,7 @@ route.post("/uploadprofile", verifytoken, multer, upProfile);
 route.patch("/updateprofile", verifytoken, multer, updateProfile);
 route.get("/readmyprofile/:id",verifytoken,getMyProfile);
 route.get("/readprofile/:id",getProfileById);
-route.delete("/removeuser/:id",deleteUser);
+route.delete("/removeuser",verifytoken,deleteUser);
 route.get("/listuser", getAllUser);
 route.get("/readuser/:user_id", getUserById);
 route.get("/readuserbyemail/:email", getUserByEmail);

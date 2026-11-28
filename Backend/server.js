@@ -11,6 +11,7 @@ import addressRoute from "./routes/address.routes.js"
 import locationRoutes from "./routes/location.routes.js"
 import boqRoutes from "./routes/boq.routes.js"
 import paymentRoute from "./routes/payment.route.js"
+import reportRoute from "./routes/report.route.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { chatSocket }from "./socket/chat.socket.js";
@@ -38,6 +39,7 @@ app.use("/api",addressRoute)
 app.use("/api",locationRoutes)
 app.use("/api",boqRoutes)
 app.use("/api",paymentRoute)
+app.use("/api",reportRoute);
 app.use((err,req,res,next)=>{
   res.status(err.code||500).json({message:err.message||"server error"})
 })

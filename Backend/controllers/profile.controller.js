@@ -58,23 +58,29 @@ export const upProfile = async (req, res, next) => {
 };
 export const deleteUser = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const {Users_Id,DeleteUser_Id}=req.body
     const user = await prisma.users.findUnique({
       where: {
-        Users_Id: Number(id),
+        Users_Id: Number(DeleteUser_Id),
       },
     });
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
+      createError(404, "User not found");
+    }
+    const checkroleuser = await prisma.users.findUnique({
+      where: {
+        Users_Id: Number(Users_Id),
+      },
+    });
+    if (checkroleuser.Role !== "ADMIN") {
+      createError(403, "Only Admin can delete user");
     }
     await prisma.users.delete({
       where: {
-        Users_Id: Number(id),
+        Users_Id: Number(DeleteUser_Id),
       },
     });
-    res.json({message: "Delete User Success",});
+    res.json({ message: "Delete User Success", });
   } catch (err) {
     next(err);
   }
@@ -102,12 +108,12 @@ export const getProfileById = async (req, res, next) => {
       where: {
         Users_Id: Number(id)
       },
-      select:{
-        First_Name:true,
-        Last_Name:true,
-        Avatar:true,
-        Phone:true,
-        PromptPay_Id:true
+      select: {
+        First_Name: true,
+        Last_Name: true,
+        Avatar: true,
+        Phone: true,
+        PromptPay_Id: true
       }
     });
     if (!profile) {
@@ -120,7 +126,7 @@ export const getProfileById = async (req, res, next) => {
 };
 export const updateProfile = async (req, res, next) => {
   try {
-    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date} = req.body;
+    const { Users_Id, First_Name, Last_Name, Phone, Gender, Birth_Date } = req.body;
     let Avatar
     const profile = await prisma.profiles.findUnique({
       where: {
@@ -329,10 +335,10 @@ export const editServiceArea = async (req, res, next) => {
       where: {
         Users_Id: Number(Users_Id)
       },
-      select:{
-        ServicesAreas:{
-          select:{
-            Area_Id:true
+      select: {
+        ServicesAreas: {
+          select: {
+            Area_Id: true
           }
         }
       }

@@ -52,6 +52,12 @@ enum ChatType {
   PRICE_REJECT
 }
 
+enum ReportStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+}
+
 enum PaymentStatus {
   PENDING
   WAITING_CONFIRMATION
@@ -73,6 +79,19 @@ model users {
   TechnicianOrders orders[]        @relation("TechnicianOrders")
   Addresses        addresses[]
   ServiceAreas     service_areas[]
+  Reports          reports[]
+}
+
+model reports {
+  Report_Id   Int          @id @default(autoincrement())
+  Users_Id    Int
+  Title       String
+  Description String       @db.Text
+  Status      ReportStatus @default(PENDING)
+  Admin_Reply String?      @db.Text
+  Created_At  DateTime     @default(now())
+  Updated_At  DateTime     @updatedAt
+  User        users        @relation(fields: [Users_Id], references: [Users_Id], onDelete: Cascade)
 }
 
 model service_areas {
