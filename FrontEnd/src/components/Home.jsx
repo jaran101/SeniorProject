@@ -22,23 +22,25 @@ export default function Home() {
     setSearchText(null); // เคลียร์ searchText เมื่อเลือก category ใหม่
   };
 
- const handleSearch = (event) => {
+  const handleSearch = (event) => {
     if (event.key !== "Enter") return;
     //         เพิ่ม: setSelectedItem(null) เคลียร์ category เก่าด้วย
     setSearchText(text);
     setSelectedItem(null);
   };
 
-//---------------------------------------------------------------------
-//UI
-//---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //UI
+  //---------------------------------------------------------------------
 
   return (
     <>
-      <h1 className="f1">เรียกช่างใกล้บ้าน ง่าย รวดเร็ว ไว้ใจได้</h1>
-      <p className="f2">รวมช่างมืออาชีพหลากหลายประเภท</p>
-      <p className="f2">พร้อมรีวิวจากผู้ใช้จริง</p>
-      <hr className="line" />
+      <div className="HomeHeader">
+        <h1 className="f1">เรียกช่างใกล้บ้าน ง่าย รวดเร็ว ไว้ใจได้</h1>
+        <p className="f2">รวมช่างมืออาชีพหลากหลายประเภท</p>
+        <p className="f2">พร้อมรีวิวจากผู้ใช้จริง</p>
+      </div>
+      {/* <hr className="line" /> */}
       <input
         type="text"
         className="i3"
@@ -51,7 +53,7 @@ export default function Home() {
       <br />
       <p className="f1">เลือกประเภท</p>
       <br />
-      <hr className="line" />
+      {/* <hr className="line" /> */}
 
       {/* ── ปุ่มประเภท ── */}
       <div className="job-scroll">
@@ -68,18 +70,20 @@ export default function Home() {
 
       <div className="show">
         <div className="show">
-  {(selectedItem || searchText) && (
-    <button className="buttonRed" onClick={() => {
-      setSelectedItem(null);
-      setSearchText(null);
-      setText("");
-      
-    }}>
-      X
-    </button>
-  )}
-  <Show category={selectedItem} searchText={searchText} />
-</div>
+          {(selectedItem || searchText) && (
+            <button
+              className="buttonRed"
+              onClick={() => {
+                setSelectedItem(null);
+                setSearchText(null);
+                setText("");
+              }}
+            >
+              X
+            </button>
+          )}
+          <Show category={selectedItem} searchText={searchText} />
+        </div>
       </div>
     </>
   );

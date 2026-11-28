@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./components/Home";
@@ -7,7 +8,7 @@ import Header from "./components/bar/header";
 import Sidebar from "./components/bar/Sidebar.jsx";
 import Footer from "./components/bar/footer";
 import Show from "./components/service/Show.jsx";
-import Data from"./components/data";
+import Data from "./components/data";
 import Register from "./components/auth/register";
 import Lar from "./components/auth/lar";
 import Newprofile from "./components/newprofile";
@@ -18,20 +19,20 @@ import ListService from "./components/service/listservice.jsx";
 import SearchMyservice from "./components/service/searchmyservice.jsx";
 import ServiceOption from "./components/service/serviceoption.jsx";
 import ShowService from "./components/service/showservice.jsx";
-import QrTest  from "./components/QrTest.jsx";
+import QrTest from "./components/QrTest.jsx";
 import Map from "./components/map/CustomerMap.jsx";
 import NewServiceArea from "./components/area/newservicearea.jsx";
 import BOQPreview from "./components/Chat/BOQPreview.jsx";
 import DetailOrderUser from "./components/techUser/DetailOrderUser.jsx";
 import Admin from "./components/admin/admin.jsx";
 import Slip from "./components/slip.jsx";
-//--------------------------------
+
 import ChatContainer from "./components/Chat/ChatContainer";
 import ViewProfile from "./components/view/viewProfile";
-//--------------------------------
+
 import "./components/service/servicecreate.css";
 import "./components/bar/header.css";
-import "./components/bar/footer.css"; 
+import "./components/bar/footer.css";
 import "./components/home.css";
 import "./components/auth/login.css";
 import "./App.css";
@@ -43,47 +44,58 @@ import "./components/service/show.css";
 import "./components/newprofile.css";
 import "./components/service/searchmyservice.css";
 import "./components/service/showservice.css";
-import { Sliders } from "lucide-react";
+
+// Layout สำหรับหน้าที่มี Sidebar และ Footer
 function Layout({ children }) {
   return (
     <div className="page">
-
       <Sidebar />
-      <main className="content">
-        {children}
+
+      <div className="content">
+        <div className="content-body">
+          {children}
+        </div>
+
         <Footer />
-      </main>
+      </div>
     </div>
   );
 }
 
 export default function App() {
   return (
-      <Routes>
-        <Route path="/" element={<Layout><Home /><br /></Layout>} />
-        <Route path="/login" element={<><Login /><br /></>} />
-        <Route path="/show" element={<Layout><Show /><br /></Layout>} />
-        <Route path="/profile" element={<Layout><Profile /><br /></Layout>} />
-        <Route path="/data" element={<Layout><Data /><br /></Layout>} />
-        <Route path="/register" element={<><Register /><br /></>} />
-        <Route path="/lar" element={<><Lar /><br /></>} />
-        <Route path="/newprofile" element={<><Newprofile /><br /></>} />
-        <Route path="/editprofile" element={<><Editprofile /><br /></>} />
-        <Route path="/servicecreate" element={<><ServiceCreate /><br /></>} />
-        <Route path="/listservice" element={<><ListService /><br /></>} />
-        <Route path="/searchmyservice" element={<><SearchMyservice /><br /></>} />
-        <Route path="/serviceoption" element={<><ServiceOption /><br /></>} />
-        <Route path="/showservice" element={<><ShowService /><br /></>} />
-        <Route path="/chat" element={<Layout><ChatContainer /></Layout>} />
-        <Route path="/map" element={<Layout><Map /></Layout>} />
-        <Route path="/newservicearea" element={<Layout><NewServiceArea /><br /></Layout>} />
-        <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>}/>
-        <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>}/> 
-        <Route path="/DetailOrderUser" element={<Layout><DetailOrderUser /></Layout>}/>
-        <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>}/>  
-        <Route path="/QrTest/:orderId" element={<><QrTest /></>}/>
-        <Route path="/admin" element={<Layout><Admin /></Layout>}/>
-         <Route path="/slip" element={<Layout><Slip /></Layout>}/>
-      </Routes>
-    )   
+    <div className="app-shell">
+
+      <div className="route-area">
+        <Routes>
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/show" element={<Layout><Show /></Layout>} />
+          <Route path="/profile" element={<Layout><Profile /></Layout>} />
+          <Route path="/data" element={<Layout><Data /></Layout>} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/lar" element={<Lar />} />
+          <Route path="/newprofile" element={<Newprofile />} />
+          <Route path="/editprofile" element={<Editprofile />} />
+          <Route path="/servicecreate" element={<ServiceCreate />} />
+          <Route path="/listservice" element={<ListService />} />
+          <Route path="/searchmyservice" element={<SearchMyservice />} />
+          <Route path="/serviceoption" element={<ServiceOption />} />
+          <Route path="/showservice" element={<ShowService />} />
+
+          <Route path="/chat" element={<Layout><ChatContainer /></Layout>} />
+          <Route path="/map" element={<Layout><Map /></Layout>} />
+          <Route path="/newservicearea" element={<Layout><NewServiceArea /></Layout>} />
+          <Route path="/BOQPreview" element={<Layout><BOQPreview /></Layout>} />
+          <Route path="/DetailOrder" element={<Layout><DetailOrder /></Layout>} />
+          <Route path="/DetailOrderUser" element={<Layout><DetailOrderUser /></Layout>} />
+          <Route path="/viewProfile/:Users_Id" element={<Layout><ViewProfile /></Layout>} />
+
+          <Route path="/QrTest/:orderId" element={<QrTest />} />
+          <Route path="/admin" element={<Layout><Admin /></Layout>} />
+          <Route path="/slip" element={<Layout><Slip /></Layout>} />
+        </Routes>
+      </div>
+    </div>
+  );
 }

@@ -10,8 +10,8 @@ const categoryMap = {
   โครงสร้าง: "CONSTRUCTION",
   เฟอร์นิเจอร์: "FURNITURE",
   ทำความสะอาด: "CLEANING",
-  "อื่นๆ": "OTHER",
-  "งานทั้งหมด": null,
+  อื่นๆ: "OTHER",
+  งานทั้งหมด: null,
 };
 
 export default function Show({ category, searchText }) {
@@ -20,74 +20,74 @@ export default function Show({ category, searchText }) {
   const [selectedService, setSelectedService] = useState(null);
   const [allServices, setAllServices] = useState([]);
   const [provinces, setProvinces] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState(null); 
+  const [selectedProvince, setSelectedProvince] = useState(null);
   const hideNoProvinceMessage = !category || categoryMap[category] === null;
   //------------------------------------------------------------------------------------------------------------
-// โหลดบริการตามหมวดหมู่เมื่อ prop data เปลี่ยน
-//------------------------------------------------------------------------------------------------------------
-useEffect(()=>{
-  const fetchData = async () => {
-  try {
-    let response;
-    const categoryCode = category ? categoryMap[category] : null;
+  // โหลดบริการตามหมวดหมู่เมื่อ prop data เปลี่ยน
+  //------------------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let response;
+        const categoryCode = category ? categoryMap[category] : null;
 
+        if (categoryCode) {
+          response = await axios.get(
+            `http://localhost:3000/api/searchservices?Category=${categoryCode}`,
+          );
+        } else if (searchText) {
+          response = await axios.get(
+            `http://localhost:3000/api/searchservices?q=${encodeURIComponent(searchText)}`,
+          );
+        } else {
+          response = await axios.get(`http://localhost:3000/api/listservice`);
+        }
 
-    if (categoryCode) {
-      response = await axios.get(`http://localhost:3000/api/searchservices?Category=${categoryCode}`);
-      
-    } else if (searchText) {
-      response = await axios.get(`http://localhost:3000/api/searchservices?q=${searchText}`);
-    } else {
-      response = await axios.get(`http://localhost:3000/api/listservice`);
-    }
+        setAllServices(response.data.result);
+      } catch (err) {
+        console.log(err.response?.data?.message || err.message);
+      }
+    };
+    fetchData();
+  }, [category, searchText]);
 
-    setAllServices(response.data.result);
-  } catch (err) {
-    console.log(err.response?.data?.message || err.message);
-  }
-};
-fetchData()
-},[category, searchText])
-
-
-useEffect(() => {
-  if (!allServices) return;
-  const allProvinces = new Set();
-  allServices.forEach((service) => {
-    service.User?.ServiceAreas?.forEach((area) => {
-      allProvinces.add(area.Province);
+  useEffect(() => {
+    if (!allServices) return;
+    const allProvinces = new Set();
+    allServices.forEach((service) => {
+      service.User?.ServiceAreas?.forEach((area) => {
+        allProvinces.add(area.Province);
+      });
     });
-  });
-  setProvinces(Array.from(allProvinces));
-}, [allServices]);
+    setProvinces(Array.from(allProvinces));
+  }, [allServices]);
 
-useEffect(() => {
-  if (!selectedProvince) {
-    setServices(allServices);
-    return;
-  }
- const filteredServices = allServices.filter((service) =>
-  service.User?.ServiceAreas?.some((area) => area.Province === selectedProvince)
-);
-  setServices(filteredServices);
-}, [allServices, selectedProvince]);
+  useEffect(() => {
+    if (!selectedProvince) {
+      setServices(allServices);
+      return;
+    }
+    const filteredServices = allServices.filter((service) =>
+      service.User?.ServiceAreas?.some(
+        (area) => area.Province === selectedProvince,
+      ),
+    );
+    setServices(filteredServices);
+  }, [allServices, selectedProvince]);
 
+  useEffect(() => {
+    setSelectedProvince(null);
+  }, [category]);
 
-useEffect(() => {
-  setSelectedProvince(null);
-}, [category]);
+  const headerText = category
+    ? `ประเภทงาน : ${category}`
+    : searchText
+      ? `ผลการค้นหา : ${searchText}`
+      : `บริการทั้งหมด`;
 
-
-const headerText = category
-  ? `ประเภทงาน : ${category}`
-  : searchText
-  ? `ผลการค้นหา : ${searchText}`
-  : `บริการทั้งหมด`;
-
-
-  //------------------------------------------------------------------------------------------------------------  
-//UI
-//------------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------------------
+  //UI
+  //------------------------------------------------------------------------------------------------------------
   return (
     <div className="show-card">
       <div className="dd">
@@ -98,37 +98,38 @@ const headerText = category
         {services.length > 0 && (
           <span className="show-category">มี {services.length} รายการ</span>
         )}
-        
-          
       </div>
 
-        <div className="province-buttons">
-          {provinces.length === 0 ? (
-            hideNoProvinceMessage ? "" : (
-              <span className="show-category">ไม่พบพื้นที่ให้บริการ</span>
-            )
+      <div className="province-buttons">
+        {provinces.length === 0 ? (
+          hideNoProvinceMessage ? (
+            ""
           ) : (
-            provinces.map((p) => (
-              <button
-                key={p}
-                className={selectedProvince === p ? "province-active" : ""}
-                onClick={() => setSelectedProvince(prev => prev === p ? "" : p)}
-              >
-                {p}
-                {console.log('category',category)}
-                {console.log('selectedProvince',selectedProvince)}
-              </button>
-            ))
-            
-          )}
-{provinces.length > 0 && (
-          <button onClick={() => setSelectedProvince(null)}>แสดงพื้นที่ให้บริการทั้งหมด</button>
+            <span className="show-category">ไม่พบพื้นที่ให้บริการ</span>
+          )
+        ) : (
+          provinces.map((p) => (
+            <button
+              key={p}
+              className={selectedProvince === p ? "province-active" : ""}
+              onClick={() =>
+                setSelectedProvince((prev) => (prev === p ? "" : p))
+              }
+            >
+              {p}
+            </button>
+          ))
         )}
-        </div>
-
+        {provinces.length > 0 && (
+          <button onClick={() => setSelectedProvince(null)}>
+            แสดงพื้นที่ให้บริการทั้งหมด
+          </button>
+        )}
+      </div>
 
       {/* แสดงรายการบริการในหมวดหมู่นั้น ๆ */}
       <div className="show-c2">
+        <div className="Show-c3">
         {services.map((service) => (
           <div
             key={service.Service_Id}
@@ -142,7 +143,9 @@ const headerText = category
             />
             <p>{service.Service_Id}</p>
             <p className="show-title">บริการ: {service.Title}</p>
-            <p className="show-price">ราคา: {service.Price?.toLocaleString()}บาท</p>
+            <p className="show-price">
+              ราคา: {service.Price?.toLocaleString()}บาท
+            </p>
           </div>
         ))}
       </div>
@@ -150,14 +153,21 @@ const headerText = category
       {/* Modal สำหรับแสดงรายละเอียดบริการที่เลือก */}
       {selectedService && (
         <div className="modal-overlay" onClick={() => setSelectedService(null)}>
-          <div className="modal-box" onClick={(event) => event.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelectedService(null)}>
+          <div
+            className="modal-box"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setSelectedService(null)}
+            >
               ✕
             </button>
             <ShowService service={selectedService} data={category} />
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
